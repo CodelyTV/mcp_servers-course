@@ -44,6 +44,7 @@
 		"eslint-config-next": "15.4.3",
 		"globals": "^16.3.0",
 		"jest": "^30.0.5",
+		"next-test-api-route-handler": "^5.0.0",
 		"ts-jest": "^29.4.0",
 		"ts-node": "^10.9.2",
 		"typescript": "^5.8.3"
