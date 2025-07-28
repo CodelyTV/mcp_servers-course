@@ -1,4 +1,6 @@
 import { AllCoursesPaginatedSearcher } from "../../../../../../src/contexts/mooc/courses/application/search-all-paginated/AllCoursesPaginatedSearcher";
+import { InvalidBase64Error } from "../../../../../../src/contexts/shared/domain/InvalidBase64Error";
+import { InvalidNanoIdError } from "../../../../../../src/contexts/shared/domain/InvalidNanoIdError";
 import { CourseIdMother } from "../../domain/CourseIdMother";
 import { CourseMother } from "../../domain/CourseMother";
 import { MockCourseRepository } from "../../infrastructure/MockCourseRepository";
@@ -48,15 +50,16 @@ describe("AllCoursesPaginatedSearcher should", () => {
 		const invalidCursor = "invalid-base64!@#$%";
 
 		await expect(searcher.search(invalidCursor)).rejects.toThrow(
-			"InvalidBase64Error",
+			new InvalidBase64Error(invalidCursor),
 		);
 	});
 
 	it("throw InvalidNanoIdError when cursor decodes to invalid nanoid", async () => {
-		const invalidCursor = Buffer.from("invalid-nano-id").toString("base64");
+		const invalidCursorNanoId =
+			Buffer.from("invalid-nano-id").toString("base64");
 
-		await expect(searcher.search(invalidCursor)).rejects.toThrow(
-			"InvalidNanoIdError",
+		await expect(searcher.search(invalidCursorNanoId)).rejects.toThrow(
+			new InvalidNanoIdError(invalidCursorNanoId),
 		);
 	});
 });

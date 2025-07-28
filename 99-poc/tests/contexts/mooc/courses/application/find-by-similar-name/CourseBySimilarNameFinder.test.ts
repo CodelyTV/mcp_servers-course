@@ -29,7 +29,7 @@ describe("CourseBySimilarNameFinder should", () => {
 		repository.shouldSearchBySimilarNameAndReturnNull(searchName);
 
 		await expect(finder.find(searchName)).rejects.toThrow(
-			CourseBySimilarNameNotFoundError,
+			new CourseBySimilarNameNotFoundError(searchName),
 		);
 	});
 });
