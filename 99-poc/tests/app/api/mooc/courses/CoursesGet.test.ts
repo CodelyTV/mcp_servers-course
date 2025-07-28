@@ -20,96 +20,91 @@ describe("/api/mooc/courses", () => {
 		await connection.end();
 	});
 
-	describe("GET", () => {
-		it("should return all courses", async () => {
-			const courses = [
-				CourseMother.create({
-					name: "TypeScript Fundamentals",
-					summary: "Learn the basics of TypeScript",
-					categories: ["programming", "typescript"],
-					publishedAt: new Date("2023-01-01"),
-				}),
-				CourseMother.create({
-					name: "React Advanced",
-					summary: "Advanced React patterns and techniques",
-					categories: ["react", "frontend"],
-					publishedAt: new Date("2023-02-01"),
-				}),
-			];
-
-			await Promise.all(courses.map((course) => repository.save(course)));
-
-			await testApiHandler({
-				handler,
-				test: async ({ fetch }) => {
-					const response = await fetch({
-						method: "GET",
-					});
-
-					expect(response.status).toBe(200);
-					const data = await response.json();
-					expect(data).toHaveLength(2);
-					expect(data).toEqual(
-						expect.arrayContaining([
-							expect.objectContaining({
-								name: "TypeScript Fundamentals",
-								summary: "Learn the basics of TypeScript",
-								categories: ["programming", "typescript"],
-							}),
-							expect.objectContaining({
-								name: "React Advanced",
-								summary:
-									"Advanced React patterns and techniques",
-								categories: ["react", "frontend"],
-							}),
-						]),
-					);
-				},
-			});
-		});
-
-		it("should return empty array when no courses exist", async () => {
-			await testApiHandler({
-				handler,
-				test: async ({ fetch }) => {
-					const response = await fetch({
-						method: "GET",
-					});
-
-					expect(response.status).toBe(200);
-					const data = await response.json();
-					expect(data).toEqual([]);
-				},
-			});
-		});
-
-		it("should return courses ordered by published date descending", async () => {
-			const oldCourse = CourseMother.create({
-				name: "Old Course",
+	it("should return all courses", async () => {
+		const courses = [
+			CourseMother.create({
+				name: "TypeScript Fundamentals",
+				summary: "Learn the basics of TypeScript",
+				categories: ["programming", "typescript"],
 				publishedAt: new Date("2023-01-01"),
-			});
-			const recentCourse = CourseMother.create({
-				name: "Recent Course",
-				publishedAt: new Date("2024-01-01"),
-			});
+			}),
+			CourseMother.create({
+				name: "React Advanced",
+				summary: "Advanced React patterns and techniques",
+				categories: ["react", "frontend"],
+				publishedAt: new Date("2023-02-01"),
+			}),
+		];
 
-			await repository.save(oldCourse);
-			await repository.save(recentCourse);
+		await Promise.all(courses.map((course) => repository.save(course)));
 
-			await testApiHandler({
-				handler,
-				test: async ({ fetch }) => {
-					const response = await fetch({
-						method: "GET",
-					});
+		await testApiHandler({
+			appHandler: handler,
+			test: async ({ fetch }) => {
+				const response = await fetch({ method: "GET" });
 
-					expect(response.status).toBe(200);
-					const data = await response.json();
-					expect(data).toHaveLength(2);
-					expect(data[0].name).toBe("Recent Course");
-					expect(data[1].name).toBe("Old Course");
-				},
-			});
+				expect(response.status).toBe(200);
+				const data = await response.json();
+				expect(data).toHaveLength(2);
+				expect(data).toEqual(
+					expect.arrayContaining([
+						expect.objectContaining({
+							name: "TypeScript Fundamentals",
+							summary: "Learn the basics of TypeScript",
+							categories: ["programming", "typescript"],
+						}),
+						expect.objectContaining({
+							name: "React Advanced",
+							summary: "Advanced React patterns and techniques",
+							categories: ["react", "frontend"],
+						}),
+					]),
+				);
+			},
+		});
+	});
+
+	it("should return empty array when no courses exist", async () => {
+		await testApiHandler({
+			appHandler: handler,
+			test: async ({ fetch }) => {
+				const response = await fetch({
+					method: "GET",
+				});
+
+				expect(response.status).toBe(200);
+				const data = await response.json();
+				expect(data).toEqual([]);
+			},
+		});
+	});
+
+	it("should return courses ordered by published date descending", async () => {
+		const oldCourse = CourseMother.create({
+			name: "Old Course",
+			publishedAt: new Date("2023-01-01"),
+		});
+		const recentCourse = CourseMother.create({
+			name: "Recent Course",
+			publishedAt: new Date("2024-01-01"),
+		});
+
+		await repository.save(oldCourse);
+		await repository.save(recentCourse);
+
+		await testApiHandler({
+			appHandler: handler,
+			test: async ({ fetch }) => {
+				const response = await fetch({
+					method: "GET",
+				});
+
+				expect(response.status).toBe(200);
+				const data = await response.json();
+				expect(data).toHaveLength(2);
+				expect(data[0].name).toBe("Recent Course");
+				expect(data[1].name).toBe("Old Course");
+			},
 		});
 	});
 });
