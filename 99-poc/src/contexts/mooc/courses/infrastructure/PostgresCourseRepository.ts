@@ -65,6 +65,24 @@ export class PostgresCourseRepository
 		`;
 	}
 
+	async searchAll(): Promise<Course[]> {
+		return await this.searchMany`
+			SELECT id, name, summary, categories, published_at
+			FROM mooc.courses
+			ORDER BY published_at DESC;
+		`;
+	}
+
+	async searchByIds(ids: CourseId[]): Promise<Course[]> {
+		const plainIds = ids.map((id) => id.value);
+
+		return await this.searchMany`
+			SELECT id, name, summary, categories, published_at
+			FROM mooc.courses
+			WHERE id = ANY(${plainIds}::text[]);
+		`;
+	}
+
 	async searchSimilar(ids: CourseId[]): Promise<Course[]> {
 		const coursesToSearchSimilar = await this.searchByIds(ids);
 
@@ -87,24 +105,6 @@ export class PostgresCourseRepository
 				(embedding <=> ${embeddings}) +
 				${recencyWeight} * EXTRACT(EPOCH FROM NOW() - published_at) / 86400
 			LIMIT 10;
-		`;
-	}
-
-	async searchByIds(ids: CourseId[]): Promise<Course[]> {
-		const plainIds = ids.map((id) => id.value);
-
-		return await this.searchMany`
-			SELECT id, name, summary, categories, published_at
-			FROM mooc.courses
-			WHERE id = ANY(${plainIds}::text[]);
-		`;
-	}
-
-	async searchAll(): Promise<Course[]> {
-		return await this.searchMany`
-			SELECT id, name, summary, categories, published_at
-			FROM mooc.courses
-			ORDER BY published_at DESC;
 		`;
 	}
 
