@@ -20,6 +20,18 @@ describe("/api/mooc/courses", () => {
 		await connection.end();
 	});
 
+	it("should return empty array when no courses exist", async () => {
+		await testApiHandler({
+			appHandler: handler,
+			test: async ({ fetch }) => {
+				const response = await fetch({ method: "GET" });
+
+				expect(response.status).toBe(200);
+				expect(await response.json()).toEqual([]);
+			},
+		});
+	});
+
 	it("should return all courses", async () => {
 		const courses = [
 			CourseMother.create({
@@ -64,21 +76,6 @@ describe("/api/mooc/courses", () => {
 		});
 	});
 
-	it("should return empty array when no courses exist", async () => {
-		await testApiHandler({
-			appHandler: handler,
-			test: async ({ fetch }) => {
-				const response = await fetch({
-					method: "GET",
-				});
-
-				expect(response.status).toBe(200);
-				const data = await response.json();
-				expect(data).toEqual([]);
-			},
-		});
-	});
-
 	it("should return courses ordered by published date descending", async () => {
 		const oldCourse = CourseMother.create({
 			name: "Old Course",
@@ -95,10 +92,7 @@ describe("/api/mooc/courses", () => {
 		await testApiHandler({
 			appHandler: handler,
 			test: async ({ fetch }) => {
-				const response = await fetch({
-					method: "GET",
-				});
-
+				const response = await fetch({ method: "GET" });
 				expect(response.status).toBe(200);
 				const data = await response.json();
 				expect(data).toHaveLength(2);
