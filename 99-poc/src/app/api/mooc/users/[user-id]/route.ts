@@ -1,7 +1,6 @@
 /* eslint-disable camelcase */
 import "reflect-metadata";
 
-import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { NextResponse } from "next/server";
 
 import {
@@ -15,7 +14,7 @@ import { HttpNextResponse } from "../../../../../contexts/shared/infrastructure/
 
 export async function GET(
 	_request: Request,
-	context: { params: Params },
+	context: { params: { "user-id": string } },
 ): Promise<NextResponse> {
 	return executeWithErrorHandling(
 		async () => {
@@ -35,7 +34,7 @@ export async function GET(
 
 export async function PUT(
 	request: Request,
-	context: { params: Params },
+	context: { params: { "user-id": string } },
 ): Promise<NextResponse> {
 	return executeWithErrorHandling(async () => {
 		const registrar = container.get(UserRegistrar);
