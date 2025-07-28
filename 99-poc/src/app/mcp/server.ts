@@ -1,126 +1,73 @@
-#!/usr/bin/env node
-
+/* eslint-disable no-console,@typescript-eslint/explicit-function-return-type */
 import "reflect-metadata";
 
-import { Server } from "@modelcontextprotocol/sdk/server/index.js";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import {
-	CallToolRequestSchema,
-	InitializeRequestSchema,
-	ListResourcesRequestSchema,
-	ListToolsRequestSchema,
-	ReadResourceRequestSchema,
-} from "@modelcontextprotocol/sdk/types.js";
+	McpServer,
+	ResourceTemplate,
+} from "@modelcontextprotocol/sdk/server/mcp.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 
-import { getCoursesResource } from "./courses-resource";
+import { AllCoursesSearcher } from "../../contexts/mooc/courses/application/search-all/AllCoursesSearcher";
+import { container } from "../../contexts/shared/infrastructure/dependency-injection/diod.config";
 
-const server = new Server(
+const server = new McpServer({
+	name: "codely-mcp-server",
+	version: "1.0.0",
+});
+
+server.registerTool(
+	"ping",
 	{
-		name: "codely-mcp-server",
-		version: "1.0.0",
+		title: "Ping Tool",
+		description: "Health check - confirms the server is running",
+		inputSchema: {},
 	},
-	{
-		capabilities: {
-			resources: {},
-			tools: {},
-		},
-	},
-);
-
-server.setRequestHandler(InitializeRequestSchema, async (request) => {
-	return {
-		protocolVersion: "2025-06-18",
-		capabilities: {
-			resources: {},
-			tools: {},
-		},
-		serverInfo: {
-			name: "courses-mcp-server",
-			version: "1.0.0",
-		},
-	};
-});
-
-server.setRequestHandler(ListResourcesRequestSchema, async () => {
-	try {
-		const coursesResource = await getCoursesResource();
-
-		return {
-			resources: coursesResource,
-		};
-	} catch (error) {
-		console.error("Error listing resources:", error);
-		throw error;
-	}
-});
-
-server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
-	const { uri } = request.params;
-
-	try {
-		if (uri === "courses://all") {
-			const coursesResource = await getCoursesResource();
-			const resource = coursesResource[0];
-
-			return {
-				contents: [
-					{
-						uri: resource.uri,
-						mimeType: resource.mimeType,
-						text: resource.text,
-					},
-				],
-			};
-		}
-
-		throw new Error(`Resource not found: ${uri}`);
-	} catch (error) {
-		console.error("Error reading resource:", uri, error);
-		throw error;
-	}
-});
-
-server.setRequestHandler(ListToolsRequestSchema, async () => {
-	return {
-		tools: [
+	async () => ({
+		content: [
 			{
-				name: "ping",
-				description: "Health check - confirms the server is running",
-				inputSchema: {
-					type: "object",
-					properties: {},
-				},
+				type: "text",
+				text: "Pong! Courses MCP server is running correctly.",
 			},
 		],
-	};
-});
+	}),
+);
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
-	const { name } = request.params;
+server.registerResource(
+	"courses",
+	new ResourceTemplate("courses://all", { list: undefined }),
+	{
+		title: "All Courses",
+		description: "Complete list of all available courses",
+	},
+	async (uri) => {
+		const coursesSearcher = container.get(AllCoursesSearcher);
+		const courses = await coursesSearcher.search();
 
-	if (name === "ping") {
 		return {
-			content: [
+			contents: [
 				{
-					type: "text",
-					text: "Pong! Courses MCP server is running correctly.",
+					uri: uri.href,
+					mimeType: "application/json",
+					text: JSON.stringify(courses, null, 2),
 				},
 			],
 		};
-	}
-
-	throw new Error(`Unknown tool: ${name}`);
-});
+	},
+);
 
 async function main() {
+	console.info("ENTRA MAIN");
 	const transport = new StdioServerTransport();
+	console.info("SIGUE MAIN");
 	await server.connect(transport);
-	console.error("Courses MCP Server running on stdio");
+
+	console.info("Courses MCP Server running on stdio");
 }
 
-if (require.main === module) {
-	main().catch((error) => {
-		console.error("Server error:", error);
-		process.exit(1);
-	});
-}
+main().catch((error) => {
+	console.error("Server error:", error);
+
+	process.exit(1);
+});
+
+console.info("ENTRA");
