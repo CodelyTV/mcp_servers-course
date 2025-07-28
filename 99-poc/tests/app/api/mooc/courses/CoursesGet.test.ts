@@ -20,7 +20,7 @@ describe("/api/mooc/courses", () => {
 		await connection.end();
 	});
 
-	it("should return empty array when no courses exist", async () => {
+	it("should return empty when no courses exist", async () => {
 		await testApiHandler({
 			appHandler: handler,
 			test: async ({ fetch }) => {
@@ -35,16 +35,10 @@ describe("/api/mooc/courses", () => {
 	it("should return all courses", async () => {
 		const courses = [
 			CourseMother.create({
-				name: "TypeScript Fundamentals",
-				summary: "Learn the basics of TypeScript",
-				categories: ["programming", "typescript"],
-				publishedAt: new Date("2023-01-01"),
+				publishedAt: new Date("2023-02-01"),
 			}),
 			CourseMother.create({
-				name: "React Advanced",
-				summary: "Advanced React patterns and techniques",
-				categories: ["react", "frontend"],
-				publishedAt: new Date("2023-02-01"),
+				publishedAt: new Date("2023-01-01"),
 			}),
 		];
 
@@ -56,21 +50,8 @@ describe("/api/mooc/courses", () => {
 				const response = await fetch({ method: "GET" });
 
 				expect(response.status).toBe(200);
-				const data = await response.json();
-				expect(data).toHaveLength(2);
-				expect(data).toEqual(
-					expect.arrayContaining([
-						expect.objectContaining({
-							name: "TypeScript Fundamentals",
-							summary: "Learn the basics of TypeScript",
-							categories: ["programming", "typescript"],
-						}),
-						expect.objectContaining({
-							name: "React Advanced",
-							summary: "Advanced React patterns and techniques",
-							categories: ["react", "frontend"],
-						}),
-					]),
+				expect(await response.json()).toEqual(
+					courses.map((course) => course.toPrimitives()),
 				);
 			},
 		});
@@ -93,8 +74,9 @@ describe("/api/mooc/courses", () => {
 			appHandler: handler,
 			test: async ({ fetch }) => {
 				const response = await fetch({ method: "GET" });
-				expect(response.status).toBe(200);
 				const data = await response.json();
+
+				expect(response.status).toBe(200);
 				expect(data).toHaveLength(2);
 				expect(data[0].name).toBe("Recent Course");
 				expect(data[1].name).toBe("Old Course");
