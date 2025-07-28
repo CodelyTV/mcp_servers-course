@@ -42,7 +42,7 @@ export class CourseMother {
 		return Array.from({ length: count }, () => this.create());
 	}
 
-	static createCodelyStyleCourses(): Course[] {
+	static codelyStyleCourses(): Course[] {
 		return [
 			this.create({
 				name: "DDD en PHP",

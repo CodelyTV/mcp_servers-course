@@ -23,10 +23,10 @@ describe("OllamaCourseSuggestionsGenerator should", () => {
 	beforeAll(async () => {
 		await connection.truncateAll();
 
-		availableCourses = CourseMother.createCodelyStyleCourses();
-		for (const course of availableCourses) {
-			await courseRepository.save(course);
-		}
+		availableCourses = CourseMother.codelyStyleCourses();
+		await Promise.all(
+			availableCourses.map((course) => courseRepository.save(course)),
+		);
 
 		completedCourses = faker.helpers.arrayElements(availableCourses, 3);
 		const completedCourseIds = completedCourses.map(
