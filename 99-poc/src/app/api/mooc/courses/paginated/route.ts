@@ -2,8 +2,12 @@ import "reflect-metadata";
 
 import { NextRequest, NextResponse } from "next/server";
 
-import { AllCoursesPaginatedSearcher } from "../../../../../contexts/mooc/courses/application/search-all-paginated/AllCoursesPaginatedSearcher";
+import {
+	AllCoursesPaginatedSearcher,
+	AllCoursesPaginatedSearcherErrors,
+} from "../../../../../contexts/mooc/courses/application/search-all-paginated/AllCoursesPaginatedSearcher";
 import { container } from "../../../../../contexts/shared/infrastructure/dependency-injection/diod.config";
+import { HttpNextResponse } from "../../../../../contexts/shared/infrastructure/http/HttpNextResponse";
 import { withErrorHandling } from "../../../../../contexts/shared/infrastructure/http/withErrorHandling";
 
 const searcher = container.get(AllCoursesPaginatedSearcher);
@@ -15,7 +19,10 @@ export const GET = withErrorHandling(
 		const courses = await searcher.search(cursor);
 
 		return NextResponse.json({
-			courses,
+			...courses,
 		});
+	},
+	(error: AllCoursesPaginatedSearcherErrors) => {
+		return HttpNextResponse.codelyError(error, 400);
 	},
 );

@@ -33,7 +33,7 @@ export const GET = withErrorHandling(
 		const similarCourses = await searcher.search(courseIds);
 
 		return NextResponse.json({
-			courses: similarCourses,
+			...similarCourses,
 		});
 	},
 	(error: SimilarCoursesSearcherErrors) => {

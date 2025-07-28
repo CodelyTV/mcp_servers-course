@@ -44,17 +44,16 @@ describe("AllCoursesPaginatedSearcher should", () => {
 		expect(await searcher.search(cursor)).toEqual([]);
 	});
 
-	it("throw InvalidCourseCursorError when cursor is invalid", async () => {
-		const invalidCursor = "invalid-cursor-not-base64";
+	it("throw InvalidCourseCursorError when cursor is not valid base64", async () => {
+		const invalidCursor = "invalid-base64!@#$%";
 
 		await expect(searcher.search(invalidCursor)).rejects.toThrow(
-			"InvalidCourseCursorError",
+			"InvalidBase64Error",
 		);
 	});
 
-	it("throw InvalidCourseCursorError when decoded cursor is not a valid course id", async () => {
-		const invalidCursor =
-			Buffer.from("not-a-valid-nanoid").toString("base64");
+	it("throw InvalidNanoIdError when cursor decodes to invalid nanoid", async () => {
+		const invalidCursor = Buffer.from("invalid-nano-id").toString("base64");
 
 		await expect(searcher.search(invalidCursor)).rejects.toThrow(
 			"InvalidNanoIdError",
