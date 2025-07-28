@@ -65,13 +65,21 @@ export class PostgresCourseRepository
 		`;
 	}
 
+	async searchAll(): Promise<Course[]> {
+		return await this.searchMany`
+			SELECT id, name, summary, categories, published_at
+			FROM mooc.courses
+			ORDER BY published_at DESC;
+		`;
+	}
+
 	async searchAllPaginated(lastCourseId?: CourseId): Promise<Course[]> {
 		if (lastCourseId) {
 			const lastCourse = await this.search(lastCourseId);
 			if (!lastCourse) {
 				return [];
 			}
-			
+
 			return await this.searchMany`
 				SELECT id, name, summary, categories, published_at
 				FROM mooc.courses
@@ -80,7 +88,7 @@ export class PostgresCourseRepository
 				LIMIT 10;
 			`;
 		}
-		
+
 		return await this.searchMany`
 			SELECT id, name, summary, categories, published_at
 			FROM mooc.courses
