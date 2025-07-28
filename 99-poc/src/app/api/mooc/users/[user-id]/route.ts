@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import "reflect-metadata";
 
 import { NextResponse } from "next/server";
@@ -40,13 +39,13 @@ export async function PUT(
 		const registrar = container.get(UserRegistrar);
 
 		const id = context.params["user-id"] as string;
-		const { name, email, profile_picture } = (await request.json()) as {
+		const { name, bio, email } = (await request.json()) as {
 			name: string;
+			bio: string;
 			email: string;
-			profile_picture: string;
 		};
 
-		await registrar.registrar(id, name, email, profile_picture);
+		await registrar.registrar(id, name, bio, email);
 
 		return HttpNextResponse.created();
 	});

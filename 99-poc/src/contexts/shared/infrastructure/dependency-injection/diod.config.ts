@@ -30,7 +30,7 @@ builder
 		return new PostgresConnection(
 			"localhost",
 			5432,
-			"codely",
+			"supabase_admin",
 			"c0d3ly7v",
 			"postgres",
 		);

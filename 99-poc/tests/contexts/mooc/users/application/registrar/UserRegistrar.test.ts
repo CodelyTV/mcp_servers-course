@@ -23,8 +23,8 @@ describe("UserRegistrar should", () => {
 		await userRegistrar.registrar(
 			expectedUserPrimitives.id,
 			expectedUserPrimitives.name,
+			expectedUserPrimitives.bio,
 			expectedUserPrimitives.email,
-			expectedUserPrimitives.profilePicture,
 		);
 	});
 });

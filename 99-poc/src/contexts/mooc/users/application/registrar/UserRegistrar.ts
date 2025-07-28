@@ -14,10 +14,10 @@ export class UserRegistrar {
 	async registrar(
 		id: string,
 		name: string,
+		bio: string,
 		email: string,
-		profilePicture: string,
 	): Promise<void> {
-		const user = User.create(id, name, email, profilePicture);
+		const user = User.create(id, name, bio, email);
 
 		await this.repository.save(user);
 		await this.eventBus.publish(user.pullDomainEvents());

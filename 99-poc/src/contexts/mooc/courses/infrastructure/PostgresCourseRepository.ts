@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { Primitives } from "@codelytv/primitives-type";
 import { OllamaEmbeddings } from "@langchain/ollama";
 import { Service } from "diod";

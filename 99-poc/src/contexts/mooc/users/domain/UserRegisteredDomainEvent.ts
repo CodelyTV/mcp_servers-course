@@ -8,9 +8,8 @@ export class UserRegisteredDomainEvent extends UserDomainEvent {
 	constructor(
 		public readonly id: string,
 		public readonly name: string,
+		public readonly bio: string,
 		public readonly email: string,
-		public readonly profilePicture: string,
-		public readonly status: string,
 		eventId?: string,
 		occurredOn?: Date,
 	) {
@@ -26,9 +25,8 @@ export class UserRegisteredDomainEvent extends UserDomainEvent {
 		return new UserRegisteredDomainEvent(
 			aggregateId,
 			attributes.name as string,
+			attributes.bio as string,
 			attributes.email as string,
-			attributes.profilePicture as string,
-			attributes.status as string,
 			eventId,
 			occurredOn,
 		);
@@ -38,9 +36,8 @@ export class UserRegisteredDomainEvent extends UserDomainEvent {
 		return {
 			id: this.id,
 			name: this.name,
+			bio: this.bio,
 			email: this.email,
-			profilePicture: this.profilePicture,
-			status: this.status,
 		};
 	}
 }

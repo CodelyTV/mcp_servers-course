@@ -2,52 +2,35 @@ import { Primitives } from "@codelytv/primitives-type";
 
 import { AggregateRoot } from "../../../shared/domain/AggregateRoot";
 
+import { UserBio } from "./UserBio";
 import { UserEmail } from "./UserEmail";
 import { UserId } from "./UserId";
 import { UserName } from "./UserName";
-import { UserProfilePicture } from "./UserProfilePicture";
 import { UserRegisteredDomainEvent } from "./UserRegisteredDomainEvent";
-import { UserStatus } from "./UserStatus";
 
 export class User extends AggregateRoot {
 	private constructor(
 		public readonly id: UserId,
 		public readonly name: UserName,
+		public readonly bio: UserBio,
 		public email: UserEmail,
-		public readonly profilePicture: UserProfilePicture,
-		public status: UserStatus,
 		public suggestedCourses: string,
 	) {
 		super();
 	}
 
-	static create(
-		id: string,
-		name: string,
-		email: string,
-		profilePicture: string,
-	): User {
-		const defaultUserStatus = UserStatus.Active;
+	static create(id: string, name: string, bio: string, email: string): User {
 		const defaultSuggestedCourses = "";
 
 		const user = new User(
 			new UserId(id),
 			new UserName(name),
+			new UserBio(bio),
 			new UserEmail(email),
-			new UserProfilePicture(profilePicture),
-			defaultUserStatus,
 			defaultSuggestedCourses,
 		);
 
-		user.record(
-			new UserRegisteredDomainEvent(
-				id,
-				name,
-				email,
-				profilePicture,
-				defaultUserStatus,
-			),
-		);
+		user.record(new UserRegisteredDomainEvent(id, name, bio, email));
 
 		return user;
 	}
@@ -56,9 +39,8 @@ export class User extends AggregateRoot {
 		return new User(
 			new UserId(primitives.id),
 			new UserName(primitives.name),
+			new UserBio(primitives.bio),
 			new UserEmail(primitives.email),
-			new UserProfilePicture(primitives.profilePicture),
-			primitives.status as UserStatus,
 			primitives.suggestedCourses,
 		);
 	}
@@ -67,9 +49,8 @@ export class User extends AggregateRoot {
 		return {
 			id: this.id.value,
 			name: this.name.value,
+			bio: this.bio.value,
 			email: this.email.value,
-			profilePicture: this.profilePicture.value,
-			status: this.status,
 			suggestedCourses: this.suggestedCourses,
 		};
 	}

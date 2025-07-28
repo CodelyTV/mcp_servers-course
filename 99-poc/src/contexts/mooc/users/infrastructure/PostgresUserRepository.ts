@@ -4,14 +4,12 @@ import { PostgresRepository } from "../../../shared/infrastructure/postgres/Post
 import { User } from "../domain/User";
 import { UserId } from "../domain/UserId";
 import { UserRepository } from "../domain/UserRepository";
-import { UserStatus } from "../domain/UserStatus";
 
 type DatabaseUserRow = {
 	id: string;
 	name: string;
+	bio: string;
 	email: string;
-	profile_picture: string;
-	status: string;
 	suggested_courses: string;
 };
 
@@ -24,27 +22,25 @@ export class PostgresUserRepository
 		const userPrimitives = user.toPrimitives();
 
 		await this.execute`
-			INSERT INTO mooc.users (id, name, email, profile_picture, status, suggested_courses)
+			INSERT INTO mooc.users (id, name, bio, email, suggested_courses)
 			VALUES (
 				${userPrimitives.id},
 				${userPrimitives.name},
+				${userPrimitives.bio},
 				${userPrimitives.email},
-				${userPrimitives.profilePicture},
-				${userPrimitives.status.valueOf()},
 				${userPrimitives.suggestedCourses}
 			)
 			ON CONFLICT (id) DO UPDATE SET
 				name = EXCLUDED.name,
+				bio = EXCLUDED.bio,
 				email = EXCLUDED.email,
-				profile_picture = EXCLUDED.profile_picture,
-				status = EXCLUDED.status,
 				suggested_courses = EXCLUDED.suggested_courses;
 		`;
 	}
 
 	async search(id: UserId): Promise<User | null> {
 		return await this.searchOne`
-			SELECT id, name, email, profile_picture, status, suggested_courses
+			SELECT id, name, bio, email, suggested_courses
 			FROM mooc.users
 			WHERE id = ${id.value};
 		`;
@@ -54,9 +50,8 @@ export class PostgresUserRepository
 		return User.fromPrimitives({
 			id: row.id,
 			name: row.name,
+			bio: row.bio,
 			email: row.email,
-			profilePicture: row.profile_picture,
-			status: row.status as UserStatus,
 			suggestedCourses: row.suggested_courses,
 		});
 	}

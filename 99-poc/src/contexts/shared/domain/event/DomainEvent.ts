@@ -22,7 +22,6 @@ export abstract class DomainEvent {
 		eventId: string,
 		occurredOn: Date,
 		attributes: DomainEventAttributes,
-		// eslint-disable-next-line no-use-before-define
 	) => DomainEvent;
 
 	abstract toPrimitives(): DomainEventAttributes;
