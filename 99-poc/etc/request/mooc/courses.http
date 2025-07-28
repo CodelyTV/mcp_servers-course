@@ -1,3 +1,7 @@
+### List all courses
+GET http://localhost:3000/api/mooc/courses
+Content-Type: application/json
+
 ### Search similar courses
 GET http://localhost:3000/api/mooc/courses/similar?ids=wuzn,xcih,u2rx
 Content-Type: application/json

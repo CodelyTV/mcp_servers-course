@@ -100,6 +100,14 @@ export class PostgresCourseRepository
 		`;
 	}
 
+	async searchAll(): Promise<Course[]> {
+		return await this.searchMany`
+			SELECT id, name, summary, categories, published_at
+			FROM mooc.courses
+			ORDER BY published_at DESC;
+		`;
+	}
+
 	protected toAggregate(row: DatabaseCourseRow): Course {
 		return Course.fromPrimitives({
 			id: row.id,
