@@ -10,7 +10,7 @@ export class CourseSuggestionMother {
 		params?: Partial<CourseSuggestionPrimitives>,
 	): CourseSuggestion {
 		const primitives: CourseSuggestionPrimitives = {
-			courseName: faker.string.alpha(50),
+			courseId: faker.string.alpha(50),
 			reason: faker.string.alpha(150),
 			...params,
 		};

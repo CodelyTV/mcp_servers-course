@@ -13,32 +13,34 @@ import { HttpNextResponse } from "../../../../../contexts/shared/infrastructure/
 
 export async function GET(
 	_request: Request,
-	context: { params: { "user-id": string } },
+	context: { params: Promise<{ "user-id": string }> },
 ): Promise<NextResponse> {
 	return executeWithErrorHandling(
 		async () => {
 			const finder = container.get(UserFinder);
 
-			const userId = context.params["user-id"] as string;
+			const resolvedParams = await context.params;
+			const userId = resolvedParams["user-id"] as string;
 
 			const user = await finder.find(userId);
 
 			return NextResponse.json(user);
 		},
 		(error: UserFinderErrors) => {
-			return HttpNextResponse.domainError(error, 404);
+			return HttpNextResponse.codelyError(error, 404);
 		},
 	);
 }
 
 export async function PUT(
 	request: Request,
-	context: { params: { "user-id": string } },
+	context: { params: Promise<{ "user-id": string }> },
 ): Promise<NextResponse> {
 	return executeWithErrorHandling(async () => {
 		const registrar = container.get(UserRegistrar);
 
-		const id = context.params["user-id"] as string;
+		const resolvedParams = await context.params;
+		const id = resolvedParams["user-id"] as string;
 		const { name, bio, email } = (await request.json()) as {
 			name: string;
 			bio: string;

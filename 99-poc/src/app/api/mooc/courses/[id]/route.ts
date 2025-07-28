@@ -11,9 +11,10 @@ const finder = container.get(CourseByIdFinder);
 export const GET = withErrorHandling(
 	async (
 		_request: NextRequest,
-		{ params }: { params: { id: string } },
+		{ params }: { params: Promise<{ id: string }> },
 	): Promise<NextResponse> => {
-		const course = await finder.find(params.id);
+		const resolvedParams = await params;
+		const course = await finder.find(resolvedParams.id);
 
 		return NextResponse.json(course.toPrimitives());
 	},

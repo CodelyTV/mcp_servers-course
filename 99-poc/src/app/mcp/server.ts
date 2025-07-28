@@ -1,4 +1,4 @@
-/* eslint-disable no-console,@typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import "reflect-metadata";
 
 import {
@@ -66,4 +66,3 @@ main().catch((error) => {
 
 	process.exit(1);
 });
-
