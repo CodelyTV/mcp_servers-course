@@ -11,16 +11,12 @@ describe("AllCoursesSearcher should", () => {
 
 		repository.shouldSearchAll(expectedCourses);
 
-		const result = await searcher.search();
-
-		expect(result).toEqual(expectedCourses);
+		expect(await searcher.search()).toEqual(expectedCourses);
 	});
 
 	it("return empty array when no courses found", async () => {
 		repository.shouldSearchAllAndReturnEmpty();
 
-		const result = await searcher.search();
-
-		expect(result).toEqual([]);
+		expect(await searcher.search()).toEqual([]);
 	});
 });
