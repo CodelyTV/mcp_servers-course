@@ -98,7 +98,7 @@ Cursos que el usuario ya ha completado:
 		});
 
 		return suggestions.map(
-			(suggestion) =>
+			(suggestion: { courseId: string; reason: string }) =>
 				new CourseSuggestion(suggestion.courseId, suggestion.reason),
 		);
 	}
