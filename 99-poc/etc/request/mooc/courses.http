@@ -2,6 +2,11 @@
 GET http://localhost:3000/api/mooc/courses
 Content-Type: application/json
 
+### List all courses paginated
+GET http://localhost:3000/api/mooc/courses/paginated?cursor=Z1JUMg==
+Content-Type: application/json
+
+
 ### Search similar courses
 GET http://localhost:3000/api/mooc/courses/similar?ids=wuzn,xcih,u2rx
 Content-Type: application/json
