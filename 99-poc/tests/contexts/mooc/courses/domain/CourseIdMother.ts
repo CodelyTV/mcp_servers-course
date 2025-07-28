@@ -4,6 +4,6 @@ import { CourseId } from "../../../../../src/contexts/mooc/courses/domain/Course
 
 export class CourseIdMother {
 	static create(value?: string): CourseId {
-		return new CourseId(value ?? faker.string.sample(4));
+		return new CourseId(value ?? faker.string.alphanumeric(4));
 	}
 }

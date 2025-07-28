@@ -17,7 +17,7 @@ import { CourseSuggestionsGenerator } from "../domain/CourseSuggestionsGenerator
 import { UserCourseSuggestions } from "../domain/UserCourseSuggestions";
 
 @Service()
-export class OllamaLlama31CourseSuggestionsGenerator
+export class OllamaCourseSuggestionsGenerator
 	implements CourseSuggestionsGenerator
 {
 	constructor(private readonly courseRepository: CourseRepository) {}
@@ -81,7 +81,7 @@ Cursos que el usuario ya ha completado:
 		const chain = RunnableSequence.from([
 			chatPrompt,
 			new ChatOllama({
-				model: "llama3.1:8b",
+				model: "gemma3",
 				temperature: 0,
 			}),
 			outputParser,

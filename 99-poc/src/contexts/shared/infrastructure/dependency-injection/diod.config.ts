@@ -8,7 +8,7 @@ import { GenerateUserCourseSuggestionsOnUserCourseProgressCompleted } from "../.
 import { UserCourseSuggestionsGenerator } from "../../../mooc/user-course-suggestions/application/generate/UserCourseSuggestionsGenerator";
 import { CourseSuggestionsGenerator } from "../../../mooc/user-course-suggestions/domain/CourseSuggestionsGenerator";
 import { UserCourseSuggestionsRepository } from "../../../mooc/user-course-suggestions/domain/UserCourseSuggestionsRepository";
-import { OllamaLlama31CourseSuggestionsGenerator } from "../../../mooc/user-course-suggestions/infrastructure/OllamaLlama31CourseSuggestionsGenerator";
+import { OllamaCourseSuggestionsGenerator } from "../../../mooc/user-course-suggestions/infrastructure/OllamaCourseSuggestionsGenerator";
 import { PostgresUserCourseSuggestionsRepository } from "../../../mooc/user-course-suggestions/infrastructure/PostgresUserCourseSuggestionsRepository";
 import { UserFinder } from "../../../mooc/users/application/find/UserFinder";
 import { UserRegistrar } from "../../../mooc/users/application/registrar/UserRegistrar";
@@ -56,8 +56,8 @@ builder.registerAndUse(UserCourseSuggestionsUpdater);
 // UserCourseSuggestions
 builder
 	.register(CourseSuggestionsGenerator)
-	.use(OllamaLlama31CourseSuggestionsGenerator);
-builder.registerAndUse(OllamaLlama31CourseSuggestionsGenerator);
+	.use(OllamaCourseSuggestionsGenerator);
+builder.registerAndUse(OllamaCourseSuggestionsGenerator);
 builder
 	.register(UserCourseSuggestionsRepository)
 	.use(PostgresUserCourseSuggestionsRepository);

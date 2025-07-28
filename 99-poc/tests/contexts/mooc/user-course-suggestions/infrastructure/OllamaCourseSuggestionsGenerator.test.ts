@@ -5,7 +5,7 @@ import { faker } from "@faker-js/faker";
 import { Course } from "../../../../../src/contexts/mooc/courses/domain/Course";
 import { PostgresCourseRepository } from "../../../../../src/contexts/mooc/courses/infrastructure/PostgresCourseRepository";
 import { CourseSuggestion } from "../../../../../src/contexts/mooc/user-course-suggestions/domain/CourseSuggestion";
-import { OllamaLlama31CourseSuggestionsGenerator } from "../../../../../src/contexts/mooc/user-course-suggestions/infrastructure/OllamaLlama31CourseSuggestionsGenerator";
+import { OllamaCourseSuggestionsGenerator } from "../../../../../src/contexts/mooc/user-course-suggestions/infrastructure/OllamaCourseSuggestionsGenerator";
 import { container } from "../../../../../src/contexts/shared/infrastructure/dependency-injection/diod.config";
 import { PostgresConnection } from "../../../../../src/contexts/shared/infrastructure/postgres/PostgresConnection";
 import { CourseMother } from "../../courses/domain/CourseMother";
@@ -13,9 +13,9 @@ import { UserCourseSuggestionsMother } from "../domain/UserCourseSuggestionsMoth
 
 const connection = container.get(PostgresConnection);
 const courseRepository = container.get(PostgresCourseRepository);
-const generator = container.get(OllamaLlama31CourseSuggestionsGenerator);
+const generator = container.get(OllamaCourseSuggestionsGenerator);
 
-describe("OllamaLlama31CourseSuggestionsGenerator should", () => {
+describe("OllamaCourseSuggestionsGenerator should", () => {
 	let availableCourses: Course[];
 	let completedCourses: Course[];
 	let suggestions: CourseSuggestion[];
