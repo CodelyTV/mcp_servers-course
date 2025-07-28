@@ -98,7 +98,7 @@ describe("PostgresCourseRepository should", () => {
 
 	describe("searchAllPaginated", () => {
 		it("return empty array when no courses exist", async () => {
-			const courses = await repository.searchAllPaginated();
+			const courses = await repository.searchAllPaginated(null);
 
 			expect(courses).toHaveLength(0);
 		});
@@ -118,7 +118,7 @@ describe("PostgresCourseRepository should", () => {
 			await repository.save(recentCourse);
 			await repository.save(middleCourse);
 
-			const courses = await repository.searchAllPaginated();
+			const courses = await repository.searchAllPaginated(null);
 
 			expect(courses).toHaveLength(3);
 			expect(courses[0]).toStrictEqual(recentCourse);
@@ -161,7 +161,7 @@ describe("PostgresCourseRepository should", () => {
 
 			await Promise.all(courses.map((course) => repository.save(course)));
 
-			expect(await repository.searchAllPaginated()).toHaveLength(10);
+			expect(await repository.searchAllPaginated(null)).toHaveLength(10);
 		});
 	});
 

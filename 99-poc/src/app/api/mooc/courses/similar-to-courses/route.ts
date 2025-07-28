@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 import {
 	SimilarCoursesSearcher,
 	SimilarCoursesSearcherErrors,
-} from "../../../../../contexts/mooc/courses/application/search-similar/SimilarCoursesSearcher";
+} from "../../../../../contexts/mooc/courses/application/search-similar-to-courses/SimilarCoursesSearcher";
 import { container } from "../../../../../contexts/shared/infrastructure/dependency-injection/diod.config";
 import { HttpNextResponse } from "../../../../../contexts/shared/infrastructure/http/HttpNextResponse";
 import { withErrorHandling } from "../../../../../contexts/shared/infrastructure/http/withErrorHandling";

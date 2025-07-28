@@ -8,7 +8,7 @@ Content-Type: application/json
 
 
 ### Search similar courses
-GET http://localhost:3000/api/mooc/courses/similar?ids=wuzn,xcih,u2rx
+GET http://localhost:3000/api/mooc/courses/similar-to-courses?ids=wuzn,xcih,u2rx
 Content-Type: application/json
 
 # wuzn = Buenas prácticas con CSS: Colores

@@ -3,7 +3,7 @@ import { ContainerBuilder } from "diod";
 import { AllCoursesSearcher } from "../../../mooc/courses/application/search-all/AllCoursesSearcher";
 import { AllCoursesPaginatedSearcher } from "../../../mooc/courses/application/search-all-paginated/AllCoursesPaginatedSearcher";
 import { CoursesByIdsSearcher } from "../../../mooc/courses/application/search-by-ids/CoursesByIdsSearcher";
-import { SimilarCoursesSearcher } from "../../../mooc/courses/application/search-similar/SimilarCoursesSearcher";
+import { SimilarCoursesSearcher } from "../../../mooc/courses/application/search-similar-to-courses/SimilarCoursesSearcher";
 import { CourseRepository } from "../../../mooc/courses/domain/CourseRepository";
 import { PostgresCourseRepository } from "../../../mooc/courses/infrastructure/PostgresCourseRepository";
 import { UserCourseProgressCompleter } from "../../../mooc/user-course-progress/application/complete/UserCourseProgressCompleter";

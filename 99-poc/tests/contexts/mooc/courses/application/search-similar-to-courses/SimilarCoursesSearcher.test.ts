@@ -1,4 +1,4 @@
-import { SimilarCoursesSearcher } from "../../../../../../src/contexts/mooc/courses/application/search-similar/SimilarCoursesSearcher";
+import { SimilarCoursesSearcher } from "../../../../../../src/contexts/mooc/courses/application/search-similar-to-courses/SimilarCoursesSearcher";
 import { CourseIdMother } from "../../domain/CourseIdMother";
 import { CourseMother } from "../../domain/CourseMother";
 import { MockCourseRepository } from "../../infrastructure/MockCourseRepository";
