@@ -1,0 +1,7 @@
+### Search similar courses
+GET http://localhost:3000/api/mooc/courses/similar?ids=wuzn,xcih,u2rx
+Content-Type: application/json
+
+# wuzn = Buenas prácticas con CSS: Colores
+# xcih = CSS Grid a fondo
+# u2rx = React de 0 aplicando buenas prácticas

@@ -1,6 +1,8 @@
 /* eslint-disable no-console */
 import "reflect-metadata";
 
+import { ISODateTime } from "@codelytv/primitives-type/src/Primitives";
+
 import { Course } from "../../contexts/mooc/courses/domain/Course";
 import { PostgresCourseRepository } from "../../contexts/mooc/courses/infrastructure/PostgresCourseRepository";
 import { container } from "../../contexts/shared/infrastructure/dependency-injection/diod.config";
@@ -13,7 +15,9 @@ async function main(repository: PostgresCourseRepository): Promise<void> {
 		jsonCourses.map(async (jsonCourse) => {
 			const course = Course.fromPrimitives({
 				...jsonCourse,
-				publishedAt: new Date(jsonCourse.published_at),
+				publishedAt: new Date(
+					jsonCourse.published_at,
+				).toISOString() as ISODateTime,
 			});
 
 			await repository.save(course);

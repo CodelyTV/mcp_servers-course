@@ -1,4 +1,5 @@
 import { Primitives } from "@codelytv/primitives-type";
+import { ISODateTime } from "@codelytv/primitives-type/src/Primitives";
 import { OllamaEmbeddings } from "@langchain/ollama";
 import { Service } from "diod";
 
@@ -76,7 +77,7 @@ export class PostgresCourseRepository
 		);
 
 		const plainIds = ids.map((id) => id.value);
-		const recencyWeight = 0.001;
+		const recencyWeight = 0.0001;
 
 		return await this.searchMany`
 			SELECT id, name, summary, categories, published_at
@@ -105,7 +106,7 @@ export class PostgresCourseRepository
 			name: row.name,
 			summary: row.summary,
 			categories: row.categories,
-			publishedAt: row.published_at,
+			publishedAt: row.published_at.toISOString() as ISODateTime,
 		});
 	}
 
