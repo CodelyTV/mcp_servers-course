@@ -14,8 +14,7 @@ const searcher = container.get(SimilarCoursesSearcher);
 
 export const GET = withErrorHandling(
 	async (request: NextRequest): Promise<NextResponse> => {
-		const { searchParams } = new URL(request.url);
-		const ids = searchParams.get("ids");
+		const ids = request.nextUrl.searchParams.get("ids");
 
 		if (!ids) {
 			return HttpNextResponse.badRequest(

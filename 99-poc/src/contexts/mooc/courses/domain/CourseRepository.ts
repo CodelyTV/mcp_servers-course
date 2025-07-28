@@ -8,7 +8,9 @@ export abstract class CourseRepository {
 
 	abstract searchAll(): Promise<Course[]>;
 
-	abstract searchAllPaginated(lastCourseId?: CourseId): Promise<Course[]>;
+	abstract searchAllPaginated(
+		lastCourseId: CourseId | null,
+	): Promise<Course[]>;
 
 	abstract searchByIds(ids: CourseId[]): Promise<Course[]>;
 
