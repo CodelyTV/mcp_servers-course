@@ -1,5 +1,6 @@
 import { ContainerBuilder } from "diod";
 
+import { AllCoursesSearcher } from "../../../mooc/courses/application/search-all/AllCoursesSearcher";
 import { AllCoursesPaginatedSearcher } from "../../../mooc/courses/application/search-all-paginated/AllCoursesPaginatedSearcher";
 import { CoursesByIdsSearcher } from "../../../mooc/courses/application/search-by-ids/CoursesByIdsSearcher";
 import { SimilarCoursesSearcher } from "../../../mooc/courses/application/search-similar/SimilarCoursesSearcher";
@@ -75,6 +76,7 @@ builder.register(CourseRepository).use(PostgresCourseRepository);
 builder.registerAndUse(PostgresCourseRepository);
 builder.registerAndUse(CoursesByIdsSearcher);
 builder.registerAndUse(SimilarCoursesSearcher);
+builder.registerAndUse(AllCoursesSearcher);
 builder.registerAndUse(AllCoursesPaginatedSearcher);
 
 // Export container

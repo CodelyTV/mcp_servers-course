@@ -12,6 +12,6 @@ export const GET = withErrorHandling(async (): Promise<NextResponse> => {
 	const courses = await searcher.search();
 
 	return NextResponse.json({
-		courses: courses.map((course) => course.toPrimitives()),
+		courses,
 	});
 });

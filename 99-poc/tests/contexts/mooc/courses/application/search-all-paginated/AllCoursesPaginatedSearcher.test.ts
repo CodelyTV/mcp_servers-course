@@ -10,7 +10,7 @@ describe("AllCoursesPaginatedSearcher should", () => {
 	it("search all courses without pagination", async () => {
 		const expectedCourses = [CourseMother.create(), CourseMother.create()];
 
-		repository.shouldSearchAll(expectedCourses);
+		repository.shouldSearchAllPaginated(expectedCourses);
 
 		expect(await searcher.search()).toEqual(
 			expectedCourses.map((course) => course.toPrimitives()),
@@ -21,7 +21,7 @@ describe("AllCoursesPaginatedSearcher should", () => {
 		const lastCourseId = CourseIdMother.create();
 		const expectedCourses = [CourseMother.create(), CourseMother.create()];
 
-		repository.shouldSearchAll(expectedCourses);
+		repository.shouldSearchAllPaginated(expectedCourses);
 
 		expect(await searcher.search(lastCourseId.value)).toEqual(
 			expectedCourses.map((course) => course.toPrimitives()),

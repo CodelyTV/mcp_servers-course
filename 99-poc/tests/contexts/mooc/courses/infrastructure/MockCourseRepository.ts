@@ -5,6 +5,7 @@ import { CourseRepository } from "../../../../../src/contexts/mooc/courses/domai
 export class MockCourseRepository implements CourseRepository {
 	private readonly mockSave = jest.fn();
 	private readonly mockSearch = jest.fn();
+	private readonly mockSearchAll = jest.fn();
 	private readonly mockSearchByIds = jest.fn();
 	private readonly mockSearchSimilar = jest.fn();
 	private readonly mockSearchAllPaginated = jest.fn();
@@ -19,6 +20,10 @@ export class MockCourseRepository implements CourseRepository {
 		expect(this.mockSearch).toHaveBeenCalledWith(id);
 
 		return this.mockSearch() as Promise<Course | null>;
+	}
+
+	async searchAll(): Promise<Course[]> {
+		return this.mockSearchAll() as Promise<Course[]>;
 	}
 
 	async searchByIds(ids: CourseId[]): Promise<Course[]> {
@@ -67,11 +72,19 @@ export class MockCourseRepository implements CourseRepository {
 		this.mockSearchSimilar.mockReturnValueOnce([]);
 	}
 
-	shouldSearchAll(courses: Course[]): void {
+	shouldSearchAllPaginated(courses: Course[]): void {
 		this.mockSearchAllPaginated.mockReturnValueOnce(courses);
 	}
 
 	shouldSearchAllPaginatedAndReturnEmpty(): void {
 		this.mockSearchAllPaginated.mockReturnValueOnce([]);
+	}
+
+	shouldSearchAll(courses: Course[]): void {
+		this.mockSearchAll.mockReturnValueOnce(courses);
+	}
+
+	shouldSearchAllAndReturnEmpty(): void {
+		this.mockSearchAll.mockReturnValueOnce([]);
 	}
 }

@@ -55,6 +55,47 @@ describe("PostgresCourseRepository should", () => {
 		expect(searchedCourse).toStrictEqual(updatedCourse);
 	});
 
+	describe("searchAll", () => {
+		it("return empty array when no courses exist", async () => {
+			const courses = await repository.searchAll();
+
+			expect(courses).toHaveLength(0);
+		});
+
+		it("return all courses ordered by published date descending", async () => {
+			const oldCourse = CourseMother.create({
+				publishedAt: new Date("2023-01-01"),
+			});
+			const recentCourse = CourseMother.create({
+				publishedAt: new Date("2024-01-01"),
+			});
+			const middleCourse = CourseMother.create({
+				publishedAt: new Date("2023-06-01"),
+			});
+
+			await repository.save(oldCourse);
+			await repository.save(recentCourse);
+			await repository.save(middleCourse);
+
+			const courses = await repository.searchAll();
+
+			expect(courses).toHaveLength(3);
+			expect(courses[0]).toStrictEqual(recentCourse);
+			expect(courses[1]).toStrictEqual(middleCourse);
+			expect(courses[2]).toStrictEqual(oldCourse);
+		});
+
+		it("return all courses without pagination limit", async () => {
+			const courses = CourseMother.createList(20);
+
+			await Promise.all(courses.map((course) => repository.save(course)));
+
+			const result = await repository.searchAll();
+
+			expect(result).toHaveLength(20);
+		});
+	});
+
 	describe("searchAllPaginated", () => {
 		it("return empty array when no courses exist", async () => {
 			const courses = await repository.searchAllPaginated();
