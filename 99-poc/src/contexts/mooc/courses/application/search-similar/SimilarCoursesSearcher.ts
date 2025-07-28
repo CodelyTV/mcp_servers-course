@@ -1,9 +1,12 @@
 import { Primitives } from "@codelytv/primitives-type";
 import { Service } from "diod";
 
+import { InvalidNanoIdError } from "../../../../shared/domain/InvalidNanoIdError";
 import { Course } from "../../domain/Course";
 import { CourseId } from "../../domain/CourseId";
 import { CourseRepository } from "../../domain/CourseRepository";
+
+export type SimilarCoursesSearcherErrors = InvalidNanoIdError;
 
 @Service()
 export class SimilarCoursesSearcher {

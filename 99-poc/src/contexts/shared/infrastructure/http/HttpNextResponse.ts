@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 
-import { DomainError } from "../../domain/DomainError";
+import { CodelyError } from "../../domain/CodelyError";
 
 export class HttpNextResponse {
-	static domainError(error: DomainError, statusCode: number): NextResponse {
+	static codelyError(error: CodelyError, statusCode: number): NextResponse {
 		return NextResponse.json(
 			{
 				error: error.toPrimitives(),
@@ -18,7 +18,7 @@ export class HttpNextResponse {
 				error: {
 					type: "InvalidRequest",
 					description: message,
-					data: {},
+					params: {},
 				},
 			},
 			{ status: 404 },
@@ -28,9 +28,9 @@ export class HttpNextResponse {
 	static internalServerError(): NextResponse {
 		return NextResponse.json(
 			{
-				code: "InternalServerError",
-				message: "Internal server error",
-				data: {},
+				type: "InternalServerError",
+				description: "Internal server error",
+				params: {},
 			},
 			{ status: 500 },
 		);
