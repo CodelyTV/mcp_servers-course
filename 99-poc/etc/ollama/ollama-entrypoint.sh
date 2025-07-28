@@ -27,5 +27,24 @@ if [ $RETRY_COUNT -ge $MAX_RETRIES ]; then
     echo "Failed to pull nomic-embed-text model after $MAX_RETRIES attempts."
 fi
 
+echo "Pulling llama3.1:8b model"
+MAX_RETRIES=10
+RETRY_COUNT=0
+
+while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+    if ollama pull llama3.1:8b; then
+        echo "llama3.1:8b model pulled successfully!"
+        break
+    else
+        echo "Attempt $RETRY_COUNT: Server not ready yet, waiting"
+        sleep 5
+        RETRY_COUNT=$((RETRY_COUNT + 1))
+    fi
+done
+
+if [ $RETRY_COUNT -ge $MAX_RETRIES ]; then
+    echo "Failed to pull llama3.1:8b model after $MAX_RETRIES attempts."
+fi
+
 echo "Server is now running and ready to use"
 wait $SERVER_PID

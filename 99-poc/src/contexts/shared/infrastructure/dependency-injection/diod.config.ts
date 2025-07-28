@@ -57,6 +57,7 @@ builder.registerAndUse(UserCourseSuggestionsUpdater);
 builder
 	.register(CourseSuggestionsGenerator)
 	.use(OllamaLlama31CourseSuggestionsGenerator);
+builder.registerAndUse(OllamaLlama31CourseSuggestionsGenerator);
 builder
 	.register(UserCourseSuggestionsRepository)
 	.use(PostgresUserCourseSuggestionsRepository);

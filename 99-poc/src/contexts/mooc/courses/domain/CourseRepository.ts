@@ -1,6 +1,5 @@
-import { CourseId } from "@codelytv/primitives-type/dist/tests/CourseId";
-
 import { Course } from "./Course";
+import { CourseId } from "./CourseId";
 
 export abstract class CourseRepository {
 	abstract save(course: Course): Promise<void>;
