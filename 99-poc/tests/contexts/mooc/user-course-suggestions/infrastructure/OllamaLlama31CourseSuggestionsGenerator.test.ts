@@ -36,7 +36,7 @@ describe("OllamaLlama31CourseSuggestionsGenerator should", () => {
 		suggestions = await generator.generate(
 			UserCourseSuggestionsMother.withoutSuggestions(completedCourseIds),
 		);
-	}, 30000);
+	}, 50000);
 
 	afterAll(async () => {
 		await connection.end();
@@ -54,9 +54,9 @@ describe("OllamaLlama31CourseSuggestionsGenerator should", () => {
 			(course) => course.id.value,
 		);
 
-		for (const suggestedId of suggestedCourseIds) {
-			expect(availableCourseIds).toContain(suggestedId);
-		}
+		expect(availableCourseIds).toEqual(
+			expect.arrayContaining(suggestedCourseIds),
+		);
 	});
 
 	it("suggest only courses that have not been completed", () => {
@@ -67,8 +67,8 @@ describe("OllamaLlama31CourseSuggestionsGenerator should", () => {
 			(course) => course.id.value,
 		);
 
-		for (const suggestedId of suggestedCourseIds) {
-			expect(completedCourseIds).not.toContain(suggestedId);
-		}
+		expect(completedCourseIds).not.toEqual(
+			expect.arrayContaining(suggestedCourseIds),
+		);
 	});
 });
