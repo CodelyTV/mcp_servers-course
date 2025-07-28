@@ -16,22 +16,22 @@ export class AllCoursesPaginatedSearcher {
 	constructor(private readonly repository: CourseRepository) {}
 
 	async search(cursor: string | null): Promise<Primitives<Course>[]> {
-		const lastId = cursor ? this.decodeCursor(cursor) : null;
+		const lastCourseId = cursor ? this.decodeCursor(cursor) : null;
 
-		return (await this.repository.searchAllPaginated(lastId)).map(
+		return (await this.repository.searchAllPaginated(lastCourseId)).map(
 			(course) => course.toPrimitives(),
 		);
 	}
 
 	private decodeCursor(cursor: string): CourseId {
-		try {
-			const lastCourseId = Buffer.from(cursor, "base64").toString(
-				"utf-8",
-			);
+		let lastCourseId: string;
 
-			return new CourseId(lastCourseId);
+		try {
+			lastCourseId = Buffer.from(cursor, "base64").toString("utf-8");
 		} catch {
 			throw new InvalidCourseCursorError(cursor);
 		}
+
+		return new CourseId(lastCourseId);
 	}
 }

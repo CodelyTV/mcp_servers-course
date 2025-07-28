@@ -12,18 +12,19 @@ describe("AllCoursesPaginatedSearcher should", () => {
 
 		repository.shouldSearchAllPaginated(expectedCourses);
 
-		expect(await searcher.search()).toEqual(
+		expect(await searcher.search(null)).toEqual(
 			expectedCourses.map((course) => course.toPrimitives()),
 		);
 	});
 
-	it("search courses with pagination", async () => {
+	it("search courses with pagination using base64 encoded cursor", async () => {
 		const lastCourseId = CourseIdMother.create();
+		const cursor = Buffer.from(lastCourseId.value).toString("base64");
 		const expectedCourses = [CourseMother.create(), CourseMother.create()];
 
-		repository.shouldSearchAllPaginated(expectedCourses);
+		repository.shouldSearchAllPaginated(expectedCourses, lastCourseId);
 
-		expect(await searcher.search(lastCourseId.value)).toEqual(
+		expect(await searcher.search(cursor)).toEqual(
 			expectedCourses.map((course) => course.toPrimitives()),
 		);
 	});
@@ -31,14 +32,32 @@ describe("AllCoursesPaginatedSearcher should", () => {
 	it("return empty array when no courses found", async () => {
 		repository.shouldSearchAllPaginatedAndReturnEmpty();
 
-		expect(await searcher.search()).toEqual([]);
+		expect(await searcher.search(null)).toEqual([]);
 	});
 
 	it("return empty array when no more courses found with pagination", async () => {
 		const lastCourseId = CourseIdMother.create();
+		const cursor = Buffer.from(lastCourseId.value).toString("base64");
 
-		repository.shouldSearchAllPaginatedAndReturnEmpty();
+		repository.shouldSearchAllPaginatedAndReturnEmpty(lastCourseId);
 
-		expect(await searcher.search(lastCourseId.value)).toEqual([]);
+		expect(await searcher.search(cursor)).toEqual([]);
+	});
+
+	it("throw InvalidCourseCursorError when cursor is invalid", async () => {
+		const invalidCursor = "invalid-cursor-not-base64";
+
+		await expect(searcher.search(invalidCursor)).rejects.toThrow(
+			"InvalidCourseCursorError",
+		);
+	});
+
+	it("throw InvalidCourseCursorError when decoded cursor is not a valid course id", async () => {
+		const invalidCursor =
+			Buffer.from("not-a-valid-nanoid").toString("base64");
+
+		await expect(searcher.search(invalidCursor)).rejects.toThrow(
+			"InvalidNanoIdError",
+		);
 	});
 });

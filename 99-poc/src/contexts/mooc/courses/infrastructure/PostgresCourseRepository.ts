@@ -73,7 +73,7 @@ export class PostgresCourseRepository
 		`;
 	}
 
-	async searchAllPaginated(lastCourseId?: CourseId): Promise<Course[]> {
+	async searchAllPaginated(lastCourseId: CourseId | null): Promise<Course[]> {
 		if (lastCourseId) {
 			const lastCourse = await this.search(lastCourseId);
 			if (!lastCourse) {

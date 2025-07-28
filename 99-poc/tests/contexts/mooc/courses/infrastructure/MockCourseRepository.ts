@@ -38,7 +38,9 @@ export class MockCourseRepository implements CourseRepository {
 		return this.mockSearchSimilar() as Promise<Course[]>;
 	}
 
-	async searchAllPaginated(lastCourseId?: CourseId): Promise<Course[]> {
+	async searchAllPaginated(lastCourseId: CourseId | null): Promise<Course[]> {
+		expect(this.mockSearchAllPaginated).toHaveBeenCalledWith(lastCourseId);
+
 		return this.mockSearchAllPaginated() as Promise<Course[]>;
 	}
 
@@ -72,11 +74,13 @@ export class MockCourseRepository implements CourseRepository {
 		this.mockSearchSimilar.mockReturnValueOnce([]);
 	}
 
-	shouldSearchAllPaginated(courses: Course[]): void {
+	shouldSearchAllPaginated(courses: Course[], lastCourseId?: CourseId): void {
+		this.mockSearchAllPaginated(lastCourseId ?? null);
 		this.mockSearchAllPaginated.mockReturnValueOnce(courses);
 	}
 
-	shouldSearchAllPaginatedAndReturnEmpty(): void {
+	shouldSearchAllPaginatedAndReturnEmpty(lastCourseId?: CourseId): void {
+		this.mockSearchAllPaginated(lastCourseId ?? null);
 		this.mockSearchAllPaginated.mockReturnValueOnce([]);
 	}
 
