@@ -1,4 +1,5 @@
 import { Primitives } from "@codelytv/primitives-type";
+import { ISODateTime } from "@codelytv/primitives-type/src/Primitives";
 
 import { AggregateRoot } from "../../../shared/domain/AggregateRoot";
 
@@ -21,11 +22,11 @@ export class Course extends AggregateRoot {
 			primitives.name,
 			primitives.summary,
 			primitives.categories,
-			primitives.publishedAt,
+			new Date(primitives.publishedAt),
 		);
 	}
 
-	create(
+	static create(
 		id: string,
 		name: string,
 		summary: string,
@@ -38,7 +39,7 @@ export class Course extends AggregateRoot {
 			name,
 			summary,
 			categories,
-			publishedAt,
+			publishedAt: publishedAt.toISOString() as ISODateTime,
 		});
 	}
 
@@ -48,7 +49,7 @@ export class Course extends AggregateRoot {
 			name: this.name,
 			summary: this.summary,
 			categories: this.categories,
-			publishedAt: this.publishedAt,
+			publishedAt: this.publishedAt.toISOString() as ISODateTime,
 		};
 	}
 }
