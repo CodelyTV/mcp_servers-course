@@ -5,7 +5,7 @@ CREATE TABLE mooc.courses (
 	name TEXT NOT NULL,
 	summary TEXT,
 	categories JSONB NOT NULL,
-	published_at TIMESTAMP NOT NULL,
+	published_at TIMESTAMP WITH TIME ZONE NOT NULL,
 	embedding vector(768)
 );
 
