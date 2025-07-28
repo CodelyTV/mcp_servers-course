@@ -56,12 +56,9 @@ server.registerResource(
 );
 
 async function main() {
-	console.info("ENTRA MAIN");
 	const transport = new StdioServerTransport();
-	console.info("SIGUE MAIN");
 	await server.connect(transport);
-
-	console.info("Courses MCP Server running on stdio");
+	console.error("Courses MCP Server running on stdio");
 }
 
 main().catch((error) => {
@@ -70,4 +67,3 @@ main().catch((error) => {
 	process.exit(1);
 });
 
-console.info("ENTRA");
