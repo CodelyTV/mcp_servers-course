@@ -11,7 +11,5 @@ const searcher = container.get(AllCoursesSearcher);
 export const GET = withErrorHandling(async (): Promise<NextResponse> => {
 	const courses = await searcher.search();
 
-	return NextResponse.json({
-		...courses,
-	});
+	return NextResponse.json(courses);
 });
