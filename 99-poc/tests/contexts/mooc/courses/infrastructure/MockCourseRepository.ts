@@ -33,7 +33,7 @@ export class MockCourseRepository implements CourseRepository {
 		return this.mockSearchSimilar() as Promise<Course[]>;
 	}
 
-	async searchAll(): Promise<Course[]> {
+	async searchAllPaginated(lastCourseId?: CourseId): Promise<Course[]> {
 		return this.mockSearchAll() as Promise<Course[]>;
 	}
 

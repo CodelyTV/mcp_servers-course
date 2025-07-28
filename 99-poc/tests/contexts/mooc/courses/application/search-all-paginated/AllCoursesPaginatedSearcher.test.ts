@@ -1,10 +1,10 @@
-import { AllCoursesSearcher } from "../../../../../../src/contexts/mooc/courses/application/search-all/AllCoursesSearcher";
+import { AllCoursesPaginatedSearcher } from "../../../../../../src/contexts/mooc/courses/application/search-all-paginated/AllCoursesPaginatedSearcher";
 import { CourseMother } from "../../domain/CourseMother";
 import { MockCourseRepository } from "../../infrastructure/MockCourseRepository";
 
-describe("AllCoursesSearcher should", () => {
+describe("AllCoursesPaginatedSearcher should", () => {
 	const repository = new MockCourseRepository();
-	const searcher = new AllCoursesSearcher(repository);
+	const searcher = new AllCoursesPaginatedSearcher(repository);
 
 	it("search all courses", async () => {
 		const expectedCourses = [CourseMother.create(), CourseMother.create()];
