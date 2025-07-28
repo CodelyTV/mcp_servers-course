@@ -6,6 +6,9 @@ Content-Type: application/json
 GET http://localhost:3000/api/mooc/courses/paginated?cursor=Z1JUMg==
 Content-Type: application/json
 
+### Find similar course by name
+GET http://localhost:3000/api/mooc/courses/by-similar-name?name=Curso%20de%20React
+Content-Type: application/json
 
 ### Search similar courses
 GET http://localhost:3000/api/mooc/courses/similar-to-courses?ids=wuzn,xcih,u2rx

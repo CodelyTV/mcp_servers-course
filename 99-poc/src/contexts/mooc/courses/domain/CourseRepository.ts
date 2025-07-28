@@ -15,4 +15,6 @@ export abstract class CourseRepository {
 	abstract searchByIds(ids: CourseId[]): Promise<Course[]>;
 
 	abstract searchSimilar(ids: CourseId[]): Promise<Course[]>;
+
+	abstract searchBySimilarName(name: string): Promise<Course | null>;
 }

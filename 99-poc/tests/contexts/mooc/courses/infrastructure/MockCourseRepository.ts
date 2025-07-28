@@ -9,6 +9,7 @@ export class MockCourseRepository implements CourseRepository {
 	private readonly mockSearchByIds = jest.fn();
 	private readonly mockSearchSimilar = jest.fn();
 	private readonly mockSearchAllPaginated = jest.fn();
+	private readonly mockSearchBySimilarName = jest.fn();
 
 	async save(course: Course): Promise<void> {
 		expect(this.mockSave).toHaveBeenCalledWith(course.toPrimitives());
@@ -42,6 +43,12 @@ export class MockCourseRepository implements CourseRepository {
 		expect(this.mockSearchAllPaginated).toHaveBeenCalledWith(lastCourseId);
 
 		return this.mockSearchAllPaginated() as Promise<Course[]>;
+	}
+
+	async searchBySimilarName(name: string): Promise<Course | null> {
+		expect(this.mockSearchBySimilarName).toHaveBeenCalledWith(name);
+
+		return this.mockSearchBySimilarName() as Promise<Course | null>;
 	}
 
 	shouldSave(course: Course): void {
@@ -90,5 +97,15 @@ export class MockCourseRepository implements CourseRepository {
 
 	shouldSearchAllAndReturnEmpty(): void {
 		this.mockSearchAll.mockReturnValueOnce([]);
+	}
+
+	shouldSearchBySimilarName(name: string, course: Course): void {
+		this.mockSearchBySimilarName(name);
+		this.mockSearchBySimilarName.mockReturnValueOnce(course);
+	}
+
+	shouldSearchBySimilarNameAndReturnNull(name: string): void {
+		this.mockSearchBySimilarName(name);
+		this.mockSearchBySimilarName.mockReturnValueOnce(null);
 	}
 }

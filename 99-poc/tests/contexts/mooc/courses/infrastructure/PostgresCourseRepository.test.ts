@@ -317,4 +317,68 @@ describe("PostgresCourseRepository should", () => {
 			expect(similarCourses).not.toContainEqual(dddCourse);
 		});
 	});
+
+	describe("searchBySimilarName", () => {
+		it("return null when no courses exist", async () => {
+			const searchName = "JavaScript";
+
+			const result = await repository.searchBySimilarName(searchName);
+
+			expect(result).toBeNull();
+		});
+
+		it("return course with most similar name using embeddings", async () => {
+			const reactCourse = CourseMother.create({
+				name: "React Fundamentals",
+				summary: "Learn React basics",
+				categories: ["frontend", "javascript"],
+			});
+			const vueCourse = CourseMother.create({
+				name: "Vue.js Complete Guide",
+				summary: "Master Vue.js",
+				categories: ["frontend", "javascript"],
+			});
+			const pythonCourse = CourseMother.create({
+				name: "Python for Beginners",
+				summary: "Learn Python programming",
+				categories: ["backend", "python"],
+			});
+
+			await repository.save(reactCourse);
+			await repository.save(vueCourse);
+			await repository.save(pythonCourse);
+
+			const foundCourse =
+				await repository.searchBySimilarName("React development");
+
+			expect(foundCourse).toStrictEqual(reactCourse);
+		});
+
+		it("return most similar course when multiple exist", async () => {
+			const nodeCourse = CourseMother.create({
+				name: "Node.js Backend Development",
+				summary: "Build APIs with Node.js",
+				categories: ["backend", "javascript"],
+			});
+			const expressCourse = CourseMother.create({
+				name: "Express.js Framework",
+				summary: "Web framework for Node.js",
+				categories: ["backend", "javascript"],
+			});
+			const reactCourse = CourseMother.create({
+				name: "React Frontend",
+				summary: "Frontend with React",
+				categories: ["frontend", "javascript"],
+			});
+
+			await repository.save(nodeCourse);
+			await repository.save(expressCourse);
+			await repository.save(reactCourse);
+
+			const foundCourse =
+				await repository.searchBySimilarName("Node backend");
+
+			expect(foundCourse).toStrictEqual(nodeCourse);
+		});
+	});
 });

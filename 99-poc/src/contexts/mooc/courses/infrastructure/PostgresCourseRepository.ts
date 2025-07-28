@@ -132,6 +132,20 @@ export class PostgresCourseRepository
 		`;
 	}
 
+	async searchBySimilarName(name: string): Promise<Course | null> {
+		const nameEmbedding = await this.embeddingsGenerator.embedQuery(
+			`Name: ${name}`,
+		);
+		const nameEmbeddingStr = JSON.stringify(nameEmbedding);
+
+		return await this.searchOne`
+			SELECT id, name, summary, categories, published_at
+			FROM mooc.courses
+			ORDER BY embedding <=> ${nameEmbeddingStr}
+			LIMIT 1;
+		`;
+	}
+
 	protected toAggregate(row: DatabaseCourseRow): Course {
 		return Course.fromPrimitives({
 			id: row.id,
