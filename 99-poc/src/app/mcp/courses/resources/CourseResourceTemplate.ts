@@ -6,14 +6,16 @@ import { CourseNotFoundError } from "../../../../contexts/mooc/courses/domain/Co
 import { container } from "../../../../contexts/shared/infrastructure/dependency-injection/diod.config";
 import { McpResourceTemplate } from "../../../../contexts/shared/infrastructure/mcp/McpResourceTemplate";
 
-export class CourseDetailResource implements McpResourceTemplate {
+export class CourseResourceTemplate implements McpResourceTemplate {
 	name = "course-detail";
 	title = "Course Detail";
 	description = "Get detailed information about a specific course by ID";
 	uriTemplate = "courses://{id}";
 
-	async handler(uri: URL, variables: Record<string, string>) {
-		return this.getCourseData(variables.id, uri);
+	async handler(uri: URL, params: Record<string, string | string[]>) {
+		const courseId = Array.isArray(params.id) ? params.id[0] : params.id;
+
+		return this.getCourseData(courseId, uri);
 	}
 
 	private async getCourseData(courseId: string, uri: URL) {

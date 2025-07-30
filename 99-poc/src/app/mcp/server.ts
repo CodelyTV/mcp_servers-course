@@ -7,7 +7,7 @@ import {
 } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 
-import { CourseDetailResource } from "./courses/resources/CourseDetailResource";
+import { CourseResourceTemplate } from "./courses/resources/CourseResourceTemplate";
 import { CoursesResource } from "./courses/resources/CoursesResource";
 import { PingTool } from "./ping/tools/PingTool";
 
@@ -31,10 +31,12 @@ server.registerResource(
 		title: coursesResource.title,
 		description: coursesResource.description,
 	},
-	coursesResource.handler.bind(coursesResource),
+	async (_uri) => {
+		return coursesResource.handler();
+	},
 );
 
-const courseDetailResource = new CourseDetailResource();
+const courseDetailResource = new CourseResourceTemplate();
 server.registerResource(
 	courseDetailResource.name,
 	new ResourceTemplate(courseDetailResource.uriTemplate, { list: undefined }),
@@ -42,8 +44,8 @@ server.registerResource(
 		title: courseDetailResource.title,
 		description: courseDetailResource.description,
 	},
-	async (uri, variables) => {
-		return courseDetailResource.handler(uri, variables);
+	async (uri, params) => {
+		return courseDetailResource.handler(uri, params);
 	},
 );
 

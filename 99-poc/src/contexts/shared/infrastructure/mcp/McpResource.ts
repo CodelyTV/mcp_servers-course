@@ -4,7 +4,7 @@ export interface McpResource {
 	description: string;
 	uriTemplate: string;
 
-	handler(uri: URL): Promise<{
+	handler(): Promise<{
 		contents: Array<{
 			uri: string;
 			mimeType: string;

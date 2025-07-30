@@ -11,16 +11,16 @@ export class CoursesResource implements McpResource {
 	description = "Complete list of all available courses";
 	uriTemplate = "courses://all";
 
-	async handler(uri: URL) {
+	async handler() {
 		const coursesSearcher = container.get(AllCoursesSearcher);
 		const courses = await coursesSearcher.search();
 
 		return {
 			contents: [
 				{
-					uri: uri.href,
+					uri: this.uriTemplate,
 					mimeType: "application/json",
-					text: JSON.stringify(courses, null, 2),
+					text: JSON.stringify(courses),
 				},
 			],
 		};

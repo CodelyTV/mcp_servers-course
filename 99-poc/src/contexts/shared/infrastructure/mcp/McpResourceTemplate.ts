@@ -6,7 +6,7 @@ export interface McpResourceTemplate {
 
 	handler(
 		uri: URL,
-		variables: Record<string, string>,
+		paramss: Record<string, string | string[]>,
 	): Promise<{
 		contents: Array<{
 			uri: string;
