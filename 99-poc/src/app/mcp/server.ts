@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import "reflect-metadata";
 
-import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
+import {
+	McpServer,
+	ResourceTemplate,
+} from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 
 import { CourseDetailResource } from "./courses/resources/CourseDetailResource";
@@ -40,7 +43,7 @@ server.registerResource(
 		description: courseDetailResource.description,
 	},
 	async (uri, variables) => {
-		return courseDetailResource.handlerWithVariables(uri, variables);
+		return courseDetailResource.handler(uri, variables);
 	},
 );
 

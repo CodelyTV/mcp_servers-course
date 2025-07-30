@@ -4,22 +4,15 @@
 import { CourseByIdFinder } from "../../../../contexts/mooc/courses/application/find-by-id/CourseByIdFinder";
 import { CourseNotFoundError } from "../../../../contexts/mooc/courses/domain/CourseNotFoundError";
 import { container } from "../../../../contexts/shared/infrastructure/dependency-injection/diod.config";
-import { McpResource } from "../../../../contexts/shared/infrastructure/mcp/McpResource";
+import { McpResourceTemplate } from "../../../../contexts/shared/infrastructure/mcp/McpResourceTemplate";
 
-export class CourseDetailResource implements McpResource {
+export class CourseDetailResource implements McpResourceTemplate {
 	name = "course-detail";
 	title = "Course Detail";
 	description = "Get detailed information about a specific course by ID";
-	uriTemplate = "course://detail/{id}";
+	uriTemplate = "courses://{id}";
 
-	async handler(uri: URL) {
-		const pathParts = uri.pathname.split("/");
-		const courseId = pathParts[pathParts.length - 1];
-
-		return this.getCourseData(courseId, uri);
-	}
-
-	async handlerWithVariables(uri: URL, variables: any) {
+	async handler(uri: URL, variables: Record<string, string>) {
 		return this.getCourseData(variables.id, uri);
 	}
 
@@ -30,7 +23,11 @@ export class CourseDetailResource implements McpResource {
 					{
 						uri: uri.href,
 						mimeType: "application/json",
-						text: JSON.stringify({ error: "Course ID is required" }, null, 2),
+						text: JSON.stringify(
+							{ error: "Course ID is required" },
+							null,
+							2,
+						),
 					},
 				],
 			};
@@ -56,7 +53,13 @@ export class CourseDetailResource implements McpResource {
 						{
 							uri: uri.href,
 							mimeType: "application/json",
-							text: JSON.stringify({ error: `Course with ID ${courseId} not found` }, null, 2),
+							text: JSON.stringify(
+								{
+									error: `Course with ID ${courseId} not found`,
+								},
+								null,
+								2,
+							),
 						},
 					],
 				};
@@ -67,7 +70,11 @@ export class CourseDetailResource implements McpResource {
 					{
 						uri: uri.href,
 						mimeType: "application/json",
-						text: JSON.stringify({ error: "Internal server error" }, null, 2),
+						text: JSON.stringify(
+							{ error: "Internal server error" },
+							null,
+							2,
+						),
 					},
 				],
 			};
