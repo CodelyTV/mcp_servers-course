@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type,no-console */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import "reflect-metadata";
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -13,7 +13,11 @@ const server = new McpServer({
 });
 
 const pingTool = new PingTool();
-server.registerTool(pingTool.name, pingTool.description, pingTool.handler.bind(pingTool));
+server.registerTool(
+	pingTool.name,
+	pingTool.description,
+	pingTool.handler.bind(pingTool),
+);
 
 const coursesResource = new CoursesResource();
 server.registerResource(
