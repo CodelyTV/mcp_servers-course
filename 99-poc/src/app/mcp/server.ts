@@ -13,21 +13,19 @@ const server = new McpServer({
 });
 
 const pingTool = new PingTool();
-server.registerTool(pingTool.name, pingTool.description, pingTool.handler);
+server.registerTool(pingTool.name, pingTool.description, pingTool.handler.bind(pingTool));
 
 const coursesResource = new CoursesResource();
 server.registerResource(
 	coursesResource.name,
 	coursesResource.template,
 	coursesResource.description,
-	coursesResource.handler,
+	coursesResource.handler.bind(coursesResource),
 );
 
 async function main() {
 	const transport = new StdioServerTransport();
 	await server.connect(transport);
-
-	console.info("Courses MCP Server running on stdio");
 }
 
 main().catch((error) => {

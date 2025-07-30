@@ -9,7 +9,7 @@ import { McpResource } from "../../../../contexts/shared/infrastructure/mcp/McpR
 export class CoursesResource implements McpResource {
 	name = "courses";
 
-	template = new ResourceTemplate("courses://all", { list: undefined });
+	template = new ResourceTemplate("courses://all");
 
 	description = {
 		title: "All Courses",

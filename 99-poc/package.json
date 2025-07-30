@@ -13,7 +13,7 @@
 		"create-courses": "ts-node ./src/app/scripts/create-courses.ts",
 		"search-courses": "ts-node ./src/app/scripts/search-courses.ts",
 		"mcp:serve": "ts-node ./src/app/mcp/server.ts",
-		"mcp:inspect": "npx @modelcontextprotocol/inspector npm run mcp:serve"
+		"mcp:inspect": "npx @modelcontextprotocol/inspector ts-node ./src/app/mcp/server.ts"
 	},
 	"dependencies": {
 		"@langchain/core": "^0.3.66",
