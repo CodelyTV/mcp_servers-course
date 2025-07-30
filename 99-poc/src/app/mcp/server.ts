@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import "reflect-metadata";
 
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 
+import { CourseDetailResource } from "./courses/resources/CourseDetailResource";
 import { CoursesResource } from "./courses/resources/CoursesResource";
 import { PingTool } from "./ping/tools/PingTool";
 
@@ -28,6 +29,19 @@ server.registerResource(
 		description: coursesResource.description,
 	},
 	coursesResource.handler.bind(coursesResource),
+);
+
+const courseDetailResource = new CourseDetailResource();
+server.registerResource(
+	courseDetailResource.name,
+	new ResourceTemplate(courseDetailResource.uriTemplate, { list: undefined }),
+	{
+		title: courseDetailResource.title,
+		description: courseDetailResource.description,
+	},
+	async (uri, variables) => {
+		return courseDetailResource.handlerWithVariables(uri, variables);
+	},
 );
 
 async function main() {
