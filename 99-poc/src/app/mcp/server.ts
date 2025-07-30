@@ -12,7 +12,8 @@ const server = new McpServer({
 	version: "1.0.0",
 });
 
-server.registerTool(PingTool.name, PingTool.description, PingTool.handler);
+const pingTool = new PingTool();
+server.registerTool(pingTool.name, pingTool.description, pingTool.handler);
 
 const coursesResource = new CoursesResource();
 server.registerResource(
