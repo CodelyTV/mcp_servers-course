@@ -22,13 +22,17 @@ server.registerTool(
 const coursesResource = new CoursesResource();
 server.registerResource(
 	coursesResource.name,
-	coursesResource.template,
-	coursesResource.description,
+	coursesResource.uriTemplate,
+	{
+		title: coursesResource.title,
+		description: coursesResource.description,
+	},
 	coursesResource.handler.bind(coursesResource),
 );
 
 async function main() {
 	const transport = new StdioServerTransport();
+
 	await server.connect(transport);
 }
 
