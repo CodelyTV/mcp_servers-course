@@ -12,7 +12,8 @@
 		"test:ci": "jest --testMatch '**/*.ci.test.ts'",
 		"create-courses": "ts-node ./src/app/scripts/create-courses.ts",
 		"search-courses": "ts-node ./src/app/scripts/search-courses.ts",
-		"mcp-server": "ts-node ./src/app/mcp/server.ts"
+		"mcp:serve": "ts-node ./src/app/mcp/server.ts",
+		"mcp:inspect": "npx @modelcontextprotocol/inspector npm run mcp:serve"
 	},
 	"dependencies": {
 		"@langchain/core": "^0.3.66",
