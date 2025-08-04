@@ -1,6 +1,9 @@
-import { CourseByIdFinder } from "../../../../contexts/mooc/courses/application/find-by-id/CourseByIdFinder";
+import {
+	CourseByIdFinder,
+	CourseByIdFinderErrors,
+} from "../../../../contexts/mooc/courses/application/find-by-id/CourseByIdFinder";
 import { CourseNotFoundError } from "../../../../contexts/mooc/courses/domain/CourseNotFoundError";
-import { CodelyError } from "../../../../contexts/shared/domain/CodelyError";
+import { assertNever } from "../../../../contexts/shared/domain/assertNever";
 import { InvalidNanoIdError } from "../../../../contexts/shared/domain/InvalidNanoIdError";
 import { container } from "../../../../contexts/shared/infrastructure/dependency-injection/diod.config";
 import { McpResourceContentsResponse } from "../../../../contexts/shared/infrastructure/mcp/McpResourceContentsResponse";
@@ -35,27 +38,23 @@ export class CourseResourceTemplate implements McpResourceTemplate {
 	}
 
 	onError(
-		error: CodelyError,
+		error: CourseByIdFinderErrors,
 		uri: URL,
 		_params: Record<string, string | string[]>,
 	): McpResourceContentsResponse {
-		if (error instanceof CourseNotFoundError) {
-			return McpResourceContentsResponse.notFound(
-				uri.href,
-				error.message,
-			);
+		switch (true) {
+			case error instanceof CourseNotFoundError:
+				return McpResourceContentsResponse.notFound(
+					uri.href,
+					error.message,
+				);
+			case error instanceof InvalidNanoIdError:
+				return McpResourceContentsResponse.badRequest(
+					uri.href,
+					"Invalid course ID format",
+				);
+			default:
+				assertNever(error);
 		}
-
-		if (error instanceof InvalidNanoIdError) {
-			return McpResourceContentsResponse.badRequest(
-				uri.href,
-				"Invalid course ID format",
-			);
-		}
-
-		return McpResourceContentsResponse.internalError(
-			uri.href,
-			error.message,
-		);
 	}
 }
