@@ -1,0 +1,3 @@
+- [ ] gestión de errores
+- [ ] gestión de 404
+- [ ] tests

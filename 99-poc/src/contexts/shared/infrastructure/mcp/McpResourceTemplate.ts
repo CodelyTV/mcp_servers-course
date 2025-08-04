@@ -1,4 +1,4 @@
-import { McpResourceResponse } from "./McpResourceResponse";
+import { McpResourceContentsResponse } from "./McpResourceContentsResponse";
 
 export interface McpResourceTemplate {
 	name: string;
@@ -9,5 +9,5 @@ export interface McpResourceTemplate {
 	handler(
 		uri: URL,
 		params: Record<string, string | string[]>,
-	): Promise<McpResourceResponse>;
+	): Promise<McpResourceContentsResponse>;
 }
