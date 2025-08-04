@@ -18,7 +18,7 @@ export class McpClient {
 	}
 
 	async readResource(uri: string): Promise<any> {
-		return await this.executeInspectorCommand("resources/read", uri);
+		return this.executeInspectorCommand("resources/read", uri);
 	}
 
 	private async executeInspectorCommand(

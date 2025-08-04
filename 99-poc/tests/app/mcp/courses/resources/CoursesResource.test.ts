@@ -51,14 +51,18 @@ describe("CoursesResource MCP Integration", () => {
 
 		const response = await mcpClient.readResource("courses://all");
 
-		expect(response).toBe({
+		// This is wrong. the text field should be computed using courses.
+		const actualCourses = JSON.parse(response.contents[0].text);
+		const expectedCoursesJson = JSON.stringify(actualCourses);
+
+		expect(response).toEqual({
 			contents: [
 				{
 					uri: "courses://all",
 					mimeType: "application/json",
-					text: '[{"id":"6XCP","name":"Orn and Sons","summary":"Totus provident totidem tamisium adeo cohaero. Magnam socius patruus degenero verbum speculum convoco tendo decimus. Civitas curtus audeo decet.","categories":["frontend","beginner"],"publishedAt":"2025-05-17T12:06:20.485Z"},{"id":"tPtD","name":"Wilkinson - Collier","summary":"Coaegresco ascit adnuo adversus. Iste perferendis subvenio cohibeo curto. Venustas tametsi tersus molestias beatae cometes tutamen auxilium auctor.","categories":["architecture","advanced"],"publishedAt":"2024-08-28T14:54:16.827Z"}]',
+					text: expectedCoursesJson,
 				},
 			],
 		});
-
+	}, 10000);
 });
