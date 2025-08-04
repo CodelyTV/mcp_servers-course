@@ -32,7 +32,7 @@ server.registerResource(
 		description: coursesResource.description,
 	},
 	async (_uri) => {
-		return { contents: coursesResource.handler() };
+		return { contents: await coursesResource.handler() };
 	},
 );
 
@@ -45,7 +45,7 @@ server.registerResource(
 		description: courseDetailResource.description,
 	},
 	async (uri, params) => {
-		return { contents: courseDetailResource.handler(uri, params) };
+		return { contents: await courseDetailResource.handler(uri, params) };
 	},
 );
 
