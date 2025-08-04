@@ -52,13 +52,21 @@ server.registerResource(
 
 			return { contents: response.contents };
 		} catch (error) {
-			const errorResponse = courseDetailResource.onError(
-				error,
-				uri,
-				params,
-			);
-
-			return { contents: errorResponse.contents };
+			// Return internal server error for any unhandled exceptions
+			return {
+				contents: [
+					{
+						uri: uri.href,
+						mimeType: "application/json",
+						text: JSON.stringify({
+							error: {
+								code: -32603,
+								message: "Internal server error",
+							},
+						}),
+					},
+				],
+			};
 		}
 	},
 );

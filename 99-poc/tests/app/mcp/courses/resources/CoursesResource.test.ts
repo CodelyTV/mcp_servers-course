@@ -19,13 +19,13 @@ describe("CoursesResource MCP Integration", () => {
 		await connection.end();
 	});
 
-	it("should list courses resource via MCP inspector", async () => {
+	it("should list courses resource", async () => {
 		const resources = await mcpClient.listResources();
 
 		expect(resources).toContain("courses://all");
 	}, 10000);
 
-	it("should list empty courses when there are not", async () => {
+	it("should return empty list reading the resource when empty", async () => {
 		const response = await mcpClient.readResource("courses://all");
 
 		expect(response).toEqual({
@@ -39,7 +39,7 @@ describe("CoursesResource MCP Integration", () => {
 		});
 	});
 
-	it("should list existing courses", async () => {
+	it("should return existing courses reading the resource", async () => {
 		const course = CourseMother.createdToday();
 		const anotherCourse = CourseMother.createdYesterday();
 		const courses = [course, anotherCourse];
