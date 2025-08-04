@@ -32,7 +32,7 @@ export const GET = withErrorHandling(
 
 		const similarCourses = await searcher.search(courseIds);
 
-		return NextResponse.json(similarCourses);
+		return HttpNextResponse.json(similarCourses);
 	},
 	(error: SimilarCoursesSearcherErrors) => {
 		return HttpNextResponse.codelyError(error, 400);

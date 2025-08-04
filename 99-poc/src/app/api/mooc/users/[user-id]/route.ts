@@ -24,7 +24,7 @@ export async function GET(
 
 			const user = await finder.find(userId);
 
-			return NextResponse.json(user);
+			return HttpNextResponse.json(user);
 		},
 		(error: UserFinderErrors) => {
 			return HttpNextResponse.codelyError(error, 404);

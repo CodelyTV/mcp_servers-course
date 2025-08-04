@@ -18,7 +18,7 @@ export const GET = withErrorHandling(
 
 		const courses = await searcher.search(cursor);
 
-		return NextResponse.json(courses);
+		return HttpNextResponse.json(courses);
 	},
 	(error: AllCoursesPaginatedSearcherErrors) => {
 		return HttpNextResponse.codelyError(error, 400);

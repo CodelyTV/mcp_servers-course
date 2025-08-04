@@ -22,7 +22,7 @@ export const GET = withErrorHandling(
 
 		const course = await finder.find(name);
 
-		return NextResponse.json(course.toPrimitives());
+		return HttpNextResponse.json(course.toPrimitives());
 	},
 	(error: CourseBySimilarNameFinderErrors) => {
 		return HttpNextResponse.codelyError(error, 404);
