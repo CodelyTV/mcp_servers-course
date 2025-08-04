@@ -1,9 +1,6 @@
-import {
-	CourseByIdFinder,
-	CourseByIdFinderErrors,
-} from "../../../../contexts/mooc/courses/application/find-by-id/CourseByIdFinder";
+import { CourseByIdFinder } from "../../../../contexts/mooc/courses/application/find-by-id/CourseByIdFinder";
 import { CourseNotFoundError } from "../../../../contexts/mooc/courses/domain/CourseNotFoundError";
-import { assertNever } from "../../../../contexts/shared/domain/assertNever";
+import { CodelyError } from "../../../../contexts/shared/domain/CodelyError";
 import { container } from "../../../../contexts/shared/infrastructure/dependency-injection/diod.config";
 import { McpResourceContentsResponse } from "../../../../contexts/shared/infrastructure/mcp/McpResourceContentsResponse";
 import { McpResourceTemplate } from "../../../../contexts/shared/infrastructure/mcp/McpResourceTemplate";
@@ -37,18 +34,20 @@ export class CourseResourceTemplate implements McpResourceTemplate {
 	}
 
 	onError(
-		error: CourseByIdFinderErrors,
+		error: CodelyError,
 		uri: URL,
 		_params: Record<string, string | string[]>,
 	): McpResourceContentsResponse {
-		switch (true) {
-			case error instanceof CourseNotFoundError:
-				return McpResourceContentsResponse.notFound(
-					uri.href,
-					error.message,
-				);
-			default:
-				assertNever(error);
+		if (error instanceof CourseNotFoundError) {
+			return McpResourceContentsResponse.notFound(
+				uri.href,
+				error.message,
+			);
 		}
+
+		return McpResourceContentsResponse.internalError(
+			uri.href,
+			error.message,
+		);
 	}
 }

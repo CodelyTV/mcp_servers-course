@@ -54,7 +54,7 @@ server.registerResource(
 
 			return { contents: response.contents };
 		} catch (error) {
-			if (error instanceof CodelyError && courseDetailResource.onError) {
+			if (error instanceof CodelyError) {
 				const response = courseDetailResource.onError(
 					error,
 					uri,

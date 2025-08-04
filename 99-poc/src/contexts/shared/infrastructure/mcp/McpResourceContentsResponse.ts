@@ -35,7 +35,10 @@ export class McpResourceContentsResponse {
 		]);
 	}
 
-	static internalError(uri: string): McpResourceContentsResponse {
+	static internalError(
+		uri: string,
+		message?: string,
+	): McpResourceContentsResponse {
 		return new McpResourceContentsResponse([
 			{
 				uri,
@@ -43,7 +46,7 @@ export class McpResourceContentsResponse {
 				text: JSON.stringify({
 					error: {
 						code: -32603, // Internal error: https://modelcontextprotocol.io/specification/2025-06-18/server/resources#error-handling
-						message: "Internal server error",
+						message: message ?? "Internal server error",
 					},
 				}),
 			},

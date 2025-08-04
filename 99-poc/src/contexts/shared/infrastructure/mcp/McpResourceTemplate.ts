@@ -13,8 +13,8 @@ export interface McpResourceTemplate {
 		params: Record<string, string | string[]>,
 	): Promise<McpResourceContentsResponse>;
 
-	onError?<T extends CodelyError>(
-		error: T,
+	onError?(
+		error: CodelyError,
 		uri: URL,
 		params: Record<string, string | string[]>,
 	): McpResourceContentsResponse;
