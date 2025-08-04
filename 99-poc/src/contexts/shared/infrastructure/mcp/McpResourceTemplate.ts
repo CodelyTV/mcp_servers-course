@@ -10,4 +10,10 @@ export interface McpResourceTemplate {
 		uri: URL,
 		params: Record<string, string | string[]>,
 	): Promise<McpResourceContentsResponse>;
+
+	onError?(
+		error: unknown,
+		uri: URL,
+		params: Record<string, string | string[]>,
+	): McpResourceContentsResponse;
 }

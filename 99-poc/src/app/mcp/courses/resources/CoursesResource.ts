@@ -13,12 +13,6 @@ export class CoursesResource implements McpResource {
 		const coursesSearcher = container.get(AllCoursesSearcher);
 		const courses = await coursesSearcher.search();
 
-		return [
-			{
-				uri: this.uriTemplate,
-				mimeType: "application/json",
-				text: JSON.stringify(courses),
-			},
-		];
+		return McpResourceContentsResponse.success(this.uriTemplate, courses);
 	}
 }

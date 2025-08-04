@@ -32,7 +32,9 @@ server.registerResource(
 		description: coursesResource.description,
 	},
 	async (_uri) => {
-		return { contents: await coursesResource.handler() };
+		const response = await coursesResource.handler();
+
+		return { contents: response.toArray() };
 	},
 );
 
@@ -45,7 +47,19 @@ server.registerResource(
 		description: courseDetailResource.description,
 	},
 	async (uri, params) => {
-		return { contents: await courseDetailResource.handler(uri, params) };
+		try {
+			const response = await courseDetailResource.handler(uri, params);
+
+			return { contents: response.toArray() };
+		} catch (error) {
+			const errorResponse = courseDetailResource.onError(
+				error,
+				uri,
+				params,
+			);
+
+			return { contents: errorResponse.toArray() };
+		}
 	},
 );
 
