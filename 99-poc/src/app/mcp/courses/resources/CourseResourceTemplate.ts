@@ -1,6 +1,7 @@
 import { CourseByIdFinder } from "../../../../contexts/mooc/courses/application/find-by-id/CourseByIdFinder";
 import { CourseNotFoundError } from "../../../../contexts/mooc/courses/domain/CourseNotFoundError";
 import { CodelyError } from "../../../../contexts/shared/domain/CodelyError";
+import { InvalidNanoIdError } from "../../../../contexts/shared/domain/InvalidNanoIdError";
 import { container } from "../../../../contexts/shared/infrastructure/dependency-injection/diod.config";
 import { McpResourceContentsResponse } from "../../../../contexts/shared/infrastructure/mcp/McpResourceContentsResponse";
 import { McpResourceTemplate } from "../../../../contexts/shared/infrastructure/mcp/McpResourceTemplate";
@@ -42,6 +43,13 @@ export class CourseResourceTemplate implements McpResourceTemplate {
 			return McpResourceContentsResponse.notFound(
 				uri.href,
 				error.message,
+			);
+		}
+
+		if (error instanceof InvalidNanoIdError) {
+			return McpResourceContentsResponse.badRequest(
+				uri.href,
+				"Invalid course ID format",
 			);
 		}
 

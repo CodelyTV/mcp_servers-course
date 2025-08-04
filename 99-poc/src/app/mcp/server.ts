@@ -1,10 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import "reflect-metadata";
 
-import {
-	McpServer,
-	ResourceTemplate,
-} from "@modelcontextprotocol/sdk/server/mcp.js";
+import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 
 import { CodelyError } from "../../contexts/shared/domain/CodelyError";
@@ -43,7 +40,9 @@ server.registerResource(
 const courseDetailResource = new CourseResourceTemplate();
 server.registerResource(
 	courseDetailResource.name,
-	new ResourceTemplate(courseDetailResource.uriTemplate, { list: undefined }),
+	new ResourceTemplate(courseDetailResource.uriTemplate, { 
+		list: async () => ({ resources: [] }) 
+	}),
 	{
 		title: courseDetailResource.title,
 		description: courseDetailResource.description,
@@ -54,7 +53,8 @@ server.registerResource(
 
 			return { contents: response.contents };
 		} catch (error) {
-			if (error instanceof CodelyError) {
+			console.error("Error caught:", error, "Is CodelyError:", error instanceof CodelyError);
+			if (error instanceof CodelyError && courseDetailResource.onError) {
 				const response = courseDetailResource.onError(
 					error,
 					uri,

@@ -20,7 +20,7 @@ describe("CourseResourceTemplate MCP Integration", () => {
 		await connection.end();
 	});
 
-	it("should return internal server error when course ID is invalid", async () => {
+	it("should return bad request error when course ID is invalid", async () => {
 		const invalidId = "invalid-id";
 		const response = await mcpClient.readResource(`courses://${invalidId}`);
 
@@ -31,8 +31,8 @@ describe("CourseResourceTemplate MCP Integration", () => {
 					mimeType: "application/json",
 					text: JSON.stringify({
 						error: {
-							code: -32603,
-							message: "Internal server error",
+							code: -32000,
+							message: "Invalid course ID format",
 						},
 					}),
 				},
@@ -40,7 +40,7 @@ describe("CourseResourceTemplate MCP Integration", () => {
 		});
 	});
 
-	it("should return internal server error when course does not exist", async () => {
+	it("should return not found error when course does not exist", async () => {
 		const nonExistentId = CourseIdMother.create().value;
 		const response = await mcpClient.readResource(
 			`courses://${nonExistentId}`,
@@ -53,8 +53,11 @@ describe("CourseResourceTemplate MCP Integration", () => {
 					mimeType: "application/json",
 					text: JSON.stringify({
 						error: {
-							code: -32603,
-							message: "Internal server error",
+							code: -32002,
+							message: "CourseNotFoundError",
+							data: {
+								uri: `courses://${nonExistentId}`,
+							},
 						},
 					}),
 				},
