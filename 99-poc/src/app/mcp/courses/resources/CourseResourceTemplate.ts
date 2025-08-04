@@ -3,6 +3,7 @@ import {
 	CourseByIdFinderErrors,
 } from "../../../../contexts/mooc/courses/application/find-by-id/CourseByIdFinder";
 import { CourseNotFoundError } from "../../../../contexts/mooc/courses/domain/CourseNotFoundError";
+import { assertNever } from "../../../../contexts/shared/domain/assertNever";
 import { container } from "../../../../contexts/shared/infrastructure/dependency-injection/diod.config";
 import { McpResourceContentsResponse } from "../../../../contexts/shared/infrastructure/mcp/McpResourceContentsResponse";
 import { McpResourceTemplate } from "../../../../contexts/shared/infrastructure/mcp/McpResourceTemplate";
@@ -40,11 +41,14 @@ export class CourseResourceTemplate implements McpResourceTemplate {
 		uri: URL,
 		params: Record<string, string | string[]>,
 	): McpResourceContentsResponse {
-		if (error instanceof CourseNotFoundError) {
-			return McpResourceContentsResponse.notFound(
-				uri.href,
-				"User does not exist",
-			);
+		switch (true) {
+			case error instanceof CourseNotFoundError:
+				return McpResourceContentsResponse.notFound(
+					uri.href,
+					error.message,
+				);
+			default:
+				assertNever(error);
 		}
 	}
 }
