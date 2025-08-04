@@ -7,6 +7,8 @@ import {
 } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 
+import { CodelyError } from "../../contexts/shared/domain/CodelyError";
+
 import { CourseResourceTemplate } from "./courses/resources/CourseResourceTemplate";
 import { CoursesResource } from "./courses/resources/CoursesResource";
 import { PingTool } from "./ping/tools/PingTool";
@@ -48,11 +50,20 @@ server.registerResource(
 	},
 	async (uri, params) => {
 		try {
-			const response = await courseDetailResource.handler(uri, params);
+			const response = await courseDetailResource.handle(uri, params);
 
 			return { contents: response.contents };
 		} catch (error) {
-			// Return internal server error for any unhandled exceptions
+			if (error instanceof CodelyError && courseDetailResource.onError) {
+				const response = courseDetailResource.onError(
+					error,
+					uri,
+					params,
+				);
+
+				return { contents: response.contents };
+			}
+
 			return {
 				contents: [
 					{

@@ -1,3 +1,5 @@
+import { CodelyError } from "../../domain/CodelyError";
+
 import { McpResourceContentsResponse } from "./McpResourceContentsResponse";
 
 export interface McpResourceTemplate {
@@ -6,13 +8,13 @@ export interface McpResourceTemplate {
 	description: string;
 	uriTemplate: string;
 
-	handler(
+	handle(
 		uri: URL,
 		params: Record<string, string | string[]>,
 	): Promise<McpResourceContentsResponse>;
 
-	onError?(
-		error: unknown,
+	onError?<T extends CodelyError>(
+		error: T,
 		uri: URL,
 		params: Record<string, string | string[]>,
 	): McpResourceContentsResponse;

@@ -14,7 +14,7 @@ export class CourseResourceTemplate implements McpResourceTemplate {
 	description = "Get detailed information about a specific course by ID";
 	uriTemplate = "courses://{id}";
 
-	async handler(
+	async handle(
 		uri: URL,
 		params: Record<string, string | string[]>,
 	): Promise<McpResourceContentsResponse> {
@@ -39,7 +39,7 @@ export class CourseResourceTemplate implements McpResourceTemplate {
 	onError(
 		error: CourseByIdFinderErrors,
 		uri: URL,
-		params: Record<string, string | string[]>,
+		_params: Record<string, string | string[]>,
 	): McpResourceContentsResponse {
 		switch (true) {
 			case error instanceof CourseNotFoundError:
