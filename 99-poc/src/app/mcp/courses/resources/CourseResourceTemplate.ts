@@ -18,7 +18,7 @@ export class CourseResourceTemplate implements McpResourceTemplate {
 		const courseId = Array.isArray(params.id) ? params.id[0] : params.id;
 
 		if (!courseId) {
-			return McpResourceContentsResponse.invalidRequest(
+			return McpResourceContentsResponse.badRequest(
 				uri.href,
 				"Course ID is required",
 			);
@@ -45,7 +45,7 @@ export class CourseResourceTemplate implements McpResourceTemplate {
 		}
 
 		if (error instanceof CodelyError) {
-			return McpResourceContentsResponse.invalidRequest(
+			return McpResourceContentsResponse.badRequest(
 				uri.href,
 				error.message,
 			);

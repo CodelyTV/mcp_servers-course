@@ -1,6 +1,6 @@
 export class McpResourceContentsResponse {
 	private constructor(
-		private readonly contents: {
+		readonly contents: {
 			uri: string;
 			mimeType: string;
 			text: string;
@@ -12,7 +12,7 @@ export class McpResourceContentsResponse {
 			{
 				uri,
 				mimeType: "application/json",
-				text: JSON.stringify(data, null, 2),
+				text: JSON.stringify(data),
 			},
 		]);
 	}
@@ -22,43 +22,35 @@ export class McpResourceContentsResponse {
 			{
 				uri,
 				mimeType: "application/json",
-				text: JSON.stringify(
-					{
-						error: {
-							code: -32602, // ErrorCode.InvalidParams
-							message,
+				text: JSON.stringify({
+					error: {
+						code: -32002, // Resource not found: https://modelcontextprotocol.io/specification/2025-06-18/server/resources#error-handling
+						message,
+						data: {
+							uri,
 						},
 					},
-					null,
-					2,
-				),
+				}),
 			},
 		]);
 	}
 
-	static internalError(
-		uri: string,
-		message = "Internal server error",
-	): McpResourceContentsResponse {
+	static internalError(uri: string): McpResourceContentsResponse {
 		return new McpResourceContentsResponse([
 			{
 				uri,
 				mimeType: "application/json",
-				text: JSON.stringify(
-					{
-						error: {
-							code: -32603, // ErrorCode.InternalError
-							message,
-						},
+				text: JSON.stringify({
+					error: {
+						code: -32603, // Internal error: https://modelcontextprotocol.io/specification/2025-06-18/server/resources#error-handling
+						message: "Internal server error",
 					},
-					null,
-					2,
-				),
+				}),
 			},
 		]);
 	}
 
-	static invalidRequest(
+	static badRequest(
 		uri: string,
 		message: string,
 	): McpResourceContentsResponse {
@@ -66,25 +58,13 @@ export class McpResourceContentsResponse {
 			{
 				uri,
 				mimeType: "application/json",
-				text: JSON.stringify(
-					{
-						error: {
-							code: -32600, // ErrorCode.InvalidRequest
-							message,
-						},
+				text: JSON.stringify({
+					error: {
+						code: -32000, // Bad Request: https://github.com/modelcontextprotocol/typescript-sdk/tree/0551cc52b8920d7da46a4519b42f335a0a852b6c?tab=readme-ov-file#streamable-http
+						message,
 					},
-					null,
-					2,
-				),
+				}),
 			},
 		]);
-	}
-
-	toArray(): {
-		uri: string;
-		mimeType: string;
-		text: string;
-	}[] {
-		return this.contents;
 	}
 }

@@ -34,7 +34,7 @@ server.registerResource(
 	async (_uri) => {
 		const response = await coursesResource.handler();
 
-		return { contents: response.toArray() };
+		return { contents: response.contents };
 	},
 );
 
@@ -50,7 +50,7 @@ server.registerResource(
 		try {
 			const response = await courseDetailResource.handler(uri, params);
 
-			return { contents: response.toArray() };
+			return { contents: response.contents };
 		} catch (error) {
 			const errorResponse = courseDetailResource.onError(
 				error,
@@ -58,7 +58,7 @@ server.registerResource(
 				params,
 			);
 
-			return { contents: errorResponse.toArray() };
+			return { contents: errorResponse.contents };
 		}
 	},
 );
