@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker";
 
 import { Course } from "../../../../../src/contexts/mooc/courses/domain/Course";
+import { DateMother } from "../../users/domain/DateMother";
 
 import { CourseIdMother } from "./CourseIdMother";
 
@@ -40,6 +41,18 @@ export class CourseMother {
 
 	static createList(count: number): Course[] {
 		return Array.from({ length: count }, () => this.create());
+	}
+
+	static createdToday(): Course {
+		return this.create({
+			publishedAt: DateMother.today(),
+		});
+	}
+
+	static createdYesterday(): Course {
+		return this.create({
+			publishedAt: DateMother.yesterday(),
+		});
 	}
 
 	static codelyStyleCourses(): Course[] {

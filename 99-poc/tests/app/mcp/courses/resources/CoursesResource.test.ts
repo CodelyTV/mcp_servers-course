@@ -40,9 +40,8 @@ describe("CoursesResource MCP Integration", () => {
 	});
 
 	it("should list existing courses", async () => {
-		const course = CourseMother.create();
-		const anotherCourse = CourseMother.create();
-
+		const course = CourseMother.createdToday();
+		const anotherCourse = CourseMother.createdYesterday();
 		const courses = [course, anotherCourse];
 
 		await Promise.all(
@@ -51,18 +50,16 @@ describe("CoursesResource MCP Integration", () => {
 
 		const response = await mcpClient.readResource("courses://all");
 
-		// This is wrong. the text field should be computed using courses.
-		const actualCourses = JSON.parse(response.contents[0].text);
-		const expectedCoursesJson = JSON.stringify(actualCourses);
-
 		expect(response).toEqual({
 			contents: [
 				{
 					uri: "courses://all",
 					mimeType: "application/json",
-					text: expectedCoursesJson,
+					text: JSON.stringify(
+						courses.map((course) => course.toPrimitives()),
+					),
 				},
 			],
 		});
-	}, 10000);
+	});
 });
