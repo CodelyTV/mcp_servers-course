@@ -28,9 +28,15 @@ describe("CoursesResource MCP Integration", () => {
 	it("should list empty courses when there are not", async () => {
 		const response = await mcpClient.readResource("courses://all");
 
-		expect(response.contents).toBeDefined();
-		expect(response.contents[0]).toBeDefined();
-		expect(response.contents[0].text).toBe("[]");
+		expect(response.contents).toEqual({
+			contents: [
+				{
+					uri: "courses://all",
+					mimeType: "application/json",
+					text: "[]",
+				},
+			],
+		});
 	}, 10000);
 
 	it("should list existing courses", async () => {
@@ -47,7 +53,7 @@ describe("CoursesResource MCP Integration", () => {
 
 		expect(response.contents).toBeDefined();
 		expect(response.contents[0]).toBeDefined();
-		const coursesData = JSON.parse(response.contents[0].text) as Array<{
+		const coursesData = response.contents[0].text as Array<{
 			id: string;
 		}>;
 		expect(coursesData).toHaveLength(2);

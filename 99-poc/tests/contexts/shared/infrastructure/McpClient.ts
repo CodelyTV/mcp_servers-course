@@ -66,6 +66,16 @@ export class McpClient {
 				try {
 					const output = stdout.trim();
 					const response = JSON.parse(output);
+					
+					// Parse JSON content in text fields
+					if (response.contents?.[0]?.text) {
+						try {
+							response.contents[0].text = JSON.parse(response.contents[0].text);
+						} catch {
+							// If JSON parsing fails, keep original text
+						}
+					}
+					
 					resolve(response);
 				} catch (error) {
 					reject(error);
