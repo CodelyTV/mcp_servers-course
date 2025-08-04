@@ -27,7 +27,7 @@ export class McpClient {
 			];
 
 			if (uri) {
-				args.push("--arguments", JSON.stringify({ uri }));
+				args.push("--uri", uri);
 			}
 
 			args.push("ts-node", this.serverPath);
