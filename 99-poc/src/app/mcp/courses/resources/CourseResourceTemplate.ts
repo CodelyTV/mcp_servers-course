@@ -2,13 +2,14 @@ import {
 	CourseByIdFinder,
 	CourseByIdFinderErrors,
 } from "../../../../contexts/mooc/courses/application/find-by-id/CourseByIdFinder";
-import { CourseNotFoundError } from "../../../../contexts/mooc/courses/domain/CourseNotFoundError";
 import { assertNever } from "../../../../contexts/shared/domain/assertNever";
-import { InvalidNanoIdError } from "../../../../contexts/shared/domain/InvalidNanoIdError";
 import { container } from "../../../../contexts/shared/infrastructure/dependency-injection/diod.config";
 import { McpResourceContentsResponse } from "../../../../contexts/shared/infrastructure/mcp/McpResourceContentsResponse";
 import { McpResourceTemplate } from "../../../../contexts/shared/infrastructure/mcp/McpResourceTemplate";
 
+function match<T>(value: T): T {
+	return value;
+}
 export class CourseResourceTemplate implements McpResourceTemplate {
 	name = "course-detail";
 	title = "Course Detail";
@@ -42,13 +43,13 @@ export class CourseResourceTemplate implements McpResourceTemplate {
 		uri: URL,
 		_params: Record<string, string | string[]>,
 	): McpResourceContentsResponse {
-		switch (true) {
-			case error instanceof CourseNotFoundError:
+		switch (error.message) {
+			case "CourseNotFoundError":
 				return McpResourceContentsResponse.notFound(
 					uri.href,
 					error.message,
 				);
-			case error instanceof InvalidNanoIdError:
+			case "InvalidNanoIdError":
 				return McpResourceContentsResponse.badRequest(
 					uri.href,
 					"Invalid course ID format",

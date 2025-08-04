@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/explicit-function-return-type,@typescript-eslint/no-unnecessary-condition */
 import "reflect-metadata";
 
 import {
@@ -6,6 +6,8 @@ import {
 	ResourceTemplate,
 } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+
+import { CourseByIdFinderErrors } from "../../contexts/mooc/courses/application/find-by-id/CourseByIdFinder";
 
 import { CourseResourceTemplate } from "./courses/resources/CourseResourceTemplate";
 import { CoursesResource } from "./courses/resources/CoursesResource";
@@ -54,9 +56,9 @@ server.registerResource(
 
 			return { contents: response.contents };
 		} catch (error) {
-			if (error instanceof CourseByIdFinderErrors) {
+			if (courseDetailResource.onError) {
 				const response = courseDetailResource.onError(
-					error,
+					error as CourseByIdFinderErrors,
 					uri,
 					params,
 				);
