@@ -51,17 +51,14 @@ describe("CoursesResource MCP Integration", () => {
 
 		const response = await mcpClient.readResource("courses://all");
 
-		expect(response.contents).toBeDefined();
-		expect(response.contents.contents).toBeDefined();
-		expect(response.contents.contents[0]).toBeDefined();
-		const coursesData = JSON.parse(
-			response.contents.contents[0].text,
-		) as Array<{
-			id: string;
-		}>;
-		expect(coursesData).toHaveLength(2);
-		expect(coursesData.map((c) => c.id)).toEqual(
-			expect.arrayContaining([course.id.value, anotherCourse.id.value]),
-		);
-	}, 10000);
+		expect(response).toBe({
+			contents: [
+				{
+					uri: "courses://all",
+					mimeType: "application/json",
+					text: '[{"id":"6XCP","name":"Orn and Sons","summary":"Totus provident totidem tamisium adeo cohaero. Magnam socius patruus degenero verbum speculum convoco tendo decimus. Civitas curtus audeo decet.","categories":["frontend","beginner"],"publishedAt":"2025-05-17T12:06:20.485Z"},{"id":"tPtD","name":"Wilkinson - Collier","summary":"Coaegresco ascit adnuo adversus. Iste perferendis subvenio cohibeo curto. Venustas tametsi tersus molestias beatae cometes tutamen auxilium auctor.","categories":["architecture","advanced"],"publishedAt":"2024-08-28T14:54:16.827Z"}]',
+				},
+			],
+		});
+
 });
