@@ -37,7 +37,7 @@ describe("CoursesResource MCP Integration", () => {
 				},
 			],
 		});
-	}, 10000);
+	});
 
 	it("should list existing courses", async () => {
 		const course = CourseMother.create();
