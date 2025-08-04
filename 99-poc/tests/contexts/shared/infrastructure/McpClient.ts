@@ -9,15 +9,30 @@ export class McpClient {
 	}
 
 	async listResources(): Promise<string[]> {
+		const response = await this.executeInspectorCommand("resources/list");
+		return response.resources?.map((r: any) => r.uri) || [];
+	}
+
+	async readResource(uri: string): Promise<any> {
+		return this.executeInspectorCommand("resources/read", uri);
+	}
+
+	private async executeInspectorCommand(method: string, uri?: string): Promise<any> {
 		return new Promise((resolve, reject) => {
-			const process = spawn("npx", [
+			const args = [
 				"@modelcontextprotocol/inspector",
 				"--cli",
 				"--method",
-				"resources/list",
-				"ts-node",
-				this.serverPath,
-			]);
+				method,
+			];
+
+			if (uri) {
+				args.push("--arguments", JSON.stringify({ uri }));
+			}
+
+			args.push("ts-node", this.serverPath);
+
+			const process = spawn("npx", args);
 
 			let stdout = "";
 			let stderr = "";
@@ -44,9 +59,7 @@ export class McpClient {
 				try {
 					const output = stdout.trim();
 					const response = JSON.parse(output);
-					const resources =
-						response.resources?.map((r: any) => r.uri) || [];
-					resolve(resources);
+					resolve(response);
 				} catch (error) {
 					reject(error);
 				}
