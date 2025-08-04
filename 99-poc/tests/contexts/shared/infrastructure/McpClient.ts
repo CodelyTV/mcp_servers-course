@@ -1,7 +1,10 @@
 import { spawn } from "child_process";
 
 export class McpClient {
-	constructor(private readonly serverPath: string) {}
+	constructor(
+		private readonly runtime: string,
+		private readonly serverPath: string,
+	) {}
 
 	async listTools(): Promise<string[]> {
 		// npx @modelcontextprotocol/inspector --cli ts-node this.serverPath
@@ -10,6 +13,7 @@ export class McpClient {
 
 	async listResources(): Promise<string[]> {
 		const response = await this.executeInspectorCommand("resources/list");
+
 		return response.resources?.map((r: any) => r.uri) || [];
 	}
 
@@ -17,7 +21,10 @@ export class McpClient {
 		return this.executeInspectorCommand("resources/read", uri);
 	}
 
-	private async executeInspectorCommand(method: string, uri?: string): Promise<any> {
+	private async executeInspectorCommand(
+		method: string,
+		uri?: string,
+	): Promise<any> {
 		return new Promise((resolve, reject) => {
 			const args = [
 				"@modelcontextprotocol/inspector",
@@ -30,7 +37,7 @@ export class McpClient {
 				args.push("--uri", uri);
 			}
 
-			args.push("ts-node", this.serverPath);
+			args.push(this.runtime, this.serverPath);
 
 			const process = spawn("npx", args);
 

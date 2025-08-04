@@ -7,7 +7,7 @@ import { CourseMother } from "../../../../contexts/mooc/courses/domain/CourseMot
 import { McpClient } from "../../../../contexts/shared/infrastructure/McpClient";
 
 describe("CoursesResource MCP Integration", () => {
-	const mcpClient = new McpClient("./src/app/mcp/server.ts");
+	const mcpClient = new McpClient("ts-node", "./src/app/mcp/server.ts");
 	const courseRepository = container.get(CourseRepository);
 	const connection = container.get(PostgresConnection);
 
@@ -33,7 +33,7 @@ describe("CoursesResource MCP Integration", () => {
 		expect(response.contents[0].text).toBe("[]");
 	}, 10000);
 
-	it("should list existing courses courses", async () => {
+	it("should list existing courses", async () => {
 		const course = CourseMother.create();
 		const anotherCourse = CourseMother.create();
 
