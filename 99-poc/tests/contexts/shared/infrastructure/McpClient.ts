@@ -6,15 +6,20 @@ export class McpClient {
 		private readonly serverPath: string,
 	) {}
 
-	async listTools(): Promise<string[]> {
-		// npx @modelcontextprotocol/inspector --cli ts-node this.serverPath
-		return [];
+	async initialize(): Promise<any> {
+		return this.executeInspectorCommand("initialize");
 	}
 
-	async listResources(): Promise<string[]> {
+	async listTools(): Promise<any[]> {
+		const response = await this.executeInspectorCommand("tools/list");
+
+		return response.tools || [];
+	}
+
+	async listResources(): Promise<any[]> {
 		const response = await this.executeInspectorCommand("resources/list");
 
-		return response.resources?.map((r: any) => r.uri) || [];
+		return response.resources || [];
 	}
 
 	async readResource(uri: string): Promise<any> {
@@ -24,6 +29,7 @@ export class McpClient {
 	private async executeInspectorCommand(
 		method: string,
 		uri?: string,
+		params?: any,
 	): Promise<any> {
 		return new Promise((resolve, reject) => {
 			const args = [
@@ -35,6 +41,10 @@ export class McpClient {
 
 			if (uri) {
 				args.push("--uri", uri);
+			}
+
+			if (params) {
+				args.push("--arguments", JSON.stringify(params));
 			}
 
 			args.push(this.runtime, this.serverPath);
