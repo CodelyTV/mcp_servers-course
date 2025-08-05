@@ -40,14 +40,22 @@ const server = new McpServer({
 const pingTool = new PingTool();
 server.registerTool(
 	pingTool.name,
-	pingTool.description,
+	{
+		title: pingTool.title,
+		description: pingTool.description,
+		inputSchema: pingTool.inputSchema,
+	},
 	pingTool.handler.bind(pingTool),
 );
 
 const searchAllCoursesTool = container.get(SearchAllCoursesTool);
 server.registerTool(
 	searchAllCoursesTool.name,
-	searchAllCoursesTool.description,
+	{
+		title: searchAllCoursesTool.title,
+		description: searchAllCoursesTool.description,
+		inputSchema: searchAllCoursesTool.inputSchema,
+	},
 	searchAllCoursesTool.handler.bind(searchAllCoursesTool),
 );
 
