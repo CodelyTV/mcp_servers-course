@@ -16,6 +16,10 @@ import { PingTool } from "./ping/tools/PingTool";
 const server = new McpServer({
 	name: "codely-mcp-server",
 	version: "1.0.0",
+	capabilities: {
+		resources: true,
+		tools: true,
+	},
 });
 
 const pingTool = new PingTool();
