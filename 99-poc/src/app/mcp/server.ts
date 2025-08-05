@@ -13,6 +13,7 @@ import { McpResourceContentsResponse } from "../../contexts/shared/infrastructur
 
 import { CourseResourceTemplate } from "./courses/resources/CourseResourceTemplate";
 import { CoursesResource } from "./courses/resources/CoursesResource";
+import { SearchAllCoursesTool } from "./courses/tools/SearchAllCoursesTool";
 import { PingTool } from "./ping/tools/PingTool";
 
 function convertParamsToStrings(
@@ -41,6 +42,13 @@ server.registerTool(
 	pingTool.name,
 	pingTool.description,
 	pingTool.handler.bind(pingTool),
+);
+
+const searchAllCoursesTool = container.get(SearchAllCoursesTool);
+server.registerTool(
+	searchAllCoursesTool.name,
+	searchAllCoursesTool.description,
+	searchAllCoursesTool.handler.bind(searchAllCoursesTool),
 );
 
 const coursesResource = container.get(CoursesResource);

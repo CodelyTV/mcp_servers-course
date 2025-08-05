@@ -26,6 +26,10 @@ export class McpClient {
 		return this.executeInspectorCommand("resources/read", uri);
 	}
 
+	async callTool(name: string, args: any = {}): Promise<any> {
+		return this.executeInspectorCommand("tools/call", undefined, { name, arguments: args });
+	}
+
 	private async executeInspectorCommand(
 		method: string,
 		uri?: string,

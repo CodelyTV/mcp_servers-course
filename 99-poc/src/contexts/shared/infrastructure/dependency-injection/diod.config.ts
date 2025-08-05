@@ -27,6 +27,7 @@ import { InMemoryEventBus } from "../domain-event/InMemoryEventBus";
 import { PostgresConnection } from "../postgres/PostgresConnection";
 import { CourseResourceTemplate } from "../../../../app/mcp/courses/resources/CourseResourceTemplate";
 import { CoursesResource } from "../../../../app/mcp/courses/resources/CoursesResource";
+import { SearchAllCoursesTool } from "../../../../app/mcp/courses/tools/SearchAllCoursesTool";
 
 const builder = new ContainerBuilder();
 
@@ -88,6 +89,9 @@ builder.registerAndUse(CourseBySimilarNameFinder);
 // MCP Resources
 builder.registerAndUse(CoursesResource);
 builder.registerAndUse(CourseResourceTemplate);
+
+// MCP Tools
+builder.registerAndUse(SearchAllCoursesTool);
 
 // Export container
 export const container = builder.build();

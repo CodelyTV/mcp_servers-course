@@ -23,7 +23,7 @@ describe("CoursesResource MCP Integration", () => {
 		const resources = await mcpClient.listResources();
 
 		expect(resources).toContain("courses://all");
-	}, 10000);
+	});
 
 	it("should return empty list reading the resource when empty", async () => {
 		const response = await mcpClient.readResource("courses://all");
