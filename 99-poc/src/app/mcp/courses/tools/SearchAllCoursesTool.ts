@@ -2,6 +2,7 @@ import { Service } from "diod";
 
 import { AllCoursesSearcher } from "../../../../contexts/mooc/courses/application/search-all/AllCoursesSearcher";
 import { McpTool } from "../../../../contexts/shared/infrastructure/mcp/McpTool";
+import { McpToolResponse } from "../../../../contexts/shared/infrastructure/mcp/McpToolResponse";
 
 @Service()
 export class SearchAllCoursesTool implements McpTool {
@@ -21,13 +22,10 @@ export class SearchAllCoursesTool implements McpTool {
 			.map((course) => `- ${course.name} (ID: ${course.id})`)
 			.join("\n");
 
+		const response = McpToolResponse.text(`Available Courses:\n\n${coursesText}`);
+
 		return {
-			content: [
-				{
-					type: "text" as const,
-					text: `Available Courses:\n\n${coursesText}`,
-				},
-			],
+			content: response.content as Array<{ type: "text"; text: string }>,
 			structuredContent: {
 				courses: courses,
 				total: courses.length,

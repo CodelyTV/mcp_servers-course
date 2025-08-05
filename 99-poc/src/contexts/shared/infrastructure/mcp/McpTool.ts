@@ -1,25 +1,3 @@
-type TextContent = {
-	type: "text";
-	text: string;
-};
-
-type ImageContent = {
-	type: "image";
-	data: string;
-	mimeType: string;
-};
-
-type ResourceContent = {
-	type: "resource";
-	resource: {
-		uri: string;
-		text?: string;
-		mimeType?: string;
-	};
-};
-
-type ToolContent = TextContent | ImageContent | ResourceContent;
-
 export interface McpTool {
 	name: string;
 	description: {
@@ -28,7 +6,10 @@ export interface McpTool {
 		inputSchema: object;
 	};
 	handler: () => Promise<{
-		content: ToolContent[];
+		content: Array<{
+			type: "text";
+			text: string;
+		}>;
 		structuredContent?: Record<string, unknown>;
 		isError?: boolean;
 	}>;
