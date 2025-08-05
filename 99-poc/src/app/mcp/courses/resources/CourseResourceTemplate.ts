@@ -1,3 +1,5 @@
+import { Service } from "diod";
+
 import {
 	CourseByIdFinder,
 	CourseByIdFinderErrors,
@@ -5,17 +7,19 @@ import {
 import { CourseNotFoundError } from "../../../../contexts/mooc/courses/domain/CourseNotFoundError";
 import { assertNever } from "../../../../contexts/shared/domain/assertNever";
 import { InvalidNanoIdError } from "../../../../contexts/shared/domain/InvalidNanoIdError";
-import { container } from "../../../../contexts/shared/infrastructure/dependency-injection/diod.config";
 import { McpResourceContentsResponse } from "../../../../contexts/shared/infrastructure/mcp/McpResourceContentsResponse";
 import { McpResourceTemplate } from "../../../../contexts/shared/infrastructure/mcp/McpResourceTemplate";
 
+@Service()
 export class CourseResourceTemplate implements McpResourceTemplate {
 	name = "course-detail";
 	title = "Course Detail";
 	description = "Get detailed information about a specific course by ID";
 	uriTemplate = "courses://{id}";
 
-	async handle(
+	constructor(private readonly finder: CourseByIdFinder) {}
+
+	async handler(
 		uri: URL,
 		params: Record<string, string | string[]>,
 	): Promise<McpResourceContentsResponse> {
@@ -28,8 +32,7 @@ export class CourseResourceTemplate implements McpResourceTemplate {
 			);
 		}
 
-		const courseByIdFinder = container.get(CourseByIdFinder);
-		const course = await courseByIdFinder.find(courseId);
+		const course = await this.finder.find(courseId);
 
 		return McpResourceContentsResponse.success(
 			uri.href,

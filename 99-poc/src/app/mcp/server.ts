@@ -8,6 +8,7 @@ import {
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 
 import { CourseByIdFinderErrors } from "../../contexts/mooc/courses/application/find-by-id/CourseByIdFinder";
+import { container } from "../../contexts/shared/infrastructure/dependency-injection/diod.config";
 
 import { CourseResourceTemplate } from "./courses/resources/CourseResourceTemplate";
 import { CoursesResource } from "./courses/resources/CoursesResource";
@@ -29,7 +30,7 @@ server.registerTool(
 	pingTool.handler.bind(pingTool),
 );
 
-const coursesResource = new CoursesResource();
+const coursesResource = container.get(CoursesResource);
 server.registerResource(
 	coursesResource.name,
 	coursesResource.uriTemplate,
@@ -44,7 +45,7 @@ server.registerResource(
 	},
 );
 
-const courseDetailResource = new CourseResourceTemplate();
+const courseDetailResource = container.get(CourseResourceTemplate);
 server.registerResource(
 	courseDetailResource.name,
 	new ResourceTemplate(courseDetailResource.uriTemplate, {
@@ -56,7 +57,7 @@ server.registerResource(
 	},
 	async (uri, params) => {
 		try {
-			const response = await courseDetailResource.handle(uri, params);
+			const response = await courseDetailResource.handler(uri, params);
 
 			return { contents: response.contents };
 		} catch (error) {

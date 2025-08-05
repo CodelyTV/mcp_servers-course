@@ -25,6 +25,8 @@ import { PostgresUserRepository } from "../../../mooc/users/infrastructure/Postg
 import { EventBus } from "../../domain/event/EventBus";
 import { InMemoryEventBus } from "../domain-event/InMemoryEventBus";
 import { PostgresConnection } from "../postgres/PostgresConnection";
+import { CourseResourceTemplate } from "../../../../app/mcp/courses/resources/CourseResourceTemplate";
+import { CoursesResource } from "../../../../app/mcp/courses/resources/CoursesResource";
 
 const builder = new ContainerBuilder();
 
@@ -82,6 +84,10 @@ builder.registerAndUse(SimilarCoursesSearcher);
 builder.registerAndUse(AllCoursesSearcher);
 builder.registerAndUse(AllCoursesPaginatedSearcher);
 builder.registerAndUse(CourseBySimilarNameFinder);
+
+// MCP Resources
+builder.registerAndUse(CoursesResource);
+builder.registerAndUse(CourseResourceTemplate);
 
 // Export container
 export const container = builder.build();
