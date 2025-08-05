@@ -1,5 +1,8 @@
 import { ContainerBuilder } from "diod";
 
+import { CourseResourceTemplate } from "../../../../app/mcp/courses/resources/CourseResourceTemplate";
+import { CoursesResource } from "../../../../app/mcp/courses/resources/CoursesResource";
+import { SearchAllCoursesTool } from "../../../../app/mcp/courses/tools/SearchAllCoursesTool";
 import { CourseByIdFinder } from "../../../mooc/courses/application/find-by-id/CourseByIdFinder";
 import { CourseBySimilarNameFinder } from "../../../mooc/courses/application/find-by-similar-name/CourseBySimilarNameFinder";
 import { AllCoursesSearcher } from "../../../mooc/courses/application/search-all/AllCoursesSearcher";
@@ -25,9 +28,6 @@ import { PostgresUserRepository } from "../../../mooc/users/infrastructure/Postg
 import { EventBus } from "../../domain/event/EventBus";
 import { InMemoryEventBus } from "../domain-event/InMemoryEventBus";
 import { PostgresConnection } from "../postgres/PostgresConnection";
-import { CourseResourceTemplate } from "../../../../app/mcp/courses/resources/CourseResourceTemplate";
-import { CoursesResource } from "../../../../app/mcp/courses/resources/CoursesResource";
-import { SearchAllCoursesTool } from "../../../../app/mcp/courses/tools/SearchAllCoursesTool";
 
 const builder = new ContainerBuilder();
 

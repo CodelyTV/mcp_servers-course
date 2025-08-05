@@ -47,11 +47,14 @@ server.registerTool(
 	},
 	async () => {
 		const response = await pingTool.handler();
+
 		return {
-			content: response.content.filter(item => item.type === "text").map(item => ({
-				type: "text" as const,
-				text: (item as any).text,
-			})),
+			content: response.content
+				.filter((item) => item.type === "text")
+				.map((item) => ({
+					type: "text" as const,
+					text: (item as any).text,
+				})),
 			structuredContent: response.structuredContent,
 			isError: response.isError,
 		};
@@ -68,11 +71,14 @@ server.registerTool(
 	},
 	async () => {
 		const response = await searchAllCoursesTool.handler();
+
 		return {
-			content: response.content.filter(item => item.type === "text").map(item => ({
-				type: "text" as const,
-				text: (item as any).text,
-			})),
+			content: response.content
+				.filter((item) => item.type === "text")
+				.map((item) => ({
+					type: "text" as const,
+					text: (item as any).text,
+				})),
 			structuredContent: response.structuredContent,
 			isError: response.isError,
 		};

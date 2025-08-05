@@ -51,22 +51,34 @@ export class McpClient {
 	) {}
 
 	async listTools(): Promise<McpTool[]> {
-		const response = await this.executeInspectorCommand<McpListToolsResponse>("tools/list");
+		const response =
+			await this.executeInspectorCommand<McpListToolsResponse>(
+				"tools/list",
+			);
 
-		return response.tools || [];
+		return response.tools;
 	}
 
 	async listResources(): Promise<string[]> {
-		const response = await this.executeInspectorCommand<McpListResourcesResponse>("resources/list");
+		const response =
+			await this.executeInspectorCommand<McpListResourcesResponse>(
+				"resources/list",
+			);
 
-		return response.resources || [];
+		return response.resources;
 	}
 
 	async readResource(uri: string): Promise<McpResourcesReadResponse> {
-		return this.executeInspectorCommand<McpResourcesReadResponse>("resources/read", uri);
+		return this.executeInspectorCommand<McpResourcesReadResponse>(
+			"resources/read",
+			uri,
+		);
 	}
 
-	async callTool(name: string, args: Record<string, unknown> = {}): Promise<McpToolCallResponse> {
+	async callTool(
+		name: string,
+		args: Record<string, unknown> = {},
+	): Promise<McpToolCallResponse> {
 		return new Promise((resolve, reject) => {
 			const cmdArgs = [
 				"@modelcontextprotocol/inspector",
