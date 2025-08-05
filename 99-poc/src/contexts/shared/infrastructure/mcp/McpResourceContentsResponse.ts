@@ -1,11 +1,19 @@
+type TextResourceContent = {
+	uri: string;
+	mimeType?: string;
+	text: string;
+};
+
+type BlobResourceContent = {
+	uri: string;
+	mimeType?: string;
+	blob: string; // base64-encoded
+};
+
+type ResourceContent = TextResourceContent | BlobResourceContent;
+
 export class McpResourceContentsResponse {
-	private constructor(
-		readonly contents: {
-			uri: string;
-			mimeType: string;
-			text: string;
-		}[],
-	) {}
+	private constructor(readonly contents: ResourceContent[]) {}
 
 	static success(uri: string, data: unknown): McpResourceContentsResponse {
 		return new McpResourceContentsResponse([

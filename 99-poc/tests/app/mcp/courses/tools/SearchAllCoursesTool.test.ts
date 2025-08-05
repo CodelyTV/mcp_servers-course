@@ -36,6 +36,10 @@ describe("SearchAllCoursesTool MCP Integration", () => {
 					text: "Available Courses:\n\n",
 				},
 			],
+			structuredContent: {
+				courses: [],
+				total: 0,
+			},
 		});
 	});
 
@@ -57,5 +61,19 @@ describe("SearchAllCoursesTool MCP Integration", () => {
 			`- ${anotherCourse.name} (ID: ${anotherCourse.id.value})`,
 		);
 		expect(response.content[0].text).toContain("Available Courses:");
+
+		expect(response.structuredContent).toEqual({
+			courses: expect.arrayContaining([
+				expect.objectContaining({
+					id: course.id.value,
+					name: course.name,
+				}),
+				expect.objectContaining({
+					id: anotherCourse.id.value,
+					name: anotherCourse.name,
+				}),
+			]),
+			total: 2,
+		});
 	});
 });

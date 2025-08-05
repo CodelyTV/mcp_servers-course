@@ -28,6 +28,10 @@ export class SearchAllCoursesTool implements McpTool {
 					text: `Available Courses:\n\n${coursesText}`,
 				},
 			],
+			structuredContent: {
+				courses: courses,
+				total: courses.length,
+			},
 		};
 	}
 }
