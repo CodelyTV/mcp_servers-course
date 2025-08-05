@@ -27,24 +27,20 @@ export class McpToolResponse {
 		readonly isError?: boolean,
 	) {}
 
-	static success(
-		content: ToolContent[],
-		structuredContent?: Record<string, any>,
-	): McpToolResponse {
-		return new McpToolResponse(content, structuredContent, false);
-	}
-
 	static text(text: string): McpToolResponse {
 		return new McpToolResponse([{ type: "text", text }]);
 	}
 
-	static error(
-		message: string,
-		structuredContent?: Record<string, any>,
-	): McpToolResponse {
+	static structured(data: Record<string, any>): McpToolResponse {
+		const text = JSON.stringify(data);
+
+		return new McpToolResponse([{ type: "text", text }], data);
+	}
+
+	static error(message: string): McpToolResponse {
 		return new McpToolResponse(
 			[{ type: "text", text: `Error: ${message}` }],
-			structuredContent,
+			undefined,
 			true,
 		);
 	}
@@ -67,13 +63,5 @@ export class McpToolResponse {
 				resource: { uri, text, mimeType },
 			},
 		]);
-	}
-
-	static structured(
-		data: Record<string, any>,
-		text?: string,
-	): McpToolResponse {
-		const displayText = text || JSON.stringify(data, null, 2);
-		return new McpToolResponse([{ type: "text", text: displayText }], data);
 	}
 }

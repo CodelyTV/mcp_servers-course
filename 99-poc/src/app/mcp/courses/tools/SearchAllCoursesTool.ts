@@ -16,16 +16,9 @@ export class SearchAllCoursesTool implements McpTool {
 	async handler(): Promise<McpToolResponse> {
 		const courses = await this.searcher.search();
 
-		const coursesText = courses
-			.map((course) => `- ${course.name} (ID: ${course.id})`)
-			.join("\n");
-
-		return McpToolResponse.structured(
-			{
-				courses,
-				total: courses.length,
-			},
-			`Available Courses:\n\n${coursesText}`,
-		);
+		return McpToolResponse.structured({
+			courses,
+			total: courses.length,
+		});
 	}
 }

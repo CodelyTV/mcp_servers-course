@@ -33,7 +33,10 @@ describe("SearchAllCoursesTool MCP Integration", () => {
 			content: [
 				{
 					type: "text",
-					text: "Available Courses:\n\n",
+					text: JSON.stringify({
+						courses: [],
+						total: 0,
+					}),
 				},
 			],
 			structuredContent: {
@@ -54,15 +57,7 @@ describe("SearchAllCoursesTool MCP Integration", () => {
 
 		const response = await mcpClient.callTool("search_all");
 
-		expect(response.content[0].text).toContain(
-			`- ${course.name} (ID: ${course.id.value})`,
-		);
-		expect(response.content[0].text).toContain(
-			`- ${anotherCourse.name} (ID: ${anotherCourse.id.value})`,
-		);
-		expect(response.content[0].text).toContain("Available Courses:");
-
-		expect(response.structuredContent).toEqual({
+		const expectedData = {
 			courses: expect.arrayContaining([
 				expect.objectContaining({
 					id: course.id.value,
@@ -74,6 +69,9 @@ describe("SearchAllCoursesTool MCP Integration", () => {
 				}),
 			]),
 			total: 2,
-		});
+		};
+
+		expect(response.content[0].text).toEqual(JSON.stringify(expectedData));
+		expect(response.structuredContent).toEqual(expectedData);
 	});
 });
