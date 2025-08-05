@@ -14,6 +14,14 @@ import { CourseResourceTemplate } from "./courses/resources/CourseResourceTempla
 import { CoursesResource } from "./courses/resources/CoursesResource";
 import { PingTool } from "./ping/tools/PingTool";
 
+function convertParamsToStrings(params: Record<string, string | string[]>): Record<string, string> {
+	const result: Record<string, string> = {};
+	for (const [key, value] of Object.entries(params)) {
+		result[key] = Array.isArray(value) ? value[0] : value;
+	}
+	return result;
+}
+
 const server = new McpServer({
 	name: "codely-mcp-server",
 	version: "1.0.0",
@@ -57,7 +65,7 @@ server.registerResource(
 	},
 	async (uri, params) => {
 		try {
-			const response = await courseDetailResource.handler(uri, params);
+			const response = await courseDetailResource.handler(uri, convertParamsToStrings(params));
 
 			return { contents: response.contents };
 		} catch (error) {
@@ -65,7 +73,7 @@ server.registerResource(
 				const response = courseDetailResource.onError(
 					error as CourseByIdFinderErrors,
 					uri,
-					params,
+					convertParamsToStrings(params),
 				);
 
 				return { contents: response.contents };

@@ -21,9 +21,9 @@ export class CourseResourceTemplate implements McpResourceTemplate {
 
 	async handler(
 		uri: URL,
-		params: Record<string, string | string[]>,
+		params: Record<string, string>,
 	): Promise<McpResourceContentsResponse> {
-		const courseId = Array.isArray(params.id) ? params.id[0] : params.id;
+		const courseId = params.id;
 
 		if (!courseId || courseId.trim() === "") {
 			return McpResourceContentsResponse.badRequest(
@@ -43,7 +43,7 @@ export class CourseResourceTemplate implements McpResourceTemplate {
 	onError(
 		error: CourseByIdFinderErrors,
 		uri: URL,
-		_params: Record<string, string | string[]>,
+		_params: Record<string, string>,
 	): McpResourceContentsResponse {
 		switch (true) {
 			case error instanceof CourseNotFoundError:

@@ -10,12 +10,12 @@ export interface McpResourceTemplate {
 
 	handler(
 		uri: URL,
-		params: Record<string, string | string[]>,
+		params: Record<string, string>,
 	): Promise<McpResourceContentsResponse>;
 
 	onError?(
 		error: CodelyError,
 		uri: URL,
-		params: Record<string, string | string[]>,
+		params: Record<string, string>,
 	): McpResourceContentsResponse;
 }
