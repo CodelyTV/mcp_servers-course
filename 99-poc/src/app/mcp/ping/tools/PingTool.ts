@@ -7,20 +7,9 @@ export class PingTool implements McpTool {
 	description = "Health check - confirms the server is running";
 	inputSchema = {};
 
-	async handler(): Promise<{
-		content: Array<{
-			type: "text";
-			text: string;
-		}>;
-		structuredContent?: Record<string, unknown>;
-		isError?: boolean;
-	}> {
-		const response = McpToolResponse.text(
+	async handler(): Promise<McpToolResponse> {
+		return McpToolResponse.text(
 			"Pong! Courses MCP server is running correctly.",
 		);
-
-		return {
-			content: response.content as Array<{ type: "text"; text: string }>,
-		};
 	}
 }

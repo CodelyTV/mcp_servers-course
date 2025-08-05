@@ -5,5 +5,5 @@ export interface McpTool {
 	title: string;
 	description: string;
 	inputSchema: object;
-	handler: () => Promise<McpToolResponse>;
+	handler(): Promise<McpToolResponse>;
 }

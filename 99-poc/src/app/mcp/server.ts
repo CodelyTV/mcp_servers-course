@@ -45,7 +45,17 @@ server.registerTool(
 		description: pingTool.description,
 		inputSchema: pingTool.inputSchema,
 	},
-	pingTool.handler.bind(pingTool),
+	async () => {
+		const response = await pingTool.handler();
+		return {
+			content: response.content.filter(item => item.type === "text").map(item => ({
+				type: "text" as const,
+				text: (item as any).text,
+			})),
+			structuredContent: response.structuredContent,
+			isError: response.isError,
+		};
+	},
 );
 
 const searchAllCoursesTool = container.get(SearchAllCoursesTool);
@@ -56,7 +66,17 @@ server.registerTool(
 		description: searchAllCoursesTool.description,
 		inputSchema: searchAllCoursesTool.inputSchema,
 	},
-	searchAllCoursesTool.handler.bind(searchAllCoursesTool),
+	async () => {
+		const response = await searchAllCoursesTool.handler();
+		return {
+			content: response.content.filter(item => item.type === "text").map(item => ({
+				type: "text" as const,
+				text: (item as any).text,
+			})),
+			structuredContent: response.structuredContent,
+			isError: response.isError,
+		};
+	},
 );
 
 const coursesResource = container.get(CoursesResource);

@@ -68,4 +68,12 @@ export class McpToolResponse {
 			},
 		]);
 	}
+
+	static structured(
+		data: Record<string, any>,
+		text?: string,
+	): McpToolResponse {
+		const displayText = text || JSON.stringify(data, null, 2);
+		return new McpToolResponse([{ type: "text", text: displayText }], data);
+	}
 }
