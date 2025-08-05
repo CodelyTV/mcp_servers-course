@@ -9,16 +9,21 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 
 import { CourseByIdFinderErrors } from "../../contexts/mooc/courses/application/find-by-id/CourseByIdFinder";
 import { container } from "../../contexts/shared/infrastructure/dependency-injection/diod.config";
+import { McpResourceContentsResponse } from "../../contexts/shared/infrastructure/mcp/McpResourceContentsResponse";
 
 import { CourseResourceTemplate } from "./courses/resources/CourseResourceTemplate";
 import { CoursesResource } from "./courses/resources/CoursesResource";
 import { PingTool } from "./ping/tools/PingTool";
 
-function convertParamsToStrings(params: Record<string, string | string[]>): Record<string, string> {
+function convertParamsToStrings(
+	params: Record<string, string | string[]>,
+): Record<string, string> {
 	const result: Record<string, string> = {};
+
 	for (const [key, value] of Object.entries(params)) {
 		result[key] = Array.isArray(value) ? value[0] : value;
 	}
+
 	return result;
 }
 
@@ -65,7 +70,10 @@ server.registerResource(
 	},
 	async (uri, params) => {
 		try {
-			const response = await courseDetailResource.handler(uri, convertParamsToStrings(params));
+			const response = await courseDetailResource.handler(
+				uri,
+				convertParamsToStrings(params),
+			);
 
 			return { contents: response.contents };
 		} catch (error) {
@@ -80,18 +88,8 @@ server.registerResource(
 			}
 
 			return {
-				contents: [
-					{
-						uri: uri.href,
-						mimeType: "application/json",
-						text: JSON.stringify({
-							error: {
-								code: -32603,
-								message: "Internal server error",
-							},
-						}),
-					},
-				],
+				contents: McpResourceContentsResponse.internalError(uri.href)
+					.contents,
 			};
 		}
 	},
