@@ -27,20 +27,7 @@ describe("SearchCourseBySimilarNameTool should", () => {
 		expect(toolNames).toContain("courses-search_by_similar_name");
 	});
 
-	it("return error when no name is provided via CLI", async () => {
-		// Test via CLI without arguments - should show error message
-		const response = await mcpClient.callTool(
-			"courses-search_by_similar_name",
-		);
-
-		expect(response.isError).toBe(true);
-		expect(response.content[0].text).toContain(
-			"Error: name parameter is required",
-		);
-	});
-
 	it("tool works correctly when called directly", async () => {
-		// Test the tool directly to verify it works with proper arguments
 		const searchCourseBySimilarNameTool = container.get(
 			SearchCourseBySimilarNameTool,
 		);

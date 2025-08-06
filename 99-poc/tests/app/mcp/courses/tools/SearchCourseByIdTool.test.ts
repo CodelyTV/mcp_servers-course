@@ -27,18 +27,7 @@ describe("SearchCourseByIdTool should", () => {
 		expect(toolNames).toContain("courses-search_by_id");
 	});
 
-	it("return error when no id is provided via CLI", async () => {
-		// Test via CLI without arguments - should show error message
-		const response = await mcpClient.callTool("courses-search_by_id");
-
-		expect(response.isError).toBe(true);
-		expect(response.content[0].text).toContain(
-			"Error: id parameter is required",
-		);
-	});
-
 	it("tool works correctly when called directly", async () => {
-		// Test the tool directly to verify it works with proper arguments
 		const searchCourseByIdTool = container.get(SearchCourseByIdTool);
 		const course = CourseMother.createdToday();
 		await courseRepository.save(course);

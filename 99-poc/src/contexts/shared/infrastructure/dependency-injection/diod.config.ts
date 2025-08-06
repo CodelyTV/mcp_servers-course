@@ -4,6 +4,7 @@ import { CourseResourceTemplate } from "../../../../app/mcp/courses/resources/Co
 import { CoursesResource } from "../../../../app/mcp/courses/resources/CoursesResource";
 import { SearchAllCoursesTool } from "../../../../app/mcp/courses/tools/SearchAllCoursesTool";
 import { SearchCourseByIdTool } from "../../../../app/mcp/courses/tools/SearchCourseByIdTool";
+import { SearchCourseBySimilarNameTool } from "../../../../app/mcp/courses/tools/SearchCourseBySimilarNameTool";
 import { CourseFinder } from "../../../mooc/courses/application/find/CourseFinder";
 import { CourseBySimilarNameFinder } from "../../../mooc/courses/application/find-by-similar-name/CourseBySimilarNameFinder";
 import { CourseSearcher } from "../../../mooc/courses/application/search/CourseSearcher";
@@ -96,6 +97,7 @@ builder.registerAndUse(CourseResourceTemplate);
 // MCP Tools
 builder.registerAndUse(SearchAllCoursesTool);
 builder.registerAndUse(SearchCourseByIdTool);
+builder.registerAndUse(SearchCourseBySimilarNameTool);
 
 // Export container
 export const container = builder.build();

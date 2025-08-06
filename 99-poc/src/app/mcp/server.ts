@@ -16,6 +16,7 @@ import { CourseResourceTemplate } from "./courses/resources/CourseResourceTempla
 import { CoursesResource } from "./courses/resources/CoursesResource";
 import { SearchAllCoursesTool } from "./courses/tools/SearchAllCoursesTool";
 import { SearchCourseByIdTool } from "./courses/tools/SearchCourseByIdTool";
+import { SearchCourseBySimilarNameTool } from "./courses/tools/SearchCourseBySimilarNameTool";
 import { PingTool } from "./ping/tools/PingTool";
 
 function convertParamsToStrings(
@@ -102,6 +103,35 @@ server.registerTool(
 		);
 
 		const response = await searchCourseByIdTool.handler(args as any);
+
+		return {
+			content: response.content
+				.filter((item) => item.type === "text")
+				.map((item) => ({
+					type: "text" as const,
+					text: (item as { text: string }).text,
+				})),
+			structuredContent: response.structuredContent,
+			isError: response.isError,
+		};
+	},
+);
+
+const searchCourseBySimilarNameTool = container.get(SearchCourseBySimilarNameTool);
+server.registerTool(
+	searchCourseBySimilarNameTool.name,
+	{
+		title: searchCourseBySimilarNameTool.title,
+		description: searchCourseBySimilarNameTool.description,
+		inputSchema: searchCourseBySimilarNameTool.inputSchema as any,
+	},
+	async (args: Record<string, unknown>) => {
+		fs.appendFileSync(
+			`${process.env.HOME}/.test.log`,
+			`Tool called with args: ${JSON.stringify(args, null, 2)}\n`,
+		);
+
+		const response = await searchCourseBySimilarNameTool.handler(args as any);
 
 		return {
 			content: response.content
