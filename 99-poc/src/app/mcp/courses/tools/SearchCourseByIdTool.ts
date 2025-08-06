@@ -1,4 +1,5 @@
 import { Service } from "diod";
+import * as z from "zod/v3";
 
 import { CourseByIdFinder } from "../../../../contexts/mooc/courses/application/find-by-id/CourseByIdFinder";
 import { McpTool } from "../../../../contexts/shared/infrastructure/mcp/McpTool";
@@ -9,16 +10,7 @@ export class SearchCourseByIdTool implements McpTool {
 	name = "courses-search_by_id";
 	title = "Search Course by ID";
 	description = "Search for a specific course by its ID";
-	inputSchema = {
-		type: "object",
-		properties: {
-			id: {
-				type: "string",
-				description: "The course ID to search for",
-			},
-		},
-		required: ["id"],
-	};
+	inputSchema = { id: z.string() };
 
 	constructor(private readonly finder: CourseByIdFinder) {}
 

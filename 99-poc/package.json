@@ -16,9 +16,9 @@
 		"mcp:inspect": "npx @modelcontextprotocol/inspector ts-node ./src/app/mcp/server.ts"
 	},
 	"dependencies": {
+		"@alcyone-labs/modelcontextprotocol-sdk": "^1.16.0",
 		"@langchain/core": "^0.3.66",
 		"@langchain/ollama": "^0.2.3",
-		"@modelcontextprotocol/sdk": "^1.17.1",
 		"diod": "^3.0.0",
 		"langchain": "^0.3.30",
 		"mariadb": "^3.4.5",

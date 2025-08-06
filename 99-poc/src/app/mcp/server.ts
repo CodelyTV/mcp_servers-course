@@ -7,7 +7,6 @@ import {
 } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import fs from "fs";
-import { z } from "zod";
 
 import { CourseByIdFinderErrors } from "../../contexts/mooc/courses/application/find-by-id/CourseByIdFinder";
 import { container } from "../../contexts/shared/infrastructure/dependency-injection/diod.config";
@@ -94,7 +93,7 @@ server.registerTool(
 	{
 		title: searchCourseByIdTool.title,
 		description: searchCourseByIdTool.description,
-		inputSchema: { id: z.string() },
+		inputSchema: searchCourseByIdTool.inputSchema,
 	},
 	async (args) => {
 		fs.appendFileSync(
