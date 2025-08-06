@@ -1,4 +1,5 @@
 import { Service } from "diod";
+import { z } from "zod";
 
 import { AllCoursesSearcher } from "../../../../contexts/mooc/courses/application/search-all/AllCoursesSearcher";
 import { McpTool } from "../../../../contexts/shared/infrastructure/mcp/McpTool";
@@ -9,11 +10,7 @@ export class SearchAllCoursesTool implements McpTool {
 	name = "courses-search_all";
 	title = "List All Courses";
 	description = "Returns a complete list of all available courses";
-	inputSchema = {
-		type: "object",
-		properties: {},
-		required: [],
-	};
+	inputSchema = {};
 
 	constructor(private readonly searcher: AllCoursesSearcher) {}
 

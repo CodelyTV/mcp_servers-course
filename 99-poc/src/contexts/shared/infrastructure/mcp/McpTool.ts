@@ -1,17 +1,12 @@
-import { McpToolResponse } from "./McpToolResponse";
+import { z } from "zod";
 
-export interface JsonSchema {
-	type: string;
-	properties?: Record<string, unknown>;
-	required?: string[];
-	[key: string]: unknown;
-}
+import { McpToolResponse } from "./McpToolResponse";
 
 export interface McpTool {
 	name: string;
 	title: string;
 	description: string;
-	inputSchema: JsonSchema;
+	inputSchema: Record<string, z.ZodTypeAny>;
 
 	handler(args?: Record<string, unknown>): Promise<McpToolResponse>;
 }

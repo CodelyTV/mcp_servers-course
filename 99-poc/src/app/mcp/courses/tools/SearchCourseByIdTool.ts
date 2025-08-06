@@ -1,4 +1,5 @@
 import { Service } from "diod";
+import { z } from "zod";
 
 import {
 	CourseByIdFinder,
@@ -18,14 +19,7 @@ export class SearchCourseByIdTool implements McpTool {
 		"Returns detailed information about a specific course by its ID";
 
 	inputSchema = {
-		type: "object",
-		properties: {
-			id: {
-				type: "string",
-				description: "The unique identifier of the course",
-			},
-		},
-		required: ["id"],
+		id: z.string().describe("The unique identifier of the course"),
 	};
 
 	constructor(private readonly finder: CourseByIdFinder) {}
