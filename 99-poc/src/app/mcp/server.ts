@@ -101,21 +101,7 @@ server.registerTool(
 			`Tool called with args: ${JSON.stringify(args, null, 2)}\n`,
 		);
 
-		const { id } = args as { id?: string };
-
-		if (!id) {
-			return {
-				content: [
-					{
-						type: "text" as const,
-						text: `Error: id parameter is required. Received: ${JSON.stringify(args)}`,
-					},
-				],
-				isError: true,
-			};
-		}
-
-		const response = await searchCourseByIdTool.handler({ id });
+		const response = await searchCourseByIdTool.handler(args as any);
 
 		return {
 			content: response.content

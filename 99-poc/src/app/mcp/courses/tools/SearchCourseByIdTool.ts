@@ -14,13 +14,13 @@ export class SearchCourseByIdTool implements McpTool {
 
 	constructor(private readonly finder: CourseByIdFinder) {}
 
-	async handler(args: { id: string }): Promise<McpToolResponse> {
+	async handler({ id }: { id: string }): Promise<McpToolResponse> {
 		try {
-			const course = await this.finder.find(args.id);
+			const course = await this.finder.find(id);
 
 			return McpToolResponse.structured(course.toPrimitives());
-		} catch (error) {
-			return McpToolResponse.error(`Course with id ${args.id} not found`);
+		} catch (_error) {
+			return McpToolResponse.error(`Course with id ${id} not found`);
 		}
 	}
 }
