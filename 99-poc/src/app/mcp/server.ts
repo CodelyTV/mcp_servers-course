@@ -8,6 +8,7 @@ import {
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 
 import { container } from "../../contexts/shared/infrastructure/dependency-injection/diod.config";
+import { McpPrompt } from "../../contexts/shared/infrastructure/mcp/McpPrompt";
 import { McpResource } from "../../contexts/shared/infrastructure/mcp/McpResource";
 import { McpResourceContentsResponse } from "../../contexts/shared/infrastructure/mcp/McpResourceContentsResponse";
 import { McpResourceTemplate } from "../../contexts/shared/infrastructure/mcp/McpResourceTemplate";
@@ -31,6 +32,7 @@ const server = new McpServer({
 	capabilities: {
 		resources: true,
 		tools: true,
+		prompts: true,
 	},
 });
 
@@ -59,6 +61,24 @@ tools.forEach((tool) => {
 				structuredContent: response.structuredContent,
 				isError: response.isError,
 			};
+		},
+	);
+});
+
+const prompts = container
+	.findTaggedServiceIdentifiers<McpPrompt>("mcp-prompt")
+	.map((identifier) => container.get(identifier));
+
+prompts.forEach((prompt) => {
+	server.registerPrompt(
+		prompt.name,
+		{
+			title: prompt.title,
+			description: prompt.description,
+			argsSchema: prompt.argsSchema as any,
+		},
+		async (args?: Record<string, unknown>) => {
+			return await prompt.handler(args);
 		},
 	);
 });

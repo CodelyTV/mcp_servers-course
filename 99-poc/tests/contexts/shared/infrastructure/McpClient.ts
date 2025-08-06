@@ -49,6 +49,30 @@ interface McpListResourcesResponse {
 	}>;
 }
 
+interface McpPrompt {
+	name: string;
+	title: string;
+	description: string;
+	argsSchema?: object;
+}
+
+interface McpListPromptsResponse {
+	prompts: McpPrompt[];
+}
+
+interface McpPromptMessage {
+	role: "user" | "assistant";
+	content: {
+		type: "text";
+		text: string;
+	};
+}
+
+interface McpGetPromptResponse {
+	description?: string;
+	messages: McpPromptMessage[];
+}
+
 export class McpClient {
 	constructor(
 		private readonly runtime: string,
@@ -130,6 +154,72 @@ export class McpClient {
 					const response = JSON.parse(output);
 
 					resolve(response as McpToolCallResponse);
+				} catch (error) {
+					reject(error);
+				}
+			});
+		});
+	}
+
+	async listPrompts(): Promise<McpPrompt[]> {
+		const response =
+			await this.executeInspectorCommand<McpListPromptsResponse>(
+				"prompts/list",
+			);
+
+		return response.prompts;
+	}
+
+	async getPrompt(
+		name: string,
+		args: Record<string, unknown> = {},
+	): Promise<McpGetPromptResponse> {
+		return new Promise((resolve, reject) => {
+			const cmdArgs = [
+				"@modelcontextprotocol/inspector",
+				"--cli",
+				this.runtime,
+				this.serverPath,
+				"--method",
+				"prompts/get",
+				"--prompt-name",
+				name,
+			];
+
+			// Add prompt arguments using --prompt-arg format (similar to tools)
+			for (const [key, value] of Object.entries(args)) {
+				cmdArgs.push("--prompt-arg", `${key}=${value}`);
+			}
+
+			const process = spawn("npx", cmdArgs);
+
+			let stdout = "";
+			let stderr = "";
+
+			process.stdout.on("data", (data) => {
+				stdout += data.toString();
+			});
+
+			process.stderr.on("data", (data) => {
+				stderr += data.toString();
+			});
+
+			process.on("close", (code) => {
+				if (code !== 0) {
+					reject(
+						new Error(
+							`Process exited with code ${code}: ${stderr}`,
+						),
+					);
+
+					return;
+				}
+
+				try {
+					const output = stdout.trim();
+					const response = JSON.parse(output);
+
+					resolve(response as McpGetPromptResponse);
 				} catch (error) {
 					reject(error);
 				}

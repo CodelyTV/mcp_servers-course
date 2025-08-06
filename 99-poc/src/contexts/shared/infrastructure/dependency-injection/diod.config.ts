@@ -1,5 +1,6 @@
 import { ContainerBuilder } from "diod";
 
+import { SearchMultipleSimilarCoursesPrompt } from "../../../../app/mcp/courses/prompts/SearchMultipleSimilarCoursesPrompt";
 import { CourseResourceTemplate } from "../../../../app/mcp/courses/resources/CourseResourceTemplate";
 import { CoursesResource } from "../../../../app/mcp/courses/resources/CoursesResource";
 import { SearchAllCoursesTool } from "../../../../app/mcp/courses/tools/SearchAllCoursesTool";
@@ -98,6 +99,9 @@ builder.registerAndUse(CourseResourceTemplate).addTag("mcp-resource_template");
 builder.registerAndUse(SearchAllCoursesTool).addTag("mcp-tool");
 builder.registerAndUse(SearchCourseByIdTool).addTag("mcp-tool");
 builder.registerAndUse(SearchCourseBySimilarNameTool).addTag("mcp-tool");
+
+// MCP Prompts
+builder.registerAndUse(SearchMultipleSimilarCoursesPrompt).addTag("mcp-prompt");
 
 // Export container
 export const container = builder.build();
