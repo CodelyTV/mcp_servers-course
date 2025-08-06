@@ -6,6 +6,7 @@ import { CoursesResource } from "../../../../app/mcp/courses/resources/CoursesRe
 import { SearchAllCoursesTool } from "../../../../app/mcp/courses/tools/SearchAllCoursesTool";
 import { SearchCourseByIdTool } from "../../../../app/mcp/courses/tools/SearchCourseByIdTool";
 import { SearchCourseBySimilarNameTool } from "../../../../app/mcp/courses/tools/SearchCourseBySimilarNameTool";
+import { SearchSimilarCoursesByIdsTool } from "../../../../app/mcp/courses/tools/SearchSimilarCoursesByIdsTool";
 import { CourseFinder } from "../../../mooc/courses/application/find/CourseFinder";
 import { CourseBySimilarNameFinder } from "../../../mooc/courses/application/find-by-similar-name/CourseBySimilarNameFinder";
 import { CourseSearcher } from "../../../mooc/courses/application/search/CourseSearcher";
@@ -99,6 +100,7 @@ builder.registerAndUse(CourseResourceTemplate).addTag("mcp-resource_template");
 builder.registerAndUse(SearchAllCoursesTool).addTag("mcp-tool");
 builder.registerAndUse(SearchCourseByIdTool).addTag("mcp-tool");
 builder.registerAndUse(SearchCourseBySimilarNameTool).addTag("mcp-tool");
+builder.registerAndUse(SearchSimilarCoursesByIdsTool).addTag("mcp-tool");
 
 // MCP Prompts
 builder

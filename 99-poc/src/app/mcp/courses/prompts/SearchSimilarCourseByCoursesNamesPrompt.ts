@@ -97,7 +97,9 @@ export class SearchSimilarCourseByCoursesNamesPrompt implements McpPrompt {
 					role: "user",
 					content: {
 						type: "text",
-						text: `Encontré ${foundCourses.length} curso(s) similar(es):\n\n${courseList}${notFoundText}\n\nPor favor ayúdame a encontrar más cursos que sean similares a estos en tema, dificultad o contenido.`,
+						text: `
+						Buscar cursos similares usando la herramienta courses-search_similar_by_ids a estos ids: ${foundCourses.map((course) => course.id).join(", ")}
+						`.trim(),
 					},
 				},
 			],
