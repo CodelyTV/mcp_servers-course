@@ -6,6 +6,7 @@ import {
 	ResourceTemplate,
 } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import fs from "fs";
 
 // import { z } from "zod";
 import { CourseByIdFinderErrors } from "../../contexts/mooc/courses/application/find-by-id/CourseByIdFinder";
@@ -88,15 +89,19 @@ server.registerTool(
 );
 
 const searchCourseByIdTool = container.get(SearchCourseByIdTool);
-server.tool(
+server.registerTool(
 	searchCourseByIdTool.name,
-	searchCourseByIdTool.description,
+	{
+		title: searchCourseByIdTool.title,
+		description: searchCourseByIdTool.description,
+		inputSchema: searchCourseByIdTool.inputSchema,
+	},
 	async (args) => {
-		const fs = require("fs");
 		fs.appendFileSync(
 			`${process.env.HOME}/.test.log`,
 			`Tool called with args: ${JSON.stringify(args, null, 2)}\n`,
 		);
+
 		const { id } = args as { id?: string };
 
 		if (!id) {
