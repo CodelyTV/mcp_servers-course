@@ -54,7 +54,7 @@ server.registerTool(
 				.filter((item) => item.type === "text")
 				.map((item) => ({
 					type: "text" as const,
-					text: (item as any).text,
+					text: (item as { text: string }).text,
 				})),
 			structuredContent: response.structuredContent,
 			isError: response.isError,
@@ -78,7 +78,7 @@ server.registerTool(
 				.filter((item) => item.type === "text")
 				.map((item) => ({
 					type: "text" as const,
-					text: (item as any).text,
+					text: (item as { text: string }).text,
 				})),
 			structuredContent: response.structuredContent,
 			isError: response.isError,
@@ -92,9 +92,11 @@ server.registerTool(
 	{
 		title: searchCourseByIdTool.title,
 		description: searchCourseByIdTool.description,
-		inputSchema: searchCourseByIdTool.inputSchema as any,
+		inputSchema: searchCourseByIdTool.inputSchema as unknown as Parameters<
+			typeof server.registerTool
+		>[1]["inputSchema"],
 	},
-	async (args: any) => {
+	async (args: Record<string, unknown>) => {
 		const response = await searchCourseByIdTool.handler(
 			args as { id: string },
 		);
@@ -104,7 +106,7 @@ server.registerTool(
 				.filter((item) => item.type === "text")
 				.map((item) => ({
 					type: "text" as const,
-					text: (item as any).text,
+					text: (item as { text: string }).text,
 				})),
 			structuredContent: response.structuredContent,
 			isError: response.isError,

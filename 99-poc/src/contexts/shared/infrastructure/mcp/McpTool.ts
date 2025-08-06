@@ -1,10 +1,22 @@
 import { McpToolResponse } from "./McpToolResponse";
 
+interface JsonSchema {
+	type: string;
+	properties?: Record<
+		string,
+		{
+			type: string;
+			description?: string;
+		}
+	>;
+	required?: string[];
+}
+
 export interface McpTool {
 	name: string;
 	title: string;
 	description: string;
-	inputSchema: any;
+	inputSchema: JsonSchema | Record<string, never>;
 
-	handler(args?: any): Promise<McpToolResponse>;
+	handler(args?: Record<string, unknown>): Promise<McpToolResponse>;
 }
