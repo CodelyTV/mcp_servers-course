@@ -1,5 +1,4 @@
 import { Service } from "diod";
-import { z } from "zod";
 
 import { AllCoursesSearcher } from "../../../../contexts/mooc/courses/application/search-all/AllCoursesSearcher";
 import { McpTool } from "../../../../contexts/shared/infrastructure/mcp/McpTool";
@@ -14,7 +13,7 @@ export class SearchAllCoursesTool implements McpTool {
 
 	constructor(private readonly searcher: AllCoursesSearcher) {}
 
-	async handler(_args?: Record<string, unknown>): Promise<McpToolResponse> {
+	async handler(): Promise<McpToolResponse> {
 		const courses = await this.searcher.search();
 
 		return McpToolResponse.structured({

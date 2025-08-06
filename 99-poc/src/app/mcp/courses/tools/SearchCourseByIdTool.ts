@@ -1,5 +1,4 @@
 import { Service } from "diod";
-import { z } from "zod";
 
 import {
 	CourseByIdFinder,
@@ -19,18 +18,20 @@ export class SearchCourseByIdTool implements McpTool {
 		"Returns detailed information about a specific course by its ID";
 
 	inputSchema = {
-		id: z.string().describe("The unique identifier of the course"),
+		type: "object",
+		properties: {
+			id: {
+				type: "string",
+				description: "The unique identifier of the course",
+			},
+		},
+		required: ["id"],
 	};
 
 	constructor(private readonly finder: CourseByIdFinder) {}
 
-	async handler(args?: Record<string, unknown>): Promise<McpToolResponse> {
-		if (
-			!args ||
-			!args.id ||
-			typeof args.id !== "string" ||
-			args.id.trim() === ""
-		) {
+	async handler(args: { id: string }): Promise<McpToolResponse> {
+		if (!args.id || args.id.trim() === "") {
 			return McpToolResponse.error("Course ID is required");
 		}
 
