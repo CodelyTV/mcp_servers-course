@@ -6,7 +6,7 @@ import { PostgresConnection } from "../../../../../src/contexts/shared/infrastru
 import { CourseMother } from "../../../../contexts/mooc/courses/domain/CourseMother";
 import { McpClient } from "../../../../contexts/shared/infrastructure/McpClient";
 
-describe("SearchAllCoursesTool MCP Integration", () => {
+describe("SearchAllCoursesTool should", () => {
 	const mcpClient = new McpClient("ts-node", "./src/app/mcp/server.ts");
 	const courseRepository = container.get(CourseRepository);
 	const connection = container.get(PostgresConnection);
@@ -19,14 +19,14 @@ describe("SearchAllCoursesTool MCP Integration", () => {
 		await connection.end();
 	});
 
-	it("should list search_all tool", async () => {
+	it("list search all courses tool", async () => {
 		const tools = await mcpClient.listTools();
 		const toolNames = tools.map((tool) => tool.name);
 
 		expect(toolNames).toContain("search_all");
 	});
 
-	it("should return empty list when calling the tool with no courses", async () => {
+	it("return empty when there are no courses", async () => {
 		const response = await mcpClient.callTool("search_all");
 
 		expect(response).toEqual({
@@ -46,7 +46,7 @@ describe("SearchAllCoursesTool MCP Integration", () => {
 		});
 	});
 
-	it("should return existing courses when calling the tool", async () => {
+	it("return existing courses", async () => {
 		const course = CourseMother.createdToday();
 		const anotherCourse = CourseMother.createdYesterday();
 		const courses = [course, anotherCourse];

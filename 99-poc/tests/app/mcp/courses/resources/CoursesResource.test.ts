@@ -6,7 +6,7 @@ import { PostgresConnection } from "../../../../../src/contexts/shared/infrastru
 import { CourseMother } from "../../../../contexts/mooc/courses/domain/CourseMother";
 import { McpClient } from "../../../../contexts/shared/infrastructure/McpClient";
 
-describe("CoursesResource MCP Integration", () => {
+describe("CoursesResource should", () => {
 	const mcpClient = new McpClient("ts-node", "./src/app/mcp/server.ts");
 	const courseRepository = container.get(CourseRepository);
 	const connection = container.get(PostgresConnection);
@@ -19,13 +19,13 @@ describe("CoursesResource MCP Integration", () => {
 		await connection.end();
 	});
 
-	it("should list courses resource", async () => {
+	it("list courses resource", async () => {
 		const resources = await mcpClient.listResources();
 
 		expect(resources).toContain("courses://all");
 	});
 
-	it("should return empty list reading the resource when empty", async () => {
+	it("return empty when there are no courses", async () => {
 		const response = await mcpClient.readResource("courses://all");
 
 		expect(response).toEqual({
@@ -39,7 +39,7 @@ describe("CoursesResource MCP Integration", () => {
 		});
 	});
 
-	it("should return existing courses reading the resource", async () => {
+	it("return existing courses", async () => {
 		const course = CourseMother.createdToday();
 		const anotherCourse = CourseMother.createdYesterday();
 		const courses = [course, anotherCourse];

@@ -7,7 +7,7 @@ import { CourseIdMother } from "../../../../contexts/mooc/courses/domain/CourseI
 import { CourseMother } from "../../../../contexts/mooc/courses/domain/CourseMother";
 import { McpClient } from "../../../../contexts/shared/infrastructure/McpClient";
 
-describe("CourseResourceTemplate MCP Integration", () => {
+describe("CourseResourceTemplate should", () => {
 	const mcpClient = new McpClient("ts-node", "./src/app/mcp/server.ts");
 	const courseRepository = container.get(CourseRepository);
 	const connection = container.get(PostgresConnection);
@@ -20,7 +20,7 @@ describe("CourseResourceTemplate MCP Integration", () => {
 		await connection.end();
 	});
 
-	it("should return bad request error when course ID is invalid", async () => {
+	it("return bad request error when course id is invalid", async () => {
 		const invalidId = "invalid-id";
 		const response = await mcpClient.readResource(`courses://${invalidId}`);
 
@@ -40,7 +40,7 @@ describe("CourseResourceTemplate MCP Integration", () => {
 		});
 	});
 
-	it("should return not found error when course does not exist", async () => {
+	it("return not found error when course does not exist", async () => {
 		const nonExistentId = CourseIdMother.create().value;
 
 		const response = await mcpClient.readResource(
@@ -66,7 +66,7 @@ describe("CourseResourceTemplate MCP Integration", () => {
 		});
 	});
 
-	it("should return course details when course exists", async () => {
+	it("return course details when course exists", async () => {
 		const course = CourseMother.createdToday();
 		await courseRepository.save(course);
 

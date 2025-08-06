@@ -11,7 +11,7 @@ import { CourseMother } from "../../../../contexts/mooc/courses/domain/CourseMot
 const connection = container.get(PostgresConnection);
 const repository = container.get(PostgresCourseRepository);
 
-describe("/api/mooc/courses", () => {
+describe("/api/mooc/courses should", () => {
 	beforeEach(async () => {
 		await connection.truncateAll();
 	});
@@ -20,7 +20,7 @@ describe("/api/mooc/courses", () => {
 		await connection.end();
 	});
 
-	it("should return empty when no courses exist", async () => {
+	it("return empty when no courses exist", async () => {
 		await testApiHandler({
 			appHandler: handler,
 			test: async ({ fetch }) => {
@@ -32,7 +32,7 @@ describe("/api/mooc/courses", () => {
 		});
 	});
 
-	it("should return all courses", async () => {
+	it("return all courses", async () => {
 		const courses = [
 			CourseMother.create({
 				publishedAt: new Date("2023-02-01"),
@@ -57,7 +57,7 @@ describe("/api/mooc/courses", () => {
 		});
 	});
 
-	it("should return courses ordered by published date descending", async () => {
+	it("return courses ordered by published date descending", async () => {
 		const oldCourse = CourseMother.create({
 			name: "Old Course",
 			publishedAt: new Date("2023-01-01"),
