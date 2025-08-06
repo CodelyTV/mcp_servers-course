@@ -1,3 +1,4 @@
+import { Primitives } from "@codelytv/primitives-type";
 import { Service } from "diod";
 
 import { Course } from "../../domain/Course";
@@ -10,13 +11,13 @@ export type CourseBySimilarNameFinderErrors = CourseBySimilarNameNotFoundError;
 export class CourseBySimilarNameFinder {
 	constructor(private readonly repository: CourseRepository) {}
 
-	async find(name: string): Promise<Course> {
+	async find(name: string): Promise<Primitives<Course>> {
 		const course = await this.repository.searchBySimilarName(name);
 
 		if (!course) {
 			throw new CourseBySimilarNameNotFoundError(name);
 		}
 
-		return course;
+		return course.toPrimitives();
 	}
 }

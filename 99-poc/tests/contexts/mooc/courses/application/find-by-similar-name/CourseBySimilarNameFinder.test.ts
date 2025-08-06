@@ -15,7 +15,7 @@ describe("CourseBySimilarNameFinder should", () => {
 
 		const result = await finder.find(searchName);
 
-		expect(result).toStrictEqual(course);
+		expect(result).toStrictEqual(course.toPrimitives());
 	});
 
 	it("throw CourseBySimilarNameNotFoundError when course is not found", async () => {
