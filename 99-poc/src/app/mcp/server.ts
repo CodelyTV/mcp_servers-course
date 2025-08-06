@@ -6,17 +6,14 @@ import {
 	ResourceTemplate,
 } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import * as fs from "fs";
 
 import { CourseByIdFinderErrors } from "../../contexts/mooc/courses/application/find/CourseFinder";
 import { container } from "../../contexts/shared/infrastructure/dependency-injection/diod.config";
 import { McpResourceContentsResponse } from "../../contexts/shared/infrastructure/mcp/McpResourceContentsResponse";
+import { McpTool } from "../../contexts/shared/infrastructure/mcp/McpTool";
 
 import { CourseResourceTemplate } from "./courses/resources/CourseResourceTemplate";
 import { CoursesResource } from "./courses/resources/CoursesResource";
-import { SearchAllCoursesTool } from "./courses/tools/SearchAllCoursesTool";
-import { SearchCourseByIdTool } from "./courses/tools/SearchCourseByIdTool";
-import { SearchCourseBySimilarNameTool } from "./courses/tools/SearchCourseBySimilarNameTool";
 import { PingTool } from "./ping/tools/PingTool";
 
 function convertParamsToStrings(
@@ -40,111 +37,37 @@ const server = new McpServer({
 	},
 });
 
+const tools = container
+	.findTaggedServiceIdentifiers<McpTool>("mcp-tool")
+	.map((identifier) => container.get(identifier));
+
 const pingTool = new PingTool();
-server.registerTool(
-	pingTool.name,
-	{
-		title: pingTool.title,
-		description: pingTool.description,
-		inputSchema: pingTool.inputSchema,
-	},
-	async () => {
-		const response = await pingTool.handler();
+tools.push(pingTool);
 
-		return {
-			content: response.content
-				.filter((item) => item.type === "text")
-				.map((item) => ({
-					type: "text" as const,
-					text: (item as { text: string }).text,
-				})),
-			structuredContent: response.structuredContent,
-			isError: response.isError,
-		};
-	},
-);
+tools.forEach((tool) => {
+	server.registerTool(
+		tool.name,
+		{
+			title: tool.title,
+			description: tool.description,
+			inputSchema: tool.inputSchema as any,
+		},
+		async (args?: Record<string, unknown>) => {
+			const response = await tool.handler(args);
 
-const searchAllCoursesTool = container.get(SearchAllCoursesTool);
-server.registerTool(
-	searchAllCoursesTool.name,
-	{
-		title: searchAllCoursesTool.title,
-		description: searchAllCoursesTool.description,
-		inputSchema: searchAllCoursesTool.inputSchema,
-	},
-	async () => {
-		const response = await searchAllCoursesTool.handler();
-
-		return {
-			content: response.content
-				.filter((item) => item.type === "text")
-				.map((item) => ({
-					type: "text" as const,
-					text: (item as { text: string }).text,
-				})),
-			structuredContent: response.structuredContent,
-			isError: response.isError,
-		};
-	},
-);
-
-const searchCourseByIdTool = container.get(SearchCourseByIdTool);
-server.registerTool(
-	searchCourseByIdTool.name,
-	{
-		title: searchCourseByIdTool.title,
-		description: searchCourseByIdTool.description,
-		inputSchema: searchCourseByIdTool.inputSchema as any,
-	},
-	async (args: Record<string, unknown>) => {
-		fs.appendFileSync(
-			`${process.env.HOME}/.test.log`,
-			`Tool called with args: ${JSON.stringify(args, null, 2)}\n`,
-		);
-
-		const response = await searchCourseByIdTool.handler(args as any);
-
-		return {
-			content: response.content
-				.filter((item) => item.type === "text")
-				.map((item) => ({
-					type: "text" as const,
-					text: (item as { text: string }).text,
-				})),
-			structuredContent: response.structuredContent,
-			isError: response.isError,
-		};
-	},
-);
-
-const searchCourseBySimilarNameTool = container.get(SearchCourseBySimilarNameTool);
-server.registerTool(
-	searchCourseBySimilarNameTool.name,
-	{
-		title: searchCourseBySimilarNameTool.title,
-		description: searchCourseBySimilarNameTool.description,
-		inputSchema: searchCourseBySimilarNameTool.inputSchema as any,
-	},
-	async (args: Record<string, unknown>) => {
-		fs.appendFileSync(
-			`${process.env.HOME}/.test.log`,
-			`Tool called with args: ${JSON.stringify(args, null, 2)}\n`,
-		);
-
-		const response = await searchCourseBySimilarNameTool.handler(args as any);
-
-		return {
-			content: response.content
-				.filter((item) => item.type === "text")
-				.map((item) => ({
-					type: "text" as const,
-					text: (item as { text: string }).text,
-				})),
-			structuredContent: response.structuredContent,
-			isError: response.isError,
-		};
-	},
-);
+			return {
+				content: response.content
+					.filter((item) => item.type === "text")
+					.map((item) => ({
+						type: "text" as const,
+						text: (item as { text: string }).text,
+					})),
+				structuredContent: response.structuredContent,
+				isError: response.isError,
+			};
+		},
+	);
+});
 
 const coursesResource = container.get(CoursesResource);
 server.registerResource(
