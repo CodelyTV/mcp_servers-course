@@ -34,10 +34,7 @@ export class CourseResourceTemplate implements McpResourceTemplate {
 
 		const course = await this.finder.find(courseId);
 
-		return McpResourceContentsResponse.success(
-			uri.href,
-			course.toPrimitives(),
-		);
+		return McpResourceContentsResponse.success(uri.href, course);
 	}
 
 	onError(
