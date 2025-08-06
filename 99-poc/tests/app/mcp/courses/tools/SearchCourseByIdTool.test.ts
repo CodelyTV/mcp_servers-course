@@ -32,7 +32,9 @@ describe("SearchCourseByIdTool should", () => {
 		const response = await mcpClient.callTool("courses-search_by_id");
 
 		expect(response.isError).toBe(true);
-		expect(response.content[0].text).toContain("Error: id parameter is required");
+		expect(response.content[0].text).toContain(
+			"Error: id parameter is required",
+		);
 	});
 
 	it("tool works correctly when called directly", async () => {
@@ -41,7 +43,9 @@ describe("SearchCourseByIdTool should", () => {
 		const course = CourseMother.createdToday();
 		await courseRepository.save(course);
 
-		const response = await searchCourseByIdTool.handler({ id: course.id.value });
+		const response = await searchCourseByIdTool.handler({
+			id: course.id.value,
+		});
 
 		expect(response.isError).toBe(false);
 		expect(response.structuredContent).toEqual(course.toPrimitives());

@@ -13,7 +13,9 @@ describe("CourseFinder should", () => {
 
 		repository.shouldSearch(course);
 
-		expect(await finder.find(course.id.value)).toStrictEqual(course);
+		expect(await finder.find(course.id.value)).toStrictEqual(
+			course.toPrimitives(),
+		);
 	});
 
 	it("throw CourseNotFoundError when course is not found", async () => {

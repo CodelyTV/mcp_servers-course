@@ -1,3 +1,4 @@
+import { Primitives } from "@codelytv/primitives-type";
 import { Service } from "diod";
 
 import { InvalidNanoIdError } from "../../../../shared/domain/InvalidNanoIdError";
@@ -12,13 +13,13 @@ export type CourseByIdFinderErrors = CourseNotFoundError | InvalidNanoIdError;
 export class CourseFinder {
 	constructor(private readonly repository: CourseRepository) {}
 
-	async find(id: string): Promise<Course> {
+	async find(id: string): Promise<Primitives<Course>> {
 		const course = await this.repository.search(new CourseId(id));
 
 		if (!course) {
 			throw new CourseNotFoundError(id);
 		}
 
-		return course;
+		return course.toPrimitives();
 	}
 }
