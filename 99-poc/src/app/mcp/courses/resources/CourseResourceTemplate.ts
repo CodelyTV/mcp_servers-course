@@ -1,9 +1,9 @@
 import { Service } from "diod";
 
 import {
-	CourseByIdFinder,
 	CourseByIdFinderErrors,
-} from "../../../../contexts/mooc/courses/application/find/CourseByIdFinder";
+	CourseFinder,
+} from "../../../../contexts/mooc/courses/application/find/CourseFinder";
 import { CourseNotFoundError } from "../../../../contexts/mooc/courses/domain/CourseNotFoundError";
 import { assertNever } from "../../../../contexts/shared/domain/assertNever";
 import { InvalidNanoIdError } from "../../../../contexts/shared/domain/InvalidNanoIdError";
@@ -17,7 +17,7 @@ export class CourseResourceTemplate implements McpResourceTemplate {
 	description = "Get detailed information about a specific course by ID";
 	uriTemplate = "courses://{id}";
 
-	constructor(private readonly finder: CourseByIdFinder) {}
+	constructor(private readonly finder: CourseFinder) {}
 
 	async handler(
 		uri: URL,

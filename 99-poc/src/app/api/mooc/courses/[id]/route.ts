@@ -2,12 +2,12 @@ import "reflect-metadata";
 
 import { NextRequest, NextResponse } from "next/server";
 
-import { CourseByIdFinder } from "../../../../../contexts/mooc/courses/application/find/CourseByIdFinder";
+import { CourseFinder } from "../../../../../contexts/mooc/courses/application/find/CourseFinder";
 import { container } from "../../../../../contexts/shared/infrastructure/dependency-injection/diod.config";
 import { HttpNextResponse } from "../../../../../contexts/shared/infrastructure/http/HttpNextResponse";
 import { withErrorHandling } from "../../../../../contexts/shared/infrastructure/http/withErrorHandling";
 
-const finder = container.get(CourseByIdFinder);
+const finder = container.get(CourseFinder);
 
 export const GET = withErrorHandling(
 	async (

@@ -9,7 +9,7 @@ import { CourseRepository } from "../../domain/CourseRepository";
 export type CourseByIdFinderErrors = CourseNotFoundError | InvalidNanoIdError;
 
 @Service()
-export class CourseByIdFinder {
+export class CourseFinder {
 	constructor(private readonly repository: CourseRepository) {}
 
 	async find(id: string): Promise<Course> {
