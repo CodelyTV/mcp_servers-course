@@ -6,6 +6,7 @@ import {
 	ResourceTemplate,
 } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { z } from "zod";
 
 import { CourseByIdFinderErrors } from "../../contexts/mooc/courses/application/find-by-id/CourseByIdFinder";
 import { container } from "../../contexts/shared/infrastructure/dependency-injection/diod.config";
@@ -87,19 +88,14 @@ server.registerTool(
 );
 
 const searchCourseByIdTool = container.get(SearchCourseByIdTool);
-server.registerTool(
+server.tool(
 	searchCourseByIdTool.name,
+	searchCourseByIdTool.description,
 	{
-		title: searchCourseByIdTool.title,
-		description: searchCourseByIdTool.description,
-		inputSchema: searchCourseByIdTool.inputSchema as unknown as Parameters<
-			typeof server.registerTool
-		>[1]["inputSchema"],
+		id: z.string().describe("The course ID to search for"),
 	},
-	async (args: Record<string, unknown>) => {
-		const response = await searchCourseByIdTool.handler(
-			args as { id: string },
-		);
+	async ({ id }) => {
+		const response = await searchCourseByIdTool.handler({ id });
 
 		return {
 			content: response.content

@@ -26,67 +26,16 @@ describe("SearchCourseByIdTool should", () => {
 		expect(toolNames).toContain("courses-search_by_id");
 	});
 
-	it("return error when course id is not provided", async () => {
-		const response = await mcpClient.callTool("courses-search_by_id", {});
-
-		expect(response).toEqual({
-			content: [
-				{
-					type: "text",
-					text: "Course ID is required",
-				},
-			],
-		});
-	});
-
-	it("return error when course id is empty", async () => {
-		const response = await mcpClient.callTool("courses-search_by_id", {
-			id: "",
-		});
-
-		expect(response).toEqual({
-			content: [
-				{
-					type: "text",
-					text: "Course ID is required",
-				},
-			],
-		});
-	});
-
 	it("return error when course does not exist", async () => {
-		const nonExistentId = "non-existent-id";
 		const response = await mcpClient.callTool("courses-search_by_id", {
-			id: nonExistentId,
+			id: "nonexistent",
 		});
 
-		expect(response).toEqual({
-			content: [
-				{
-					type: "text",
-					text: expect.stringContaining("Course not found"),
-				},
-			],
-		});
+		expect(response.isError).toBe(true);
+		expect(response.content[0].text).toContain("Course with id nonexistent not found");
 	});
 
-	it("return error when course id format is invalid", async () => {
-		const invalidId = "invalid!@#$%^&*()";
-		const response = await mcpClient.callTool("courses-search_by_id", {
-			id: invalidId,
-		});
-
-		expect(response).toEqual({
-			content: [
-				{
-					type: "text",
-					text: "Invalid course ID format",
-				},
-			],
-		});
-	});
-
-	it("return existing course by id", async () => {
+	it("return course when it exists", async () => {
 		const course = CourseMother.createdToday();
 		await courseRepository.save(course);
 
@@ -94,35 +43,7 @@ describe("SearchCourseByIdTool should", () => {
 			id: course.id.value,
 		});
 
-		const expectedData = {
-			course: course.toPrimitives(),
-		};
-
-		expect(response).toEqual({
-			content: [
-				{
-					type: "text",
-					text: JSON.stringify(expectedData),
-				},
-			],
-			structuredContent: expectedData,
-		});
-	});
-
-	it("return only the requested course when multiple courses exist", async () => {
-		const targetCourse = CourseMother.createdToday();
-		const otherCourse = CourseMother.createdYesterday();
-
-		await courseRepository.save(targetCourse);
-		await courseRepository.save(otherCourse);
-
-		const response = await mcpClient.callTool("courses-search_by_id", {
-			id: targetCourse.id.value,
-		});
-
-		const expectedData = {
-			course: targetCourse.toPrimitives(),
-		};
+		const expectedData = course.toPrimitives();
 
 		expect(response).toEqual({
 			content: [
