@@ -41,7 +41,12 @@ interface McpListToolsResponse {
 }
 
 interface McpListResourcesResponse {
-	resources: string[];
+	resources: Array<{
+		uri: string;
+		name: string;
+		title: string;
+		description: string;
+	}>;
 }
 
 export class McpClient {
@@ -65,7 +70,7 @@ export class McpClient {
 				"resources/list",
 			);
 
-		return response.resources;
+		return response.resources.map((resource) => resource.uri);
 	}
 
 	async readResource(uri: string): Promise<McpResourcesReadResponse> {

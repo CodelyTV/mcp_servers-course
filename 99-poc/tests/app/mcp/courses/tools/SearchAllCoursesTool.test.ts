@@ -35,13 +35,13 @@ describe("SearchAllCoursesTool MCP Integration", () => {
 					type: "text",
 					text: JSON.stringify({
 						courses: [],
-						total: 0,
+						total: "0",
 					}),
 				},
 			],
 			structuredContent: {
 				courses: [],
-				total: 0,
+				total: "0",
 			},
 		});
 	});

@@ -42,6 +42,7 @@ describe("CourseResourceTemplate MCP Integration", () => {
 
 	it("should return not found error when course does not exist", async () => {
 		const nonExistentId = CourseIdMother.create().value;
+
 		const response = await mcpClient.readResource(
 			`courses://${nonExistentId}`,
 		);

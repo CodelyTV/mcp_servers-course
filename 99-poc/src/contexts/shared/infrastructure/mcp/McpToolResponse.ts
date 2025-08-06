@@ -5,7 +5,7 @@ type TextContent = {
 
 type ImageContent = {
 	type: "image";
-	data: string; // base64-encoded
+	data: string;
 	mimeType: string;
 };
 
@@ -23,7 +23,7 @@ type ToolContent = TextContent | ImageContent | ResourceContent;
 export class McpToolResponse {
 	private constructor(
 		readonly content: ToolContent[],
-		readonly structuredContent?: Record<string, any>,
+		readonly structuredContent?: Record<string, string | number | object>,
 		readonly isError?: boolean,
 	) {}
 
@@ -31,7 +31,9 @@ export class McpToolResponse {
 		return new McpToolResponse([{ type: "text", text }]);
 	}
 
-	static structured(data: Record<string, any>): McpToolResponse {
+	static structured(
+		data: Record<string, string | number | object>,
+	): McpToolResponse {
 		const text = JSON.stringify(data);
 
 		return new McpToolResponse([{ type: "text", text }], data);
@@ -45,10 +47,7 @@ export class McpToolResponse {
 		);
 	}
 
-	static image(
-		data: string,
-		mimeType: string = "image/png",
-	): McpToolResponse {
+	static image(data: string, mimeType: string): McpToolResponse {
 		return new McpToolResponse([{ type: "image", data, mimeType }]);
 	}
 
