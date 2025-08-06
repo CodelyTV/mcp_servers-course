@@ -3,13 +3,8 @@ import { CourseBySimilarNameNotFoundError } from "../../../../../../src/contexts
 import { CourseMother } from "../../domain/CourseMother";
 import { MockCourseRepository } from "../../infrastructure/MockCourseRepository";
 
-let repository: MockCourseRepository;
-let finder: CourseBySimilarNameFinder;
-
-beforeEach(() => {
-	repository = new MockCourseRepository();
-	finder = new CourseBySimilarNameFinder(repository);
-});
+const repository = new MockCourseRepository();
+const finder = new CourseBySimilarNameFinder(repository);
 
 describe("CourseBySimilarNameFinder should", () => {
 	it("find a course by similar name", async () => {
