@@ -1,6 +1,6 @@
 import "reflect-metadata";
 
-import { SearchMultipleSimilarCoursesPrompt } from "../../../../../src/app/mcp/courses/prompts/SearchMultipleSimilarCoursesPrompt";
+import { SearchSimilarCourseByCoursesNamesPrompt } from "../../../../../src/app/mcp/courses/prompts/SearchSimilarCourseByCoursesNamesPrompt";
 import { CourseRepository } from "../../../../../src/contexts/mooc/courses/domain/CourseRepository";
 import { container } from "../../../../../src/contexts/shared/infrastructure/dependency-injection/diod.config";
 import { PostgresConnection } from "../../../../../src/contexts/shared/infrastructure/postgres/PostgresConnection";
@@ -10,7 +10,7 @@ describe("SearchMultipleSimilarCoursesPrompt should", () => {
 	const mcpClient = new McpClient("ts-node", "./src/app/mcp/server.ts");
 	const courseRepository = container.get(CourseRepository);
 	const connection = container.get(PostgresConnection);
-	const prompt = container.get(SearchMultipleSimilarCoursesPrompt);
+	const prompt = container.get(SearchSimilarCourseByCoursesNamesPrompt);
 
 	beforeEach(async () => {
 		await connection.truncateAll();
