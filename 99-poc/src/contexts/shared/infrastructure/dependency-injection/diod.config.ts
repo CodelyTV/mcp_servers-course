@@ -3,6 +3,7 @@ import { ContainerBuilder } from "diod";
 import { CourseResourceTemplate } from "../../../../app/mcp/courses/resources/CourseResourceTemplate";
 import { CoursesResource } from "../../../../app/mcp/courses/resources/CoursesResource";
 import { SearchAllCoursesTool } from "../../../../app/mcp/courses/tools/SearchAllCoursesTool";
+import { SearchCourseByIdTool } from "../../../../app/mcp/courses/tools/SearchCourseByIdTool";
 import { CourseByIdFinder } from "../../../mooc/courses/application/find-by-id/CourseByIdFinder";
 import { CourseBySimilarNameFinder } from "../../../mooc/courses/application/find-by-similar-name/CourseBySimilarNameFinder";
 import { AllCoursesSearcher } from "../../../mooc/courses/application/search-all/AllCoursesSearcher";
@@ -92,6 +93,7 @@ builder.registerAndUse(CourseResourceTemplate);
 
 // MCP Tools
 builder.registerAndUse(SearchAllCoursesTool);
+builder.registerAndUse(SearchCourseByIdTool);
 
 // Export container
 export const container = builder.build();

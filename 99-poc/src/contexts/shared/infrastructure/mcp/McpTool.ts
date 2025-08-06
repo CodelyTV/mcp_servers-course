@@ -4,7 +4,7 @@ export interface McpTool {
 	name: string;
 	title: string;
 	description: string;
-	inputSchema: object;
+	inputSchema: any;
 
-	handler(): Promise<McpToolResponse>;
+	handler(args?: any): Promise<McpToolResponse>;
 }

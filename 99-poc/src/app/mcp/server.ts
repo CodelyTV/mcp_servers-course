@@ -14,6 +14,7 @@ import { McpResourceContentsResponse } from "../../contexts/shared/infrastructur
 import { CourseResourceTemplate } from "./courses/resources/CourseResourceTemplate";
 import { CoursesResource } from "./courses/resources/CoursesResource";
 import { SearchAllCoursesTool } from "./courses/tools/SearchAllCoursesTool";
+import { SearchCourseByIdTool } from "./courses/tools/SearchCourseByIdTool";
 import { PingTool } from "./ping/tools/PingTool";
 
 function convertParamsToStrings(
@@ -71,6 +72,32 @@ server.registerTool(
 	},
 	async () => {
 		const response = await searchAllCoursesTool.handler();
+
+		return {
+			content: response.content
+				.filter((item) => item.type === "text")
+				.map((item) => ({
+					type: "text" as const,
+					text: (item as any).text,
+				})),
+			structuredContent: response.structuredContent,
+			isError: response.isError,
+		};
+	},
+);
+
+const searchCourseByIdTool = container.get(SearchCourseByIdTool);
+server.registerTool(
+	searchCourseByIdTool.name,
+	{
+		title: searchCourseByIdTool.title,
+		description: searchCourseByIdTool.description,
+		inputSchema: searchCourseByIdTool.inputSchema as any,
+	},
+	async (args: any) => {
+		const response = await searchCourseByIdTool.handler(
+			args as { id: string },
+		);
 
 		return {
 			content: response.content
