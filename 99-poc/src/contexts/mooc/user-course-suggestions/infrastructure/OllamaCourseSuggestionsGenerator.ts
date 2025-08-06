@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { StructuredOutputParser } from "@langchain/core/output_parsers";
 import {
 	ChatPromptTemplate,
@@ -48,7 +49,7 @@ export class OllamaCourseSuggestionsGenerator
 						.string()
 						.describe("Motivo por el que se sugiere el curso."),
 				}),
-			),
+			) as any,
 		);
 
 		const chatPrompt = ChatPromptTemplate.fromMessages([
@@ -97,7 +98,7 @@ Cursos que el usuario ya ha completado:
 			format_instructions: outputParser.getFormatInstructions(),
 		});
 
-		return suggestions.map(
+		return (suggestions as { courseId: string; reason: string }[]).map(
 			(suggestion: { courseId: string; reason: string }) =>
 				new CourseSuggestion(suggestion.courseId, suggestion.reason),
 		);

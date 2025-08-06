@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type,@typescript-eslint/no-unnecessary-condition */
+/* eslint-disable @typescript-eslint/explicit-function-return-type,@typescript-eslint/no-unnecessary-condition,@typescript-eslint/no-explicit-any */
 import "reflect-metadata";
 
 import {
@@ -6,7 +6,7 @@ import {
 	ResourceTemplate,
 } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import fs from "fs";
+import * as fs from "fs";
 
 import { CourseByIdFinderErrors } from "../../contexts/mooc/courses/application/find-by-id/CourseByIdFinder";
 import { container } from "../../contexts/shared/infrastructure/dependency-injection/diod.config";
@@ -93,9 +93,9 @@ server.registerTool(
 	{
 		title: searchCourseByIdTool.title,
 		description: searchCourseByIdTool.description,
-		inputSchema: searchCourseByIdTool.inputSchema,
+		inputSchema: searchCourseByIdTool.inputSchema as any,
 	},
-	async (args) => {
+	async (args: Record<string, unknown>) => {
 		fs.appendFileSync(
 			`${process.env.HOME}/.test.log`,
 			`Tool called with args: ${JSON.stringify(args, null, 2)}\n`,
