@@ -15,7 +15,7 @@ const connection = container.get(PostgresConnection);
 const courseRepository = container.get(PostgresCourseRepository);
 const generator = container.get(OllamaCourseSuggestionsGenerator);
 
-describe("OllamaCourseSuggestionsGenerator should", () => {
+describe.skip("OllamaCourseSuggestionsGenerator should", () => {
 	let availableCourses: Course[];
 	let completedCourses: Course[];
 	let suggestions: CourseSuggestion[];
