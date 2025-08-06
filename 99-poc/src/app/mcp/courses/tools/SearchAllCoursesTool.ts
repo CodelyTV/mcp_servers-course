@@ -6,7 +6,7 @@ import { McpToolResponse } from "../../../../contexts/shared/infrastructure/mcp/
 
 @Service()
 export class SearchAllCoursesTool implements McpTool {
-	name = "search_all";
+	name = "courses-search_all";
 	title = "List All Courses";
 	description = "Returns a complete list of all available courses";
 	inputSchema = {};

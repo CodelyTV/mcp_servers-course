@@ -29,7 +29,7 @@ function convertParamsToStrings(
 }
 
 const server = new McpServer({
-	name: "codely-mcp-server",
+	name: "codely-mcp",
 	version: "1.0.0",
 	capabilities: {
 		resources: true,

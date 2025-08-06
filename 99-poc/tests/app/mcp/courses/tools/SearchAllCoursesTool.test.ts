@@ -23,11 +23,11 @@ describe("SearchAllCoursesTool should", () => {
 		const tools = await mcpClient.listTools();
 		const toolNames = tools.map((tool) => tool.name);
 
-		expect(toolNames).toContain("search_all");
+		expect(toolNames).toContain("courses-search_all");
 	});
 
 	it("return empty when there are no courses", async () => {
-		const response = await mcpClient.callTool("search_all");
+		const response = await mcpClient.callTool("courses-search_all");
 
 		expect(response).toEqual({
 			content: [
@@ -55,7 +55,7 @@ describe("SearchAllCoursesTool should", () => {
 			courses.map((course) => courseRepository.save(course)),
 		);
 
-		const response = await mcpClient.callTool("search_all");
+		const response = await mcpClient.callTool("courses-search_all");
 
 		const expectedData = {
 			courses: courses.map((course) => course.toPrimitives()),
