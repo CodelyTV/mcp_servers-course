@@ -8,7 +8,7 @@ import {
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import * as fs from "fs";
 
-import { CourseByIdFinderErrors } from "../../contexts/mooc/courses/application/find-by-id/CourseByIdFinder";
+import { CourseByIdFinderErrors } from "../../contexts/mooc/courses/application/find/CourseByIdFinder";
 import { container } from "../../contexts/shared/infrastructure/dependency-injection/diod.config";
 import { McpResourceContentsResponse } from "../../contexts/shared/infrastructure/mcp/McpResourceContentsResponse";
 

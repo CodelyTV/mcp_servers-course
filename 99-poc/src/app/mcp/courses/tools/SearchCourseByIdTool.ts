@@ -1,7 +1,7 @@
 import { Service } from "diod";
 import * as z from "zod/v3";
 
-import { CourseByIdFinder } from "../../../../contexts/mooc/courses/application/find-by-id/CourseByIdFinder";
+import { CourseByIdFinder } from "../../../../contexts/mooc/courses/application/find/CourseByIdFinder";
 import { McpTool } from "../../../../contexts/shared/infrastructure/mcp/McpTool";
 import { McpToolResponse } from "../../../../contexts/shared/infrastructure/mcp/McpToolResponse";
 

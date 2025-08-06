@@ -1,4 +1,4 @@
-import { CourseByIdFinder } from "../../../../../../src/contexts/mooc/courses/application/find-by-id/CourseByIdFinder";
+import { CourseByIdFinder } from "../../../../../../src/contexts/mooc/courses/application/find/CourseByIdFinder";
 import { CourseNotFoundError } from "../../../../../../src/contexts/mooc/courses/domain/CourseNotFoundError";
 import { CourseIdMother } from "../../domain/CourseIdMother";
 import { CourseMother } from "../../domain/CourseMother";

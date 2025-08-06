@@ -3,7 +3,7 @@ import { Service } from "diod";
 import {
 	CourseByIdFinder,
 	CourseByIdFinderErrors,
-} from "../../../../contexts/mooc/courses/application/find-by-id/CourseByIdFinder";
+} from "../../../../contexts/mooc/courses/application/find/CourseByIdFinder";
 import { CourseNotFoundError } from "../../../../contexts/mooc/courses/domain/CourseNotFoundError";
 import { assertNever } from "../../../../contexts/shared/domain/assertNever";
 import { InvalidNanoIdError } from "../../../../contexts/shared/domain/InvalidNanoIdError";

@@ -4,7 +4,7 @@ import { CourseResourceTemplate } from "../../../../app/mcp/courses/resources/Co
 import { CoursesResource } from "../../../../app/mcp/courses/resources/CoursesResource";
 import { SearchAllCoursesTool } from "../../../../app/mcp/courses/tools/SearchAllCoursesTool";
 import { SearchCourseByIdTool } from "../../../../app/mcp/courses/tools/SearchCourseByIdTool";
-import { CourseByIdFinder } from "../../../mooc/courses/application/find-by-id/CourseByIdFinder";
+import { CourseByIdFinder } from "../../../mooc/courses/application/find/CourseByIdFinder";
 import { CourseBySimilarNameFinder } from "../../../mooc/courses/application/find-by-similar-name/CourseBySimilarNameFinder";
 import { AllCoursesSearcher } from "../../../mooc/courses/application/search-all/AllCoursesSearcher";
 import { AllCoursesPaginatedSearcher } from "../../../mooc/courses/application/search-all-paginated/AllCoursesPaginatedSearcher";
