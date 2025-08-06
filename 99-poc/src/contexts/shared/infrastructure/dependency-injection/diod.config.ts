@@ -12,7 +12,7 @@ import { CourseSearcher } from "../../../mooc/courses/application/search/CourseS
 import { AllCoursesSearcher } from "../../../mooc/courses/application/search-all/AllCoursesSearcher";
 import { AllCoursesPaginatedSearcher } from "../../../mooc/courses/application/search-all-paginated/AllCoursesPaginatedSearcher";
 import { CoursesByIdsSearcher } from "../../../mooc/courses/application/search-by-ids/CoursesByIdsSearcher";
-import { SimilarCoursesSearcher } from "../../../mooc/courses/application/search-similar-to-courses/SimilarCoursesSearcher";
+import { SimilarCoursesByIdsSearcher } from "../../../mooc/courses/application/search-similar-by-ids/SimilarCoursesByIdsSearcher";
 import { CourseRepository } from "../../../mooc/courses/domain/CourseRepository";
 import { PostgresCourseRepository } from "../../../mooc/courses/infrastructure/PostgresCourseRepository";
 import { UserCourseProgressCompleter } from "../../../mooc/user-course-progress/application/complete/UserCourseProgressCompleter";
@@ -86,7 +86,7 @@ builder.registerAndUse(PostgresCourseRepository);
 builder.registerAndUse(CourseFinder);
 builder.registerAndUse(CourseSearcher);
 builder.registerAndUse(CoursesByIdsSearcher);
-builder.registerAndUse(SimilarCoursesSearcher);
+builder.registerAndUse(SimilarCoursesByIdsSearcher);
 builder.registerAndUse(AllCoursesSearcher);
 builder.registerAndUse(AllCoursesPaginatedSearcher);
 builder.registerAndUse(CourseBySimilarNameFinder);

@@ -3,14 +3,14 @@ import "reflect-metadata";
 import { NextRequest, NextResponse } from "next/server";
 
 import {
-	SimilarCoursesSearcher,
+	SimilarCoursesByIdsSearcher,
 	SimilarCoursesSearcherErrors,
-} from "../../../../../contexts/mooc/courses/application/search-similar-to-courses/SimilarCoursesSearcher";
+} from "../../../../../contexts/mooc/courses/application/search-similar-by-ids/SimilarCoursesByIdsSearcher";
 import { container } from "../../../../../contexts/shared/infrastructure/dependency-injection/diod.config";
 import { HttpNextResponse } from "../../../../../contexts/shared/infrastructure/http/HttpNextResponse";
 import { withErrorHandling } from "../../../../../contexts/shared/infrastructure/http/withErrorHandling";
 
-const searcher = container.get(SimilarCoursesSearcher);
+const searcher = container.get(SimilarCoursesByIdsSearcher);
 
 export const GET = withErrorHandling(
 	async (request: NextRequest): Promise<NextResponse> => {

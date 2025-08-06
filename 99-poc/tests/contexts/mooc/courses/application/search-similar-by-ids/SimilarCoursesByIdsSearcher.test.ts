@@ -1,11 +1,11 @@
-import { SimilarCoursesSearcher } from "../../../../../../src/contexts/mooc/courses/application/search-similar-to-courses/SimilarCoursesSearcher";
+import { SimilarCoursesByIdsSearcher } from "../../../../../../src/contexts/mooc/courses/application/search-similar-by-ids/SimilarCoursesByIdsSearcher";
 import { CourseIdMother } from "../../domain/CourseIdMother";
 import { CourseMother } from "../../domain/CourseMother";
 import { MockCourseRepository } from "../../infrastructure/MockCourseRepository";
 
-describe("SimilarCoursesSearcher should", () => {
+describe("SimilarCoursesByIdsSearcher should", () => {
 	const repository = new MockCourseRepository();
-	const searcher = new SimilarCoursesSearcher(repository);
+	const searcher = new SimilarCoursesByIdsSearcher(repository);
 
 	it("search similar courses by ids", async () => {
 		const courseId1 = CourseIdMother.create();

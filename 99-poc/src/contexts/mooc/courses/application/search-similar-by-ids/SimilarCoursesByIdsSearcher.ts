@@ -9,7 +9,7 @@ import { CourseRepository } from "../../domain/CourseRepository";
 export type SimilarCoursesSearcherErrors = InvalidNanoIdError;
 
 @Service()
-export class SimilarCoursesSearcher {
+export class SimilarCoursesByIdsSearcher {
 	constructor(private readonly repository: CourseRepository) {}
 
 	async search(ids: string[]): Promise<Primitives<Course>[]> {

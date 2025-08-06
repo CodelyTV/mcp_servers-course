@@ -11,17 +11,19 @@ import { McpPrompt } from "../../../../contexts/shared/infrastructure/mcp/McpPro
 export class SearchSimilarCourseByCoursesNamesPrompt implements McpPrompt {
 	name = "courses-search_similar_by_names";
 	title = "Buscar Cursos con Nombres Similares";
-	description = "Genera un prompt para buscar un curso similar a los cursos enviados";
+	description =
+		"Genera un prompt para buscar un curso similar a los cursos enviados";
 
 	argsSchema = { names: z.string().optional() };
 
 	constructor(private readonly finder: CourseBySimilarNameFinder) {}
 
 	async handler(args?: { names?: string }): Promise<GetPromptResult> {
-		const names = args?.names
-			?.split(",")
-			.map((name) => name.trim())
-			.filter((name) => name.length > 0) ?? [];
+		const names =
+			args?.names
+				?.split(",")
+				.map((name) => name.trim())
+				.filter((name) => name.length > 0) ?? [];
 
 		if (names.length === 0) {
 			return {
