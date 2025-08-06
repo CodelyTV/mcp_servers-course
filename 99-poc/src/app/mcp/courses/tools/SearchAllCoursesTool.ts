@@ -9,11 +9,15 @@ export class SearchAllCoursesTool implements McpTool {
 	name = "courses-search_all";
 	title = "List All Courses";
 	description = "Returns a complete list of all available courses";
-	inputSchema = {};
+	inputSchema = {
+		type: "object",
+		properties: {},
+		required: [],
+	};
 
 	constructor(private readonly searcher: AllCoursesSearcher) {}
 
-	async handler(): Promise<McpToolResponse> {
+	async handler(_args?: Record<string, unknown>): Promise<McpToolResponse> {
 		const courses = await this.searcher.search();
 
 		return McpToolResponse.structured({

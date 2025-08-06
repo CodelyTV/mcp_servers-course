@@ -30,8 +30,13 @@ export class SearchCourseByIdTool implements McpTool {
 
 	constructor(private readonly finder: CourseByIdFinder) {}
 
-	async handler(args: { id: string }): Promise<McpToolResponse> {
-		if (!args.id || args.id.trim() === "") {
+	async handler(args?: Record<string, unknown>): Promise<McpToolResponse> {
+		if (
+			!args ||
+			!args.id ||
+			typeof args.id !== "string" ||
+			args.id.trim() === ""
+		) {
 			return McpToolResponse.error("Course ID is required");
 		}
 
