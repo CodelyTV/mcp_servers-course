@@ -91,13 +91,13 @@ builder.registerAndUse(AllCoursesPaginatedSearcher);
 builder.registerAndUse(CourseBySimilarNameFinder);
 
 // MCP Resources
-builder.registerAndUse(CoursesResource);
-builder.registerAndUse(CourseResourceTemplate);
+builder.registerAndUse(CoursesResource).addTag("mcp-resource");
+builder.registerAndUse(CourseResourceTemplate).addTag("mcp-resource_template");
 
 // MCP Tools
-builder.registerAndUse(SearchAllCoursesTool);
-builder.registerAndUse(SearchCourseByIdTool);
-builder.registerAndUse(SearchCourseBySimilarNameTool);
+builder.registerAndUse(SearchAllCoursesTool).addTag("mcp-tool");
+builder.registerAndUse(SearchCourseByIdTool).addTag("mcp-tool");
+builder.registerAndUse(SearchCourseBySimilarNameTool).addTag("mcp-tool");
 
 // Export container
 export const container = builder.build();
