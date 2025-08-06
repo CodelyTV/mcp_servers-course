@@ -43,6 +43,7 @@ describe("SearchAllCoursesTool should", () => {
 				courses: [],
 				total: 0,
 			},
+			isError: false,
 		});
 	});
 
@@ -70,6 +71,7 @@ describe("SearchAllCoursesTool should", () => {
 				},
 			],
 			structuredContent: expectedData,
+			isError: false,
 		});
 	});
 });

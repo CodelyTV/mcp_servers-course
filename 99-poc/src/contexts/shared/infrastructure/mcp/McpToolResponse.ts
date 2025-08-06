@@ -28,7 +28,7 @@ export class McpToolResponse {
 	) {}
 
 	static text(text: string): McpToolResponse {
-		return new McpToolResponse([{ type: "text", text }]);
+		return new McpToolResponse([{ type: "text", text }], undefined, false);
 	}
 
 	static structured(
@@ -36,7 +36,7 @@ export class McpToolResponse {
 	): McpToolResponse {
 		const text = JSON.stringify(data);
 
-		return new McpToolResponse([{ type: "text", text }], data);
+		return new McpToolResponse([{ type: "text", text }], data, false);
 	}
 
 	static error(message: string): McpToolResponse {

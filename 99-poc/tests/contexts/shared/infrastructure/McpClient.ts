@@ -88,17 +88,18 @@ export class McpClient {
 			const cmdArgs = [
 				"@modelcontextprotocol/inspector",
 				"--cli",
+				this.runtime,
+				this.serverPath,
 				"--method",
 				"tools/call",
 				"--tool-name",
 				name,
 			];
 
-			if (Object.keys(args).length > 0) {
-				cmdArgs.push("--arguments", JSON.stringify(args));
+			// Add tool arguments using --tool-arg format
+			for (const [key, value] of Object.entries(args)) {
+				cmdArgs.push("--tool-arg", `${key}=${value}`);
 			}
-
-			cmdArgs.push(this.runtime, this.serverPath);
 
 			const process = spawn("npx", cmdArgs);
 

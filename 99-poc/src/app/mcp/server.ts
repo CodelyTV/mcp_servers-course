@@ -6,8 +6,8 @@ import {
 	ResourceTemplate,
 } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { z } from "zod";
 
+// import { z } from "zod";
 import { CourseByIdFinderErrors } from "../../contexts/mooc/courses/application/find-by-id/CourseByIdFinder";
 import { container } from "../../contexts/shared/infrastructure/dependency-injection/diod.config";
 import { McpResourceContentsResponse } from "../../contexts/shared/infrastructure/mcp/McpResourceContentsResponse";
@@ -91,10 +91,26 @@ const searchCourseByIdTool = container.get(SearchCourseByIdTool);
 server.tool(
 	searchCourseByIdTool.name,
 	searchCourseByIdTool.description,
-	{
-		id: z.string().describe("The course ID to search for"),
-	},
-	async ({ id }) => {
+	async (args) => {
+		const fs = require("fs");
+		fs.appendFileSync(
+			`${process.env.HOME}/.test.log`,
+			`Tool called with args: ${JSON.stringify(args, null, 2)}\n`,
+		);
+		const { id } = args as { id?: string };
+
+		if (!id) {
+			return {
+				content: [
+					{
+						type: "text" as const,
+						text: `Error: id parameter is required. Received: ${JSON.stringify(args)}`,
+					},
+				],
+				isError: true,
+			};
+		}
+
 		const response = await searchCourseByIdTool.handler({ id });
 
 		return {
