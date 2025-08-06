@@ -44,7 +44,7 @@ server.registerTool(
 	{
 		title: pingTool.title,
 		description: pingTool.description,
-		inputSchema: pingTool.inputSchema,
+		inputSchema: pingTool.inputSchema as any,
 	},
 	async () => {
 		const response = await pingTool.handler();
@@ -68,7 +68,7 @@ server.registerTool(
 	{
 		title: searchAllCoursesTool.title,
 		description: searchAllCoursesTool.description,
-		inputSchema: searchAllCoursesTool.inputSchema,
+		inputSchema: searchAllCoursesTool.inputSchema as any,
 	},
 	async () => {
 		const response = await searchAllCoursesTool.handler();
@@ -95,9 +95,7 @@ server.registerTool(
 		inputSchema: searchCourseByIdTool.inputSchema as any,
 	},
 	async (args: any) => {
-		const response = await searchCourseByIdTool.handler(
-			args as { id: string },
-		);
+		const response = await searchCourseByIdTool.handler(args);
 
 		return {
 			content: response.content
