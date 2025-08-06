@@ -1,7 +1,7 @@
 import { Service } from "diod";
 import * as z from "zod/v3";
 
-import { CourseFinder } from "../../../../contexts/mooc/courses/application/find/CourseFinder";
+import { CourseSearcher } from "../../../../contexts/mooc/courses/application/search/CourseSearcher";
 import { McpTool } from "../../../../contexts/shared/infrastructure/mcp/McpTool";
 import { McpToolResponse } from "../../../../contexts/shared/infrastructure/mcp/McpToolResponse";
 
@@ -12,15 +12,13 @@ export class SearchCourseByIdTool implements McpTool {
 	description = "Search for a specific course by its id";
 	inputSchema = { id: z.string() };
 
-	constructor(private readonly finder: CourseFinder) {}
+	constructor(private readonly searcher: CourseSearcher) {}
 
 	async handler({ id }: { id: string }): Promise<McpToolResponse> {
-		try {
-			const course = await this.finder.find(id);
+		const course = await this.searcher.search(id);
 
-			return McpToolResponse.structured(course.toPrimitives());
-		} catch (_error) {
-			return McpToolResponse.error(`Course with id ${id} not found`);
-		}
+		return course === null
+			? McpToolResponse.error(`Course with id ${id} not found`)
+			: McpToolResponse.structured(course);
 	}
 }
