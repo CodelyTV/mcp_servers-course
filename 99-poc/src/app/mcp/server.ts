@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type,@typescript-eslint/no-unnecessary-condition,@typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-function-return-type,@typescript-eslint/no-explicit-any */
 import "reflect-metadata";
 
 import {
@@ -7,14 +7,11 @@ import {
 } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 
-import { CourseByIdFinderErrors } from "../../contexts/mooc/courses/application/find/CourseFinder";
 import { container } from "../../contexts/shared/infrastructure/dependency-injection/diod.config";
+import { McpResource } from "../../contexts/shared/infrastructure/mcp/McpResource";
 import { McpResourceContentsResponse } from "../../contexts/shared/infrastructure/mcp/McpResourceContentsResponse";
+import { McpResourceTemplate } from "../../contexts/shared/infrastructure/mcp/McpResourceTemplate";
 import { McpTool } from "../../contexts/shared/infrastructure/mcp/McpTool";
-
-import { CourseResourceTemplate } from "./courses/resources/CourseResourceTemplate";
-import { CoursesResource } from "./courses/resources/CoursesResource";
-import { PingTool } from "./ping/tools/PingTool";
 
 function convertParamsToStrings(
 	params: Record<string, string | string[]>,
@@ -41,9 +38,6 @@ const tools = container
 	.findTaggedServiceIdentifiers<McpTool>("mcp-tool")
 	.map((identifier) => container.get(identifier));
 
-const pingTool = new PingTool();
-tools.push(pingTool);
-
 tools.forEach((tool) => {
 	server.registerTool(
 		tool.name,
@@ -69,57 +63,68 @@ tools.forEach((tool) => {
 	);
 });
 
-const coursesResource = container.get(CoursesResource);
-server.registerResource(
-	coursesResource.name,
-	coursesResource.uriTemplate,
-	{
-		title: coursesResource.title,
-		description: coursesResource.description,
-	},
-	async (_uri) => {
-		const response = await coursesResource.handler();
+const resources = container
+	.findTaggedServiceIdentifiers<McpResource>("mcp-resource")
+	.map((identifier) => container.get(identifier));
 
-		return { contents: response.contents };
-	},
-);
+const resourceTemplates = container
+	.findTaggedServiceIdentifiers<McpResourceTemplate>("mcp-resource_template")
+	.map((identifier) => container.get(identifier));
 
-const courseDetailResource = container.get(CourseResourceTemplate);
-server.registerResource(
-	courseDetailResource.name,
-	new ResourceTemplate(courseDetailResource.uriTemplate, {
-		list: async () => ({ resources: [] }),
-	}),
-	{
-		title: courseDetailResource.title,
-		description: courseDetailResource.description,
-	},
-	async (uri, params) => {
-		try {
-			const response = await courseDetailResource.handler(
-				uri,
-				convertParamsToStrings(params),
-			);
+resources.forEach((resource) => {
+	server.registerResource(
+		resource.name,
+		resource.uriTemplate,
+		{
+			title: resource.title,
+			description: resource.description,
+		},
+		async (_uri) => {
+			const response = await resource.handler();
 
 			return { contents: response.contents };
-		} catch (error) {
-			if (courseDetailResource.onError) {
-				const response = courseDetailResource.onError(
-					error as CourseByIdFinderErrors,
+		},
+	);
+});
+
+resourceTemplates.forEach((resourceTemplate) => {
+	server.registerResource(
+		resourceTemplate.name,
+		new ResourceTemplate(resourceTemplate.uriTemplate, {
+			list: async () => ({ resources: [] }),
+		}),
+		{
+			title: resourceTemplate.title,
+			description: resourceTemplate.description,
+		},
+		async (uri, params) => {
+			try {
+				const response = await resourceTemplate.handler(
 					uri,
 					convertParamsToStrings(params),
 				);
 
 				return { contents: response.contents };
-			}
+			} catch (error) {
+				if (resourceTemplate.onError) {
+					const response = resourceTemplate.onError(
+						error as any,
+						uri,
+						convertParamsToStrings(params),
+					);
 
-			return {
-				contents: McpResourceContentsResponse.internalError(uri.href)
-					.contents,
-			};
-		}
-	},
-);
+					return { contents: response.contents };
+				}
+
+				return {
+					contents: McpResourceContentsResponse.internalError(
+						uri.href,
+					).contents,
+				};
+			}
+		},
+	);
+});
 
 async function main() {
 	const transport = new StdioServerTransport();

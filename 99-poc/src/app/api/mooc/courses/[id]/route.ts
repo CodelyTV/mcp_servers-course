@@ -17,6 +17,6 @@ export const GET = withErrorHandling(
 		const resolvedParams = await params;
 		const course = await finder.find(resolvedParams.id);
 
-		return HttpNextResponse.json(course.toPrimitives());
+		return HttpNextResponse.json(course);
 	},
 );
