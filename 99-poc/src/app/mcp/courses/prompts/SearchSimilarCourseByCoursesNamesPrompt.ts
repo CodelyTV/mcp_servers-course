@@ -6,6 +6,7 @@ import * as z from "zod/v3";
 import { CourseBySimilarNameFinder } from "../../../../contexts/mooc/courses/application/find-by-similar-name/CourseBySimilarNameFinder";
 import { Course } from "../../../../contexts/mooc/courses/domain/Course";
 import { McpPrompt } from "../../../../contexts/shared/infrastructure/mcp/McpPrompt";
+import { McpPromptResponse } from "../../../../contexts/shared/infrastructure/mcp/McpPromptResponse";
 
 @Service()
 export class SearchSimilarCourseByCoursesNamesPrompt implements McpPrompt {
@@ -19,90 +20,43 @@ export class SearchSimilarCourseByCoursesNamesPrompt implements McpPrompt {
 	constructor(private readonly finder: CourseBySimilarNameFinder) {}
 
 	async handler(args?: { names?: string }): Promise<GetPromptResult> {
-		const names =
-			args?.names
-				?.split(",")
-				.map((name) => name.trim())
-				.filter((name) => name.length > 0) ?? [];
+		const names = (args?.names ?? "")
+			.split(",")
+			.map((name) => name.trim())
+			.filter((name) => name.length > 0);
 
 		if (names.length === 0) {
-			return {
-				description:
-					"Por favor proporciona nombres de cursos para buscar cursos similares",
-				messages: [
-					{
-						role: "user",
-						content: {
-							type: "text",
-							text: "Necesitas proporcionar nombres de cursos para encontrar cursos similares. Usa el formato: names=curso1,curso2,curso3",
-						},
-					},
-				],
-			};
+			return McpPromptResponse.userText(
+				"Necesitas proporcionar nombres de cursos para encontrar cursos similares. Usa el formato: names=curso1,curso2,curso3",
+				"Por favor proporciona nombres de cursos para buscar cursos similares",
+			).toGetPromptResult();
 		}
 
-		const foundCourses: Primitives<Course>[] = [];
-		const notFoundNames: string[] = [];
+		const settledResults = await Promise.allSettled(
+			names.map((name) => this.finder.find(name)),
+		);
 
-		const searchPromises = names.map(async (name) => {
-			try {
-				const course = await this.finder.find(name);
-
-				return { success: true as const, course, name };
-			} catch {
-				return { success: false as const, name };
-			}
-		});
-
-		const results = await Promise.all(searchPromises);
-
-		for (const result of results) {
-			if (result.success) {
-				foundCourses.push(result.course);
-			} else {
-				notFoundNames.push(result.name);
-			}
-		}
+		const foundCourses = settledResults
+			.filter(
+				(
+					result,
+				): result is PromiseFulfilledResult<Primitives<Course>> =>
+					result.status === "fulfilled",
+			)
+			.map((result) => result.value);
 
 		if (foundCourses.length === 0) {
-			return {
-				description: "Error buscando cursos similares",
-				messages: [
-					{
-						role: "user",
-						content: {
-							type: "text",
-							text: `No se encontraron cursos similares a los nombres proporcionados: ${names.join(", ")}`,
-						},
-					},
-				],
-			};
+			return McpPromptResponse.userText(
+				`No se encontraron cursos similares a los nombres proporcionados: ${names.join(", ")}`,
+				"Error buscando cursos similares",
+			).toGetPromptResult();
 		}
 
-		const courseList = foundCourses
-			.map((course) => `- ${course.name} (ID: ${course.id})`)
-			.join("\n");
-
-		const notFoundText =
-			notFoundNames.length > 0
-				? `\n\nNo se encontraron cursos similares para: ${notFoundNames.join(
-						", ",
-					)}`
-				: "";
-
-		return {
-			description: `Buscar cursos similares a ${foundCourses.length} curso(s) encontrado(s)`,
-			messages: [
-				{
-					role: "user",
-					content: {
-						type: "text",
-						text: `
-						Buscar cursos similares usando la herramienta courses-search_similar_by_ids a estos ids: ${foundCourses.map((course) => course.id).join(", ")}
-						`.trim(),
-					},
-				},
-			],
-		};
+		return McpPromptResponse.userText(
+			`Buscar cursos similares usando la herramienta courses-search_similar_by_ids a estos ids: ${foundCourses
+				.map((course) => course.id)
+				.join(", ")}`.trim(),
+			`Buscar cursos similares a ${foundCourses.length} curso(s) encontrado(s)`,
+		).toGetPromptResult();
 	}
 }
