@@ -14,7 +14,7 @@ import { McpResourceTemplate } from "../../../../contexts/shared/infrastructure/
 export class CourseResourceTemplate implements McpResourceTemplate {
 	name = "course-detail";
 	title = "Course Detail";
-	description = "Get detailed information about a specific course by ID";
+	description = "Get detailed information about a specific course by id";
 	uriTemplate = "courses://{id}";
 
 	constructor(private readonly finder: CourseFinder) {}
