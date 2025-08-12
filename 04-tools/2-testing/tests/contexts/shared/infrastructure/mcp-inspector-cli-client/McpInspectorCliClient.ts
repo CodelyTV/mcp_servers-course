@@ -89,11 +89,8 @@ export class McpInspectorCliClient {
 				}
 			}
 
-			args.push(...this.command);
-
-			// todo: npx should not be here, should be inside the args array
-			//  when this class is instantiated
-			const process = spawn("npx", args);
+			const [executable, ...commandArgs] = this.command;
+			const process = spawn(executable, [...args, ...commandArgs]);
 
 			let stdout = "";
 			let stderr = "";

@@ -8,6 +8,7 @@ import { McpInspectorCliClient } from "../../../../contexts/shared/infrastructur
 
 describe("CoursesResource should", () => {
 	const mcpClient = new McpInspectorCliClient([
+		"npx",
 		"ts-node",
 		"./src/app/mcp/server.ts",
 	]);

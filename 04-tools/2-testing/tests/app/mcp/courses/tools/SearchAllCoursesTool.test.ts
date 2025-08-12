@@ -8,6 +8,7 @@ import { McpInspectorCliClient } from "../../../../contexts/shared/infrastructur
 
 describe("SearchAllCoursesTool should", () => {
 	const mcpClient = new McpInspectorCliClient([
+		"npx",
 		"ts-node",
 		"./src/app/mcp/server.ts",
 	]);
@@ -50,9 +51,10 @@ describe("SearchAllCoursesTool should", () => {
 	});
 
 	it("return existing courses", async () => {
-		const course = CourseMother.createdToday();
-		const anotherCourse = CourseMother.createdYesterday();
-		const courses = [course, anotherCourse];
+		const courses = [
+			CourseMother.createdToday(),
+			CourseMother.createdYesterday(),
+		];
 
 		await Promise.all(
 			courses.map((course) => courseRepository.save(course)),
