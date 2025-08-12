@@ -30,6 +30,7 @@ describe("CourseResourceTemplate should", () => {
 
 	it("return course details when course exists", async () => {
 		const course = CourseMother.createdToday();
+
 		await courseRepository.save(course);
 
 		const response = await mcpClient.readResource(

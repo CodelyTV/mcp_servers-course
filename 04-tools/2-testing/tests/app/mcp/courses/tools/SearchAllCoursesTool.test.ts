@@ -31,7 +31,7 @@ describe("SearchAllCoursesTool should", () => {
 	it("return empty when there are no courses", async () => {
 		const response = await mcpClient.callTool("courses-search_all");
 
-		expect(response).toEqual({
+		expect(response.toPrimitives()).toEqual({
 			content: [
 				{
 					type: "text",
@@ -65,7 +65,7 @@ describe("SearchAllCoursesTool should", () => {
 			total: 2,
 		};
 
-		expect(response).toEqual({
+		expect(response.toPrimitives()).toEqual({
 			content: [
 				{
 					type: "text",
