@@ -6,7 +6,6 @@ import { McpResourcesListResponse } from "./resources/McpResourcesListResponse";
 import { McpResourcesReadResponse } from "./resources/McpResourcesReadResponse";
 import { McpToolsListResponse } from "./tools/McpToolsListResponse";
 
-
 interface McpToolContent {
 	type: "text" | "image" | "resource";
 	text?: string;
@@ -77,10 +76,9 @@ export class McpInspectorCliClient {
 	}
 
 	async readResource(uri: string): Promise<McpResourcesReadResponse> {
-		const response = await this.execute<Primitives<McpResourcesReadResponse>>(
-			"resources/read",
-			uri,
-		);
+		const response = await this.execute<
+			Primitives<McpResourcesReadResponse>
+		>("resources/read", uri);
 
 		return McpResourcesReadResponse.fromPrimitives(response);
 	}

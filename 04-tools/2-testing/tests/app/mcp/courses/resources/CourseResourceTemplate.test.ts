@@ -36,7 +36,7 @@ describe("CourseResourceTemplate should", () => {
 			`courses://${course.id.value}`,
 		);
 
-		expect(response).toEqual({
+		expect(response.toPrimitives()).toEqual({
 			contents: [
 				{
 					uri: `courses://${course.id.value}`,
