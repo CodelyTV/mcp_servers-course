@@ -75,7 +75,7 @@ prompts.forEach((prompt) => {
 		{
 			title: prompt.title,
 			description: prompt.description,
-			argsSchema: prompt.argsSchema as any,
+			argsSchema: prompt.inputSchema as any,
 		},
 		async (args?: Record<string, unknown>) => {
 			return await prompt.handler(args);

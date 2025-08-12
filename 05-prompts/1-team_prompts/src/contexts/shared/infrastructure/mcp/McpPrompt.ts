@@ -1,10 +1,10 @@
-import { GetPromptResult } from "@modelcontextprotocol/sdk/types.js";
+import { McpPromptResponse } from "./McpPromptResponse";
 
 export interface McpPrompt {
 	name: string;
 	title: string;
 	description: string;
-	argsSchema?: Record<string, unknown>;
+	inputSchema?: Record<string, unknown>;
 
-	handler(args?: Record<string, unknown>): Promise<GetPromptResult>;
+	handler(args?: Record<string, unknown>): Promise<McpPromptResponse>;
 }

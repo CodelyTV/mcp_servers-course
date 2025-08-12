@@ -15,7 +15,7 @@ export class SearchSimilarCourseByCoursesNamesPrompt implements McpPrompt {
 	description =
 		"Genera un prompt para buscar un curso similar a los cursos enviados";
 
-	argsSchema = { names: z.string().optional() };
+	inputSchema = { names: z.string().optional() };
 
 	constructor(private readonly finder: CourseBySimilarNameFinder) {}
 
