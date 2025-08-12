@@ -3,18 +3,9 @@ import { spawn } from "child_process";
 
 import { McpResourceTemplatesListResponse } from "./resource-templates/McpResourceTemplatesListResponse";
 import { McpResourcesListResponse } from "./resources/McpResourcesListResponse";
+import { McpResourcesReadResponse } from "./resources/McpResourcesReadResponse";
 import { McpToolsListResponse } from "./tools/McpToolsListResponse";
 
-interface McpResourceContent {
-	uri: string;
-	mimeType?: string;
-	text?: string;
-	blob?: string;
-}
-
-interface McpResourcesReadResponse {
-	contents: McpResourceContent[];
-}
 
 interface McpToolContent {
 	type: "text" | "image" | "resource";
@@ -86,7 +77,12 @@ export class McpInspectorCliClient {
 	}
 
 	async readResource(uri: string): Promise<McpResourcesReadResponse> {
-		return this.execute<McpResourcesReadResponse>("resources/read", uri);
+		const response = await this.execute<Primitives<McpResourcesReadResponse>>(
+			"resources/read",
+			uri,
+		);
+
+		return McpResourcesReadResponse.fromPrimitives(response);
 	}
 
 	async callTool(
@@ -231,6 +227,8 @@ export class McpInspectorCliClient {
 
 			args.push(...this.command);
 
+			// todo: npx should not be here, should be inside the args array
+			//  when this class is instantiated
 			const process = spawn("npx", args);
 
 			let stdout = "";

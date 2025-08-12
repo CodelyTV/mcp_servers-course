@@ -31,7 +31,7 @@ describe("CoursesResource should", () => {
 	it("return empty when there are no courses", async () => {
 		const response = await mcpClient.readResource("courses://all");
 
-		expect(response).toEqual({
+		expect(response.toPrimitives()).toEqual({
 			contents: [
 				{
 					uri: "courses://all",
@@ -53,7 +53,7 @@ describe("CoursesResource should", () => {
 
 		const response = await mcpClient.readResource("courses://all");
 
-		expect(response).toEqual({
+		expect(response.toPrimitives()).toEqual({
 			contents: [
 				{
 					uri: "courses://all",
