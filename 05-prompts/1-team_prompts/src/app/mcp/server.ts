@@ -35,8 +35,8 @@ tools.forEach((tool) => {
 			description: tool.description,
 			inputSchema: tool.inputSchema as any,
 		},
-		async (args?: Record<string, unknown>) => {
-			const response = await tool.handler(args);
+		async (params?: Record<string, unknown>) => {
+			const response = await tool.handler(params);
 
 			return {
 				content: response.content,
@@ -121,8 +121,8 @@ prompts.forEach((prompt) => {
 			description: prompt.description,
 			argsSchema: prompt.inputSchema as any,
 		},
-		async (args?: Record<string, unknown>) => {
-			const response = await prompt.handler(args);
+		async (params?: Record<string, unknown>) => {
+			const response = await prompt.handler(params);
 
 			return {
 				messages: response.messages,
