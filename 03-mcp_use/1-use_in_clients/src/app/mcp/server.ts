@@ -29,7 +29,7 @@ server.registerTool(
 		description: "View the disk space in G",
 	},
 	() => {
-		const stdout = execSync("df -h / | awk 'NR==2 {print $4}'", {
+		const stdout = execSync("df -h / | /usr/bin/awk 'NR==2 {print $4}'", {
 			encoding: "utf8",
 		});
 

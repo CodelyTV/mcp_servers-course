@@ -1,6 +1,6 @@
 {
 	"mcpServers": {
-		"codely": {
+		"codely-mcp": {
 			"command": "npx",
 			"args": [
 				"ts-node",
