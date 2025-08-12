@@ -19,22 +19,12 @@ export class SearchSimilarCoursesByIdsTool implements McpTool {
 	constructor(private readonly searcher: SimilarCoursesByIdsSearcher) {}
 
 	async handler({ ids }: { ids: string[] }): Promise<McpToolResponse> {
-		try {
-			const courses = await this.searcher.search(ids);
+		const courses = await this.searcher.search(ids);
 
-			return courses.length > 0
-				? McpToolResponse.structured({
-						courses,
-						total: courses.length,
-						searchedIds: ids,
-					})
-				: McpToolResponse.text(
-						"No similar courses found for the provided IDs",
-					);
-		} catch (error) {
-			return McpToolResponse.error(
-				`Error searching similar courses: ${error instanceof Error ? error.message : "Unknown error"}`,
-			);
-		}
+		return McpToolResponse.structured({
+			courses,
+			total: courses.length,
+			searchedIds: ids,
+		});
 	}
 }
