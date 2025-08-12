@@ -6,7 +6,6 @@ import {
 	ResourceTemplate,
 } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { execSync } from "node:child_process";
 
 import { container } from "../../contexts/shared/infrastructure/dependency-injection/diod.config";
 import { McpResource } from "../../contexts/shared/infrastructure/mcp/McpResource";
@@ -19,31 +18,8 @@ const server = new McpServer({
 	capabilities: {
 		resources: true,
 		tools: true,
-		prompts: true,
 	},
 });
-
-server.registerTool(
-	"view_disk_space",
-	{
-		title: "View disk space",
-		description: "View the disk space in G",
-	},
-	() => {
-		const stdout = execSync("df -h / | /usr/bin/awk 'NR==2 {print $4}'", {
-			encoding: "utf8",
-		});
-
-		return {
-			content: [
-				{
-					type: "text",
-					text: `Available disk space: ${stdout.trim()}`,
-				},
-			],
-		};
-	},
-);
 
 const tools = container
 	.findTaggedServiceIdentifiers<McpTool>("mcp-tool")

@@ -18,7 +18,6 @@ const server = new McpServer({
 	capabilities: {
 		resources: true,
 		tools: true,
-		prompts: true,
 	},
 });
 

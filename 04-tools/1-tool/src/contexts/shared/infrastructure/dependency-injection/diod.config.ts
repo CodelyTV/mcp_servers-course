@@ -5,6 +5,7 @@ import { ContainerBuilder } from "diod";
 import { CourseResourceTemplate } from "../../../../app/mcp/courses/resources/CourseResourceTemplate";
 import { CoursesResource } from "../../../../app/mcp/courses/resources/CoursesResource";
 import { SearchSimilarCoursesByIdsTool } from "../../../../app/mcp/courses/tools/SearchSimilarCoursesByIdsTool";
+import { ViewDiskSpaceTool } from "../../../../app/mcp/utils/tools/ViewDiskSpaceTool";
 import { CourseFinder } from "../../../mooc/courses/application/find/CourseFinder";
 import { CourseBySimilarNameFinder } from "../../../mooc/courses/application/find-by-similar-name/CourseBySimilarNameFinder";
 import { CourseSearcher } from "../../../mooc/courses/application/search/CourseSearcher";
@@ -96,6 +97,7 @@ builder.registerAndUse(CourseResourceTemplate).addTag("mcp-resource_template");
 
 // MCP Tools
 builder.registerAndUse(SearchSimilarCoursesByIdsTool).addTag("mcp-tool");
+builder.registerAndUse(ViewDiskSpaceTool).addTag("mcp-tool");
 
 // Export container
 export const container = builder.build();
