@@ -85,7 +85,9 @@ export class McpInspectorCliClient {
 			for (const [key, value] of Object.entries(allArgs)) {
 				if (value !== undefined) {
 					// For arrays, convert to JSON string
-					const argValue = Array.isArray(value) ? JSON.stringify(value) : String(value);
+					const argValue = Array.isArray(value)
+						? JSON.stringify(value)
+						: String(value);
 					args.push("--tool-arg", `${key}=${argValue}`);
 				}
 			}

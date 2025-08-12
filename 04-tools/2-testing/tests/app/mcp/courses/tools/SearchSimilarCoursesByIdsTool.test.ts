@@ -32,7 +32,7 @@ describe("SearchSimilarCoursesByIdsTool should", () => {
 	});
 
 	it("return empty when no similar courses found", async () => {
-		const course = CourseMother.createdToday();
+		const course = CourseMother.create();
 		await courseRepository.save(course);
 
 		const response = await mcpClient.callTool(
@@ -53,6 +53,51 @@ describe("SearchSimilarCoursesByIdsTool should", () => {
 				expect.objectContaining({
 					type: "text",
 					text: JSON.stringify(expectedData),
+				}),
+			],
+			structuredContent: expectedData,
+			isError: false,
+		});
+	});
+
+	it("return similar courses when found", async () => {
+		const jsCourse = CourseMother.create({
+			name: "Advanced JavaScript",
+		});
+		const tsCourse = CourseMother.create({
+			name: "Advanced TypeScript",
+		});
+		const extremeTsCourse = CourseMother.create({
+			name: "Extreme TypeScript",
+		});
+
+		await courseRepository.save(jsCourse);
+		await courseRepository.save(tsCourse);
+		await courseRepository.save(extremeTsCourse);
+
+		const response = await mcpClient.callTool(
+			"courses-search_similar_by_ids",
+			{
+				ids: [jsCourse.id.value, tsCourse.id.value],
+			},
+		);
+
+		const expectedData = {
+			courses: expect.arrayContaining([
+				expect.objectContaining({
+					id: extremeTsCourse.id.value,
+					name: "Extreme TypeScript",
+				}),
+			]),
+			total: expect.any(Number),
+			searchedIds: [jsCourse.id.value, tsCourse.id.value],
+		};
+
+		expect(response.toPrimitives()).toEqual({
+			content: [
+				expect.objectContaining({
+					type: "text",
+					text: expect.any(String),
 				}),
 			],
 			structuredContent: expectedData,
