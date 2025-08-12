@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-import "reflect-metadata";
-
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { execSync } from "child_process";
 
 const server = new McpServer({
 	name: "codely-mcp",
@@ -18,12 +16,10 @@ server.registerTool(
 		title: "View disk space",
 		description: "View the disk space in G",
 	},
-	async () => {
-		const { exec } = await import("child_process");
-		const { promisify } = await import("util");
-		const execAsync = promisify(exec);
-
-		const { stdout } = await execAsync("df -h / | awk 'NR==2 {print $4}'");
+	() => {
+		const stdout = execSync("df -h / | awk 'NR==2 {print $4}'", {
+			encoding: "utf8",
+		});
 
 		return {
 			content: [
@@ -36,7 +32,7 @@ server.registerTool(
 	},
 );
 
-async function main() {
+async function main(): Promise<void> {
 	const transport = new StdioServerTransport();
 
 	await server.connect(transport);
