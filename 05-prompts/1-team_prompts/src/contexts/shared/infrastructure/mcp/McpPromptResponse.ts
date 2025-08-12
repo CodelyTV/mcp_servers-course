@@ -19,9 +19,15 @@ export class McpPromptResponse {
 		);
 	}
 
-	static assistant(text: string, description?: string): McpPromptResponse {
+	static replicateWithAssistant(
+		text: string,
+		description?: string,
+	): McpPromptResponse {
 		return new McpPromptResponse(
-			[{ role: "assistant", content: { type: "text", text } }],
+			[
+				{ role: "assistant", content: { type: "text", text } },
+				{ role: "user", content: { type: "text", text } },
+			],
 			description,
 		);
 	}

@@ -11,7 +11,7 @@ export class ListAllTestsPrompt implements McpPrompt {
 	inputSchema = {};
 
 	async handler(): Promise<McpPromptResponse> {
-		return McpPromptResponse.assistant(
+		return McpPromptResponse.user(
 			`
 			List all tests and test case inside the /tests folder. The format should be:
 			🧪 Test "describe" content
