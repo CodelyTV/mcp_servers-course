@@ -18,4 +18,11 @@ export class McpPromptResponse {
 			description,
 		);
 	}
+
+	static assistant(text: string, description?: string): McpPromptResponse {
+		return new McpPromptResponse(
+			[{ role: "assistant", content: { type: "text", text } }],
+			description,
+		);
+	}
 }
