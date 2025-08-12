@@ -32,7 +32,6 @@ export class CourseResourceTemplate implements McpResourceTemplate {
 	onError(
 		error: CourseByIdFinderErrors,
 		uri: string,
-		_params: { id: string },
 	): McpResourceErrorResponse {
 		switch (true) {
 			case error instanceof CourseNotFoundError:

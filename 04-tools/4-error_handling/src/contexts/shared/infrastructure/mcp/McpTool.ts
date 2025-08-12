@@ -1,3 +1,6 @@
+import { CodelyError } from "../../domain/CodelyError";
+
+import { McpResourceErrorResponse } from "./McpResourceErrorResponse";
 import { McpToolResponse } from "./McpToolResponse";
 
 export interface McpTool {
@@ -6,5 +9,7 @@ export interface McpTool {
 	description: string;
 	inputSchema: unknown;
 
-	handler(args?: Record<string, unknown>): Promise<McpToolResponse>;
+	handler(params?: Record<string, unknown>): Promise<McpToolResponse>;
+
+	onError?(error: CodelyError): McpResourceErrorResponse;
 }

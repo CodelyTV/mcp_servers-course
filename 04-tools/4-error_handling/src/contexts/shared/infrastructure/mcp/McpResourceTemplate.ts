@@ -14,9 +14,5 @@ export interface McpResourceTemplate {
 		params: Record<string, string>,
 	): Promise<McpResourceResponse>;
 
-	onError?(
-		error: CodelyError,
-		uri: string,
-		params: Record<string, string>,
-	): McpResourceErrorResponse;
+	onError?(error: CodelyError, uri: string): McpResourceErrorResponse;
 }

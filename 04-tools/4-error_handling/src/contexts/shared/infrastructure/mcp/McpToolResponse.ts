@@ -21,4 +21,12 @@ export class McpToolResponse {
 
 		return new McpToolResponse([{ type: "text", text }], data, false);
 	}
+
+	static error(message: string): McpToolResponse {
+		return new McpToolResponse(
+			[{ type: "text", text: `${message}` }],
+			undefined,
+			true,
+		);
+	}
 }

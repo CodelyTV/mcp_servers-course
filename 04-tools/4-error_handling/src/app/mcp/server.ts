@@ -92,7 +92,6 @@ resourceTemplates.forEach((resourceTemplate) => {
 					const errorResponse = resourceTemplate.onError(
 						error as any,
 						uri.href,
-						params as Record<string, string>,
 					);
 
 					throw generateMcpError(
