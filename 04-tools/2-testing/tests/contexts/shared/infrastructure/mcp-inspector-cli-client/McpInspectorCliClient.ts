@@ -1,11 +1,7 @@
 import { spawn } from "child_process";
 
-interface McpTool {
-	name: string;
-	title: string;
-	description: string;
-	inputSchema: object;
-}
+import { McpToolListResponse } from "./McpToolListResponse";
+import { McpToolsListResponse } from "./McpToolsListResponse";
 
 interface McpResourceContent {
 	uri: string;
@@ -34,10 +30,6 @@ interface McpToolCallResponse {
 	content: McpToolContent[];
 	structuredContent?: Record<string, unknown>;
 	isError?: boolean;
-}
-
-interface McpListToolsResponse {
-	tools: McpTool[];
 }
 
 interface McpListResourcesResponse {
@@ -85,13 +77,23 @@ interface McpGetPromptResponse {
 export class McpInspectorCliClient {
 	constructor(private readonly command: string[]) {}
 
-	async listTools(): Promise<McpTool[]> {
+	async listTools(): Promise<McpToolsListResponse> {
 		const response =
-			await this.executeInspectorCommand<McpListToolsResponse>(
+			await this.executeInspectorCommand<McpToolsListResponse>(
 				"tools/list",
 			);
 
-		return response.tools;
+		const toolInstances = response.tools.map(
+			(tool) =>
+				new McpToolListResponse(
+					tool.name,
+					tool.title,
+					tool.description,
+					tool.inputSchema,
+				),
+		);
+
+		return new McpToolsListResponse(toolInstances);
 	}
 
 	async listResources(): Promise<string[]> {
