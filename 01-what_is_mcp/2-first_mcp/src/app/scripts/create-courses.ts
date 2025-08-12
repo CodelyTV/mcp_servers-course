@@ -10,7 +10,7 @@ import { PostgresConnection } from "../../contexts/shared/infrastructure/postgre
 
 import jsonCourses from "./courses.json";
 
-async function createCourses(
+async function main(
 	connection: PostgresConnection,
 	repository: PostgresCourseRepository,
 ): Promise<void> {
@@ -30,10 +30,7 @@ async function createCourses(
 	);
 }
 
-createCourses(
-	container.get(PostgresConnection),
-	container.get(PostgresCourseRepository),
-)
+main(container.get(PostgresConnection), container.get(PostgresCourseRepository))
 	.catch(console.error)
 	.finally(async () => {
 		await container.get(PostgresConnection).end();
