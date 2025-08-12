@@ -13,7 +13,9 @@
 		"create-courses": "ts-node ./src/app/scripts/create-courses.ts",
 		"search-courses": "ts-node ./src/app/scripts/search-courses.ts",
 		"mcp:serve": "ts-node ./src/app/mcp/server.ts",
-		"mcp:inspect": "npx @modelcontextprotocol/inspector ts-node ./src/app/mcp/server.ts"
+		"mcp:debug:direct": "node debug-mcp-direct.js",
+		"mcp:inspect": "npx @modelcontextprotocol/inspector ts-node ./src/app/mcp/server.ts",
+		"mcp:inspect:debug": "npx @modelcontextprotocol/inspector ./start-mcp-debug.sh"
 	},
 	"dependencies": {
 		"@langchain/core": "^0.3.66",
