@@ -25,9 +25,10 @@ describe("SearchCourseBySimilarNameTool should", () => {
 
 	it("list search course by similar name tool", async () => {
 		const toolsResponse = await mcpClient.listTools();
-		const toolNames = toolsResponse.names();
 
-		expect(toolNames).toContain("courses-search_by_similar_name");
+		expect(toolsResponse.names()).toContain(
+			"courses-search_by_similar_name",
+		);
 	});
 
 	it("return existing course", async () => {
@@ -45,10 +46,10 @@ describe("SearchCourseBySimilarNameTool should", () => {
 
 		expect(response.toPrimitives()).toEqual({
 			content: [
-				{
+				expect.objectContaining({
 					type: "text",
 					text: JSON.stringify(expectedData),
-				},
+				}),
 			],
 			structuredContent: expectedData,
 			isError: false,

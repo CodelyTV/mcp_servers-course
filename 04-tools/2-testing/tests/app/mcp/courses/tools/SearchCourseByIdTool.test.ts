@@ -25,9 +25,8 @@ describe("SearchCourseByIdTool should", () => {
 
 	it("list search course by id tool", async () => {
 		const toolsResponse = await mcpClient.listTools();
-		const toolNames = toolsResponse.names();
 
-		expect(toolNames).toContain("courses-search_by_id");
+		expect(toolsResponse.names()).toContain("courses-search_by_id");
 	});
 
 	it("return existing course", async () => {
