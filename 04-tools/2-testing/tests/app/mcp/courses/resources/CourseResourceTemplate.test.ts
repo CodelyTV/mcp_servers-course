@@ -23,9 +23,9 @@ describe("CourseResourceTemplate should", () => {
 	});
 
 	it("be listed as an available resource template", async () => {
-		const resourceTemplateUris = await mcpClient.listResourceTemplates();
+		const resourceTemplates = await mcpClient.listResourceTemplates();
 
-		expect(resourceTemplateUris).toContain("courses://{id}");
+		expect(resourceTemplates.uris()).toContain("courses://{id}");
 	});
 
 	it("return course details when course exists", async () => {

@@ -1,8 +1,9 @@
 import { Primitives } from "@codelytv/primitives-type";
 import { spawn } from "child_process";
 
-import { McpToolsListResponse } from "./McpToolsListResponse";
 import { McpResourcesListResponse } from "./McpResourcesListResponse";
+import { McpResourceTemplatesListResponse } from "./McpResourceTemplatesListResponse";
+import { McpToolsListResponse } from "./McpToolsListResponse";
 
 interface McpResourceContent {
 	uri: string;
@@ -31,16 +32,6 @@ interface McpToolCallResponse {
 	content: McpToolContent[];
 	structuredContent?: Record<string, unknown>;
 	isError?: boolean;
-}
-
-
-interface McpListResourceTemplatesResponse {
-	resourceTemplates: Array<{
-		name: string;
-		title: string;
-		uriTemplate: string;
-		description: string;
-	}>;
 }
 
 interface McpPrompt {
@@ -88,20 +79,12 @@ export class McpInspectorCliClient {
 		return McpResourcesListResponse.fromPrimitives(response);
 	}
 
-	async listResourceTemplates(): Promise<
-		Array<{
-			name: string;
-			title: string;
-			uriTemplate: string;
-			description: string;
-		}>
-	> {
-		const response =
-			await this.executeInspectorCommand<McpListResourceTemplatesResponse>(
-				"resources/templates/list",
-			);
+	async listResourceTemplates(): Promise<McpResourceTemplatesListResponse> {
+		const response = await this.executeInspectorCommand<
+			Primitives<McpResourceTemplatesListResponse>
+		>("resources/templates/list");
 
-		return response.resourceTemplates;
+		return McpResourceTemplatesListResponse.fromPrimitives(response);
 	}
 
 	async readResource(uri: string): Promise<McpResourcesReadResponse> {
