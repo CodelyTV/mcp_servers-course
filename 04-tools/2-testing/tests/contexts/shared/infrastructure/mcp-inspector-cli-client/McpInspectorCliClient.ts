@@ -14,7 +14,6 @@ interface McpPrompt {
 	argsSchema?: object;
 }
 
-
 interface McpPromptMessage {
 	role: "user" | "assistant";
 	content: {
@@ -22,7 +21,6 @@ interface McpPromptMessage {
 		text: string;
 	};
 }
-
 
 export class McpInspectorCliClient {
 	constructor(private readonly command: string[]) {}
@@ -63,73 +61,23 @@ export class McpInspectorCliClient {
 		name: string,
 		args: Record<string, unknown> = {},
 	): Promise<McpToolCallResponse> {
-		const response = await this.executeToolCall<
-			Primitives<McpToolCallResponse>
-		>(name, args);
+		const response = await this.execute<Primitives<McpToolCallResponse>>(
+			"tools/call",
+			undefined,
+			undefined,
+			name,
+			args,
+		);
 
 		return McpToolCallResponse.fromPrimitives(response);
-	}
-
-	private async executeToolCall<T>(
-		name: string,
-		args: Record<string, unknown>,
-	): Promise<T> {
-		return new Promise((resolve, reject) => {
-			const cmdArgs = [
-				"@modelcontextprotocol/inspector",
-				"--cli",
-				...this.command,
-				"--method",
-				"tools/call",
-				"--tool-name",
-				name,
-			];
-
-			// Add tool arguments using --tool-arg format
-			for (const [key, value] of Object.entries(args)) {
-				cmdArgs.push("--tool-arg", `${key}=${value}`);
-			}
-
-			const process = spawn("npx", cmdArgs);
-
-			let stdout = "";
-			let stderr = "";
-
-			process.stdout.on("data", (data) => {
-				stdout += data.toString();
-			});
-
-			process.stderr.on("data", (data) => {
-				stderr += data.toString();
-			});
-
-			process.on("close", (code) => {
-				if (code !== 0) {
-					reject(
-						new Error(
-							`Process exited with code ${code}: ${stderr}`,
-						),
-					);
-
-					return;
-				}
-
-				try {
-					const output = stdout.trim();
-					const response = JSON.parse(output);
-
-					resolve(response as T);
-				} catch (error) {
-					reject(error);
-				}
-			});
-		});
 	}
 
 	private async execute<T>(
 		method: string,
 		uri?: string,
 		params?: Record<string, unknown>,
+		toolName?: string,
+		toolArgs?: Record<string, unknown>,
 	): Promise<T> {
 		return new Promise((resolve, reject) => {
 			const args = [
@@ -145,6 +93,16 @@ export class McpInspectorCliClient {
 
 			if (params) {
 				args.push("--arguments", JSON.stringify(params));
+			}
+
+			if (toolName) {
+				args.push("--tool-name", toolName);
+			}
+
+			if (toolArgs) {
+				for (const [key, value] of Object.entries(toolArgs)) {
+					args.push("--tool-arg", `${key}=${value}`);
+				}
 			}
 
 			args.push(...this.command);
