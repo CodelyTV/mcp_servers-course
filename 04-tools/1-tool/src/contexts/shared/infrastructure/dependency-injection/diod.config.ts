@@ -5,7 +5,7 @@ import { ContainerBuilder } from "diod";
 import { CourseResourceTemplate } from "../../../../app/mcp/courses/resources/CourseResourceTemplate";
 import { CoursesResource } from "../../../../app/mcp/courses/resources/CoursesResource";
 import { SearchSimilarCoursesByIdsTool } from "../../../../app/mcp/courses/tools/SearchSimilarCoursesByIdsTool";
-import { ViewDiskSpaceTool } from "../../../../app/mcp/utils/tools/ViewDiskSpaceTool";
+import { ViewDiskSpaceTool } from "../../../../app/mcp/disk/tools/ViewDiskSpaceTool";
 import { CourseFinder } from "../../../mooc/courses/application/find/CourseFinder";
 import { CourseBySimilarNameFinder } from "../../../mooc/courses/application/find-by-similar-name/CourseBySimilarNameFinder";
 import { CourseSearcher } from "../../../mooc/courses/application/search/CourseSearcher";
