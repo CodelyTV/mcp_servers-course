@@ -92,8 +92,7 @@ export class McpInspectorCliClient {
 				}
 			}
 
-			const [executable] = this.command;
-			const process = spawn(executable, args);
+			const process = spawn("npx", args);
 
 			let stdout = "";
 			let stderr = "";
