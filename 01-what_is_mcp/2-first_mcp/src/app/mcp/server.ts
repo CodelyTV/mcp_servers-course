@@ -19,7 +19,21 @@ server.registerTool(
 		description: "View the disk space in G",
 	},
 	async () => {
-		// view disk space executing `df -h / | awk 'NR==2 {print $4}'`
+		const { exec } = await import("child_process");
+		const { promisify } = await import("util");
+		const execAsync = promisify(exec);
+
+		const { stdout } = await execAsync("df -h / | awk 'NR==2 {print $4}'");
+
+		return {
+			content: [
+				{
+					type: "text",
+					text: `Available disk space: ${stdout.trim()}`,
+				},
+			],
+		};
+	},
 );
 
 async function main() {
