@@ -49,6 +49,15 @@ interface McpListResourcesResponse {
 	}>;
 }
 
+interface McpListResourceTemplatesResponse {
+	resourceTemplates: Array<{
+		name: string;
+		title: string;
+		uriTemplate: string;
+		description: string;
+	}>;
+}
+
 interface McpPrompt {
 	name: string;
 	title: string;
@@ -74,9 +83,7 @@ interface McpGetPromptResponse {
 }
 
 export class McpClient {
-	constructor(
-		private readonly command: string[],
-	) {}
+	constructor(private readonly command: string[]) {}
 
 	async listTools(): Promise<McpTool[]> {
 		const response =
@@ -94,6 +101,22 @@ export class McpClient {
 			);
 
 		return response.resources.map((resource) => resource.uri);
+	}
+
+	async listResourceTemplates(): Promise<
+		Array<{
+			name: string;
+			title: string;
+			uriTemplate: string;
+			description: string;
+		}>
+	> {
+		const response =
+			await this.executeInspectorCommand<McpListResourceTemplatesResponse>(
+				"resources/templates/list",
+			);
+
+		return response.resourceTemplates;
 	}
 
 	async readResource(uri: string): Promise<McpResourcesReadResponse> {

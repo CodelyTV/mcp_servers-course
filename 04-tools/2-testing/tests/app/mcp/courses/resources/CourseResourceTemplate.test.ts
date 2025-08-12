@@ -19,6 +19,23 @@ describe("CourseResourceTemplate should", () => {
 		await connection.end();
 	});
 
+	it("be listed as an available resource template", async () => {
+		const resourceTemplates = await mcpClient.listResourceTemplates();
+
+		const courseDetailResourceTemplate = resourceTemplates.find(
+			(template) => template.name === "course-detail",
+		);
+
+		expect(courseDetailResourceTemplate).toBeDefined();
+		expect(courseDetailResourceTemplate?.uriTemplate).toBe(
+			"courses://{id}",
+		);
+		expect(courseDetailResourceTemplate?.title).toBe("Course Detail");
+		expect(courseDetailResourceTemplate?.description).toBe(
+			"Get detailed information about a specific course by id",
+		);
+	});
+
 	it("return course details when course exists", async () => {
 		const course = CourseMother.createdToday();
 		await courseRepository.save(course);
