@@ -50,10 +50,10 @@ describe("SearchSimilarCoursesByIdsTool should", () => {
 
 		expect(response.toPrimitives()).toEqual({
 			content: [
-				expect.objectContaining({
+				{
 					type: "text",
 					text: JSON.stringify(expectedData),
-				}),
+				},
 			],
 			structuredContent: expectedData,
 			isError: false,
