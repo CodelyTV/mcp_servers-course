@@ -31,7 +31,10 @@ describe("CourseResourceTemplate should", () => {
 
 	it("return bad request error when course id is invalid", async () => {
 		const invalidId = "invalid-nanoid";
-		expect(await mcpClient.readResource(`courses://${invalidId}`)).toThrow(
+
+		await expect(
+			mcpClient.readResource(`courses://${invalidId}`),
+		).rejects.toThrow(
 			new Error(
 				`Process exited with code -32000: The id <invalid-nanoid> is not a valid nano id`,
 			),
