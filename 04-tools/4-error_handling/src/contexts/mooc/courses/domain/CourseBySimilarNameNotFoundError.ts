@@ -3,7 +3,7 @@ import { CodelyError } from "../../../shared/domain/CodelyError";
 export class CourseBySimilarNameNotFoundError extends CodelyError {
 	readonly message = "CourseBySimilarNameNotFoundError";
 
-	constructor(cursor: string) {
-		super({ cursor });
+	constructor(readonly courseName: string) {
+		super({ name: courseName });
 	}
 }

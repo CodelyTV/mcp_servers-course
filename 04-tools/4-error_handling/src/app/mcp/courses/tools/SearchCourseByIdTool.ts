@@ -18,7 +18,7 @@ export class SearchCourseByIdTool implements McpTool {
 		const course = await this.searcher.search(id);
 
 		return course === null
-			? McpToolResponse.text(`Course with id ${id} not found`)
+			? McpToolResponse.error(`Course with id ${id} not found`)
 			: McpToolResponse.structured(course);
 	}
 }
