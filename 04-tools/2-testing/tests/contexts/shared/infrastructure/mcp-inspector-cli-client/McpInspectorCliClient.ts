@@ -76,17 +76,17 @@ export class McpInspectorCliClient {
 				args.push("--uri", options.uri);
 			}
 
-			if (options.params) {
-				args.push("--arguments", JSON.stringify(options.params));
-			}
-
 			if (options.toolName) {
 				args.push("--tool-name", options.toolName);
 			}
 
-			if (options.toolArgs) {
-				for (const [key, value] of Object.entries(options.toolArgs)) {
-					args.push("--tool-arg", `${key}=${value}`);
+			// Add tool arguments using --tool-arg format
+			const allArgs = { ...options.params, ...options.toolArgs };
+			for (const [key, value] of Object.entries(allArgs)) {
+				if (value !== undefined) {
+					// For arrays, convert to JSON string
+					const argValue = Array.isArray(value) ? JSON.stringify(value) : String(value);
+					args.push("--tool-arg", `${key}=${argValue}`);
 				}
 			}
 

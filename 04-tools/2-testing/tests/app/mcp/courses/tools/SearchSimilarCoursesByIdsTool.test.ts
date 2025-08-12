@@ -1,0 +1,62 @@
+import "reflect-metadata";
+
+import { CourseRepository } from "../../../../../src/contexts/mooc/courses/domain/CourseRepository";
+import { container } from "../../../../../src/contexts/shared/infrastructure/dependency-injection/diod.config";
+import { PostgresConnection } from "../../../../../src/contexts/shared/infrastructure/postgres/PostgresConnection";
+import { CourseMother } from "../../../../contexts/mooc/courses/domain/CourseMother";
+import { McpInspectorCliClient } from "../../../../contexts/shared/infrastructure/mcp-inspector-cli-client/McpInspectorCliClient";
+
+describe("SearchSimilarCoursesByIdsTool should", () => {
+	const mcpClient = new McpInspectorCliClient([
+		"npx",
+		"ts-node",
+		"./src/app/mcp/server.ts",
+	]);
+	const courseRepository = container.get(CourseRepository);
+	const connection = container.get(PostgresConnection);
+
+	beforeEach(async () => {
+		await connection.truncateAll();
+	});
+
+	afterAll(async () => {
+		await connection.end();
+	});
+
+	it("list search similar courses by ids tool", async () => {
+		const toolsResponse = await mcpClient.listTools();
+
+		expect(toolsResponse.names()).toContain(
+			"courses-search_similar_by_ids",
+		);
+	});
+
+	it("return empty when no similar courses found", async () => {
+		const course = CourseMother.createdToday();
+		await courseRepository.save(course);
+
+		const response = await mcpClient.callTool(
+			"courses-search_similar_by_ids",
+			{
+				ids: [course.id.value],
+			},
+		);
+
+		const expectedData = {
+			courses: [],
+			total: 0,
+			searchedIds: [course.id.value],
+		};
+
+		expect(response.toPrimitives()).toEqual({
+			content: [
+				expect.objectContaining({
+					type: "text",
+					text: JSON.stringify(expectedData),
+				}),
+			],
+			structuredContent: expectedData,
+			isError: false,
+		});
+	});
+});
