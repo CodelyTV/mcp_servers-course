@@ -1,9 +1,9 @@
 import { Primitives } from "@codelytv/primitives-type";
 import { spawn } from "child_process";
 
-import { McpResourcesListResponse } from "./McpResourcesListResponse";
-import { McpResourceTemplatesListResponse } from "./McpResourceTemplatesListResponse";
-import { McpToolsListResponse } from "./McpToolsListResponse";
+import { McpResourceTemplatesListResponse } from "./resource-templates/McpResourceTemplatesListResponse";
+import { McpResourcesListResponse } from "./resources/McpResourcesListResponse";
+import { McpToolsListResponse } from "./tools/McpToolsListResponse";
 
 interface McpResourceContent {
 	uri: string;
