@@ -29,6 +29,26 @@ describe("CourseResourceTemplate should", () => {
 		expect(resourceTemplates.uris()).toContain("courses://{id}");
 	});
 
+	it("return bad request error when course id is invalid", async () => {
+		const invalidId = "invalid-nanoid";
+		const response = await mcpClient.readResource(`courses://${invalidId}`);
+
+		expect(response.toPrimitives()).toEqual({
+			contents: [
+				{
+					uri: `courses://${invalidId}`,
+					mimeType: "application/json",
+					text: JSON.stringify({
+						error: {
+							code: -32000,
+							message: `The id <invalid-nanoid> is not a valid nano id`,
+						},
+					}),
+				},
+			],
+		});
+	});
+
 	it("return course details when course exists", async () => {
 		const course = CourseMother.createdToday();
 
