@@ -16,4 +16,52 @@ export class McpResourceResponse {
 			},
 		]);
 	}
+
+	static notFound(uri: string, message: string): McpResourceResponse {
+		return new McpResourceResponse([
+			{
+				uri,
+				mimeType: "application/json",
+				text: JSON.stringify({
+					error: {
+						code: -32002, // Resource not found: https://modelcontextprotocol.io/specification/2025-06-18/server/resources#error-handling
+						message,
+						data: {
+							uri,
+						},
+					},
+				}),
+			},
+		]);
+	}
+
+	static badRequest(uri: string, message: string): McpResourceResponse {
+		return new McpResourceResponse([
+			{
+				uri,
+				mimeType: "application/json",
+				text: JSON.stringify({
+					error: {
+						code: -32000, // Bad Request: https://github.com/modelcontextprotocol/typescript-sdk/tree/0551cc52b8920d7da46a4519b42f335a0a852b6c?tab=readme-ov-file#streamable-http
+						message,
+					},
+				}),
+			},
+		]);
+	}
+
+	static internalError(uri: string, message?: string): McpResourceResponse {
+		return new McpResourceResponse([
+			{
+				uri,
+				mimeType: "application/json",
+				text: JSON.stringify({
+					error: {
+						code: -32603, // Internal error: https://modelcontextprotocol.io/specification/2025-06-18/server/resources#error-handling
+						message: message ?? "Internal server error",
+					},
+				}),
+			},
+		]);
+	}
 }

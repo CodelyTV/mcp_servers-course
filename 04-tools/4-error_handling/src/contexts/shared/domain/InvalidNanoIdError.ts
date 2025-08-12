@@ -3,7 +3,7 @@ import { CodelyError } from "./CodelyError";
 export class InvalidNanoIdError extends CodelyError {
 	readonly message = "InvalidNanoIdError";
 
-	constructor(id: string) {
+	constructor(readonly id: string) {
 		super({ id });
 	}
 }

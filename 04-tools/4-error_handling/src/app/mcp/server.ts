@@ -9,6 +9,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 
 import { container } from "../../contexts/shared/infrastructure/dependency-injection/diod.config";
 import { McpResource } from "../../contexts/shared/infrastructure/mcp/McpResource";
+import { McpResourceResponse } from "../../contexts/shared/infrastructure/mcp/McpResourceResponse";
 import { McpResourceTemplate } from "../../contexts/shared/infrastructure/mcp/McpResourceTemplate";
 import { McpTool } from "../../contexts/shared/infrastructure/mcp/McpTool";
 
@@ -80,12 +81,29 @@ resourceTemplates.forEach((resourceTemplate) => {
 			description: resourceTemplate.description,
 		},
 		async (uri, params) => {
-			const response = await resourceTemplate.handler(
-				uri.href,
-				params as Record<string, string>,
-			);
+			try {
+				const response = await resourceTemplate.handler(
+					uri.href,
+					params as Record<string, string>,
+				);
 
-			return { contents: response.contents };
+				return { contents: response.contents };
+			} catch (error) {
+				if (resourceTemplate.onError) {
+					const response = resourceTemplate.onError(
+						error as any,
+						uri.href,
+						params as Record<string, string>,
+					);
+
+					return { contents: response.contents };
+				}
+
+				return {
+					contents: McpResourceResponse.internalError(uri.href)
+						.contents,
+				};
+			}
 		},
 	);
 });
