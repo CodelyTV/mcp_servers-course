@@ -63,24 +63,22 @@ export class McpInspectorCliClient {
 
 	async listTools(): Promise<McpToolsListResponse> {
 		const response =
-			await this.executeInspectorCommand<
-				Primitives<McpToolsListResponse>
-			>("tools/list");
+			await this.execute<Primitives<McpToolsListResponse>>("tools/list");
 
 		return McpToolsListResponse.fromPrimitives(response);
 	}
 
 	async listResources(): Promise<McpResourcesListResponse> {
 		const response =
-			await this.executeInspectorCommand<
-				Primitives<McpResourcesListResponse>
-			>("resources/list");
+			await this.execute<Primitives<McpResourcesListResponse>>(
+				"resources/list",
+			);
 
 		return McpResourcesListResponse.fromPrimitives(response);
 	}
 
 	async listResourceTemplates(): Promise<McpResourceTemplatesListResponse> {
-		const response = await this.executeInspectorCommand<
+		const response = await this.execute<
 			Primitives<McpResourceTemplatesListResponse>
 		>("resources/templates/list");
 
@@ -88,10 +86,7 @@ export class McpInspectorCliClient {
 	}
 
 	async readResource(uri: string): Promise<McpResourcesReadResponse> {
-		return this.executeInspectorCommand<McpResourcesReadResponse>(
-			"resources/read",
-			uri,
-		);
+		return this.execute<McpResourcesReadResponse>("resources/read", uri);
 	}
 
 	async callTool(
@@ -152,9 +147,7 @@ export class McpInspectorCliClient {
 
 	async listPrompts(): Promise<McpPrompt[]> {
 		const response =
-			await this.executeInspectorCommand<McpListPromptsResponse>(
-				"prompts/list",
-			);
+			await this.execute<McpListPromptsResponse>("prompts/list");
 
 		return response.prompts;
 	}
@@ -215,7 +208,7 @@ export class McpInspectorCliClient {
 		});
 	}
 
-	private async executeInspectorCommand<T>(
+	private async execute<T>(
 		method: string,
 		uri?: string,
 		params?: Record<string, unknown>,
