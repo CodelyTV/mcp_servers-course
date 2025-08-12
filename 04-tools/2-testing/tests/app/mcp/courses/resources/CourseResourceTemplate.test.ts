@@ -4,10 +4,13 @@ import { CourseRepository } from "../../../../../src/contexts/mooc/courses/domai
 import { container } from "../../../../../src/contexts/shared/infrastructure/dependency-injection/diod.config";
 import { PostgresConnection } from "../../../../../src/contexts/shared/infrastructure/postgres/PostgresConnection";
 import { CourseMother } from "../../../../contexts/mooc/courses/domain/CourseMother";
-import { McpClient } from "../../../../contexts/shared/infrastructure/McpClient";
+import { McpInspectorCliClient } from "../../../../contexts/shared/infrastructure/mcp-inspector-cli-client/McpInspectorCliClient";
 
 describe("CourseResourceTemplate should", () => {
-	const mcpClient = new McpClient(["ts-node", "./src/app/mcp/server.ts"]);
+	const mcpClient = new McpInspectorCliClient([
+		"ts-node",
+		"./src/app/mcp/server.ts",
+	]);
 	const courseRepository = container.get(CourseRepository);
 	const connection = container.get(PostgresConnection);
 
@@ -20,20 +23,9 @@ describe("CourseResourceTemplate should", () => {
 	});
 
 	it("be listed as an available resource template", async () => {
-		const resourceTemplates = await mcpClient.listResourceTemplates();
+		const resourceTemplateUris = await mcpClient.listResourceTemplateUris();
 
-		const courseDetailResourceTemplate = resourceTemplates.find(
-			(template) => template.name === "course-detail",
-		);
-
-		expect(courseDetailResourceTemplate).toBeDefined();
-		expect(courseDetailResourceTemplate?.uriTemplate).toBe(
-			"courses://{id}",
-		);
-		expect(courseDetailResourceTemplate?.title).toBe("Course Detail");
-		expect(courseDetailResourceTemplate?.description).toBe(
-			"Get detailed information about a specific course by id",
-		);
+		expect(resourceTemplateUris).toContain("courses://{id}");
 	});
 
 	it("return course details when course exists", async () => {

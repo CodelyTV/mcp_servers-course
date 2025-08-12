@@ -82,7 +82,7 @@ interface McpGetPromptResponse {
 	messages: McpPromptMessage[];
 }
 
-export class McpClient {
+export class McpInspectorCliClient {
 	constructor(private readonly command: string[]) {}
 
 	async listTools(): Promise<McpTool[]> {
