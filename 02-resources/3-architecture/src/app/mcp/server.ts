@@ -80,7 +80,7 @@ resourceTemplates.forEach((resourceTemplate) => {
 		},
 		async (uri, params) => {
 			const response = await resourceTemplate.handler(
-				uri,
+				uri.href,
 				params as Record<string, string>,
 			);
 

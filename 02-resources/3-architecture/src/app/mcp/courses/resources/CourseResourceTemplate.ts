@@ -14,13 +14,11 @@ export class CourseResourceTemplate implements McpResourceTemplate {
 	constructor(private readonly finder: CourseFinder) {}
 
 	async handler(
-		uri: URL,
-		params: Record<string, string>,
+		uri: string,
+		params: { id: string },
 	): Promise<McpResourceContentsResponse> {
-		const courseId = params.id;
+		const course = await this.finder.find(params.id);
 
-		const course = await this.finder.find(courseId);
-
-		return McpResourceContentsResponse.success(uri.href, course);
+		return McpResourceContentsResponse.success(uri, course);
 	}
 }

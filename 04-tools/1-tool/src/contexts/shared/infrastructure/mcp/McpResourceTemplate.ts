@@ -7,7 +7,7 @@ export interface McpResourceTemplate {
 	uriTemplate: string;
 
 	handler(
-		uri: URL,
+		uri: string,
 		params: Record<string, string>,
 	): Promise<McpResourceContentsResponse>;
 }

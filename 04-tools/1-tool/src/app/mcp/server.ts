@@ -11,6 +11,7 @@ import { execSync } from "node:child_process";
 import { container } from "../../contexts/shared/infrastructure/dependency-injection/diod.config";
 import { McpResource } from "../../contexts/shared/infrastructure/mcp/McpResource";
 import { McpResourceTemplate } from "../../contexts/shared/infrastructure/mcp/McpResourceTemplate";
+import { McpTool } from "../../contexts/shared/infrastructure/mcp/McpTool";
 
 const server = new McpServer({
 	name: "codely-mcp",
@@ -43,6 +44,35 @@ server.registerTool(
 		};
 	},
 );
+
+const tools = container
+	.findTaggedServiceIdentifiers<McpTool>("mcp-tool")
+	.map((identifier) => container.get(identifier));
+
+tools.forEach((tool) => {
+	server.registerTool(
+		tool.name,
+		{
+			title: tool.title,
+			description: tool.description,
+			inputSchema: tool.inputSchema as any,
+		},
+		async (args?: Record<string, unknown>) => {
+			const response = await tool.handler(args);
+
+			return {
+				content: response.content
+					.filter((item) => item.type === "text")
+					.map((item) => ({
+						type: "text" as const,
+						text: (item as { text: string }).text,
+					})),
+				structuredContent: response.structuredContent,
+				isError: response.isError,
+			};
+		},
+	);
+});
 
 const resources = container
 	.findTaggedServiceIdentifiers<McpResource>("mcp-resource")
@@ -80,7 +110,7 @@ resourceTemplates.forEach((resourceTemplate) => {
 		},
 		async (uri, params) => {
 			const response = await resourceTemplate.handler(
-				uri,
+				uri.href,
 				params as Record<string, string>,
 			);
 
