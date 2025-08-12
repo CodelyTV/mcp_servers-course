@@ -1,6 +1,8 @@
 import { Primitives } from "@codelytv/primitives-type";
 import { spawn } from "child_process";
 
+import { McpPromptGetResponse } from "./prompts/McpPromptGetResponse";
+import { McpPromptsListResponse } from "./prompts/McpPromptsListResponse";
 import { McpResourceTemplatesListResponse } from "./resource-templates/McpResourceTemplatesListResponse";
 import { McpResourcesListResponse } from "./resources/McpResourcesListResponse";
 import { McpResourcesReadResponse } from "./resources/McpResourcesReadResponse";
@@ -54,6 +56,27 @@ export class McpInspectorCliClient {
 		return McpToolCallResponse.fromPrimitives(response);
 	}
 
+	async listPrompts(): Promise<McpPromptsListResponse> {
+		const response =
+			await this.execute<Primitives<McpPromptsListResponse>>(
+				"prompts/list",
+			);
+
+		return McpPromptsListResponse.fromPrimitives(response);
+	}
+
+	async getPrompt(
+		name: string,
+		args: Record<string, unknown> = {},
+	): Promise<McpPromptGetResponse> {
+		const response = await this.execute<Primitives<McpPromptGetResponse>>(
+			"prompts/get",
+			{ promptName: name, promptArgs: args },
+		);
+
+		return McpPromptGetResponse.fromPrimitives(response);
+	}
+
 	private async execute<T>(
 		method: string,
 		options: {
@@ -61,6 +84,8 @@ export class McpInspectorCliClient {
 			params?: Record<string, unknown>;
 			toolName?: string;
 			toolArgs?: Record<string, unknown>;
+			promptName?: string;
+			promptArgs?: Record<string, unknown>;
 		} = {},
 	): Promise<T> {
 		return new Promise((resolve, reject) => {
@@ -80,15 +105,25 @@ export class McpInspectorCliClient {
 				args.push("--tool-name", options.toolName);
 			}
 
-			// Add tool arguments using --tool-arg format
-			const allArgs = { ...options.params, ...options.toolArgs };
+			if (options.promptName) {
+				args.push("--prompt-name", options.promptName);
+			}
+
+			const allArgs = {
+				...options.params,
+				...options.toolArgs,
+				...options.promptArgs,
+			};
+
 			for (const [key, value] of Object.entries(allArgs)) {
 				if (value !== undefined) {
-					// For arrays, convert to JSON string
 					const argValue = Array.isArray(value)
 						? JSON.stringify(value)
 						: String(value);
-					args.push("--tool-arg", `${key}=${argValue}`);
+					const argFlag = options.promptName
+						? "--prompt-arg"
+						: "--tool-arg";
+					args.push(argFlag, `${key}=${argValue}`);
 				}
 			}
 
