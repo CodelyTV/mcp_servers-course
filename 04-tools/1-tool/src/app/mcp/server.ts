@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/explicit-function-return-type,@typescript-eslint/no-explicit-any */
 import "reflect-metadata";
 
 import {
@@ -61,12 +61,7 @@ tools.forEach((tool) => {
 			const response = await tool.handler(args);
 
 			return {
-				content: response.content
-					.filter((item) => item.type === "text")
-					.map((item) => ({
-						type: "text" as const,
-						text: (item as { text: string }).text,
-					})),
+				content: response.content,
 				structuredContent: response.structuredContent,
 				isError: response.isError,
 			};

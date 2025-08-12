@@ -4,11 +4,11 @@ type ResourceContent = {
 	text: string;
 };
 
-export class McpResourceContentsResponse {
+export class McpResourceResponse {
 	private constructor(readonly contents: ResourceContent[]) {}
 
-	static success(uri: string, data: unknown): McpResourceContentsResponse {
-		return new McpResourceContentsResponse([
+	static success(uri: string, data: unknown): McpResourceResponse {
+		return new McpResourceResponse([
 			{
 				uri,
 				mimeType: "application/json",

@@ -1,7 +1,7 @@
 import { Service } from "diod";
 
 import { CourseFinder } from "../../../../contexts/mooc/courses/application/find/CourseFinder";
-import { McpResourceContentsResponse } from "../../../../contexts/shared/infrastructure/mcp/McpResourceContentsResponse";
+import { McpResourceResponse } from "../../../../contexts/shared/infrastructure/mcp/McpResourceResponse";
 import { McpResourceTemplate } from "../../../../contexts/shared/infrastructure/mcp/McpResourceTemplate";
 
 @Service()
@@ -16,9 +16,9 @@ export class CourseResourceTemplate implements McpResourceTemplate {
 	async handler(
 		uri: string,
 		params: { id: string },
-	): Promise<McpResourceContentsResponse> {
+	): Promise<McpResourceResponse> {
 		const course = await this.finder.find(params.id);
 
-		return McpResourceContentsResponse.success(uri, course);
+		return McpResourceResponse.success(uri, course);
 	}
 }

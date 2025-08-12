@@ -1,24 +1,7 @@
-type TextContent = {
+type ToolContent = {
 	type: "text";
 	text: string;
 };
-
-type ImageContent = {
-	type: "image";
-	data: string;
-	mimeType: string;
-};
-
-type ResourceContent = {
-	type: "resource";
-	resource: {
-		uri: string;
-		text?: string;
-		mimeType?: string;
-	};
-};
-
-type ToolContent = TextContent | ImageContent | ResourceContent;
 
 export class McpToolResponse {
 	private constructor(
@@ -37,30 +20,5 @@ export class McpToolResponse {
 		const text = JSON.stringify(data);
 
 		return new McpToolResponse([{ type: "text", text }], data, false);
-	}
-
-	static error(message: string): McpToolResponse {
-		return new McpToolResponse(
-			[{ type: "text", text: `Error: ${message}` }],
-			undefined,
-			true,
-		);
-	}
-
-	static image(data: string, mimeType: string): McpToolResponse {
-		return new McpToolResponse([{ type: "image", data, mimeType }]);
-	}
-
-	static resource(
-		uri: string,
-		text?: string,
-		mimeType?: string,
-	): McpToolResponse {
-		return new McpToolResponse([
-			{
-				type: "resource",
-				resource: { uri, text, mimeType },
-			},
-		]);
 	}
 }
