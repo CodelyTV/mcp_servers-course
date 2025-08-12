@@ -39,10 +39,10 @@ describe("SearchCourseByIdTool should", () => {
 
 		expect(response.toPrimitives()).toEqual({
 			content: [
-				expect.objectContaining({
+				{
 					type: "text",
 					text: `Course with id ${nonExistingCourseId} not found`,
-				}),
+				},
 			],
 			structuredContent: undefined,
 			isError: true,
