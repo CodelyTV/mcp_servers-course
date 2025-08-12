@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import "reflect-metadata";
 
 import {
@@ -5,18 +6,19 @@ import {
 	ResourceTemplate,
 } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { execSync } from "child_process";
+import { execSync } from "node:child_process";
 
-import { CourseFinder } from "../../contexts/mooc/courses/application/find/CourseFinder";
-import { AllCoursesSearcher } from "../../contexts/mooc/courses/application/search-all/AllCoursesSearcher";
 import { container } from "../../contexts/shared/infrastructure/dependency-injection/diod.config";
+import { McpResource } from "../../contexts/shared/infrastructure/mcp/McpResource";
+import { McpResourceTemplate } from "../../contexts/shared/infrastructure/mcp/McpResourceTemplate";
 
 const server = new McpServer({
 	name: "codely-mcp",
 	version: "1.0.0",
 	capabilities: {
-		tools: true,
 		resources: true,
+		tools: true,
+		prompts: true,
 	},
 });
 
@@ -42,56 +44,52 @@ server.registerTool(
 	},
 );
 
-const allCoursesSearcher = container.get(AllCoursesSearcher);
-const courseFinder = container.get(CourseFinder);
+const resources = container
+	.findTaggedServiceIdentifiers<McpResource>("mcp-resource")
+	.map((identifier) => container.get(identifier));
 
-server.registerResource(
-	"courses",
-	"courses://all",
-	{
-		title: "All Courses",
-		description: "Complete list of all available courses",
-	},
-	async () => {
-		const courses = await allCoursesSearcher.search();
+resources.forEach((resource) => {
+	server.registerResource(
+		resource.name,
+		resource.uriTemplate,
+		{
+			title: resource.title,
+			description: resource.description,
+		},
+		async (_uri) => {
+			const response = await resource.handler();
 
-		return {
-			contents: [
-				{
-					uri: "courses://all",
-					mimeType: "application/json",
-					text: JSON.stringify(courses),
-				},
-			],
-		};
-	},
-);
+			return { contents: response.contents };
+		},
+	);
+});
 
-server.registerResource(
-	"course",
-	new ResourceTemplate("course://{id}", {
-		list: undefined,
-	}),
-	{
-		title: "Course by id",
-		description: "Get a specific course by its id",
-	},
-	async (uri, params) => {
-		const course = await courseFinder.find(params.id as string);
+const resourceTemplates = container
+	.findTaggedServiceIdentifiers<McpResourceTemplate>("mcp-resource_template")
+	.map((identifier) => container.get(identifier));
 
-		return {
-			contents: [
-				{
-					uri: uri.toString(),
-					mimeType: "application/json",
-					text: JSON.stringify(course),
-				},
-			],
-		};
-	},
-);
+resourceTemplates.forEach((resourceTemplate) => {
+	server.registerResource(
+		resourceTemplate.name,
+		new ResourceTemplate(resourceTemplate.uriTemplate, {
+			list: undefined,
+		}),
+		{
+			title: resourceTemplate.title,
+			description: resourceTemplate.description,
+		},
+		async (uri, params) => {
+			const response = await resourceTemplate.handler(
+				uri,
+				params as Record<string, string>,
+			);
 
-async function main(): Promise<void> {
+			return { contents: response.contents };
+		},
+	);
+});
+
+async function main() {
 	const transport = new StdioServerTransport();
 
 	await server.connect(transport);

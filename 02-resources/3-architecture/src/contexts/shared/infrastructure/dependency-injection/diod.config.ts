@@ -2,6 +2,8 @@ import "reflect-metadata";
 
 import { ContainerBuilder } from "diod";
 
+import { CourseResourceTemplate } from "../../../../app/mcp/courses/resources/CourseResourceTemplate";
+import { CoursesResource } from "../../../../app/mcp/courses/resources/CoursesResource";
 import { CourseFinder } from "../../../mooc/courses/application/find/CourseFinder";
 import { CourseBySimilarNameFinder } from "../../../mooc/courses/application/find-by-similar-name/CourseBySimilarNameFinder";
 import { CourseSearcher } from "../../../mooc/courses/application/search/CourseSearcher";
@@ -86,6 +88,10 @@ builder.registerAndUse(SimilarCoursesByIdsSearcher);
 builder.registerAndUse(AllCoursesSearcher);
 builder.registerAndUse(AllCoursesPaginatedSearcher);
 builder.registerAndUse(CourseBySimilarNameFinder);
+
+// MCP Resources
+builder.registerAndUse(CoursesResource).addTag("mcp-resource");
+builder.registerAndUse(CourseResourceTemplate).addTag("mcp-resource_template");
 
 // Export container
 export const container = builder.build();
