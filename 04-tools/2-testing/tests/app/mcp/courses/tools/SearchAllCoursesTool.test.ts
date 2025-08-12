@@ -7,7 +7,7 @@ import { CourseMother } from "../../../../contexts/mooc/courses/domain/CourseMot
 import { McpClient } from "../../../../contexts/shared/infrastructure/McpClient";
 
 describe("SearchAllCoursesTool should", () => {
-	const mcpClient = new McpClient("ts-node", "./src/app/mcp/server.ts");
+	const mcpClient = new McpClient(["ts-node", "./src/app/mcp/server.ts"]);
 	const courseRepository = container.get(CourseRepository);
 	const connection = container.get(PostgresConnection);
 

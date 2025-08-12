@@ -75,8 +75,7 @@ interface McpGetPromptResponse {
 
 export class McpClient {
 	constructor(
-		private readonly runtime: string,
-		private readonly serverPath: string,
+		private readonly command: string[],
 	) {}
 
 	async listTools(): Promise<McpTool[]> {
@@ -112,8 +111,7 @@ export class McpClient {
 			const cmdArgs = [
 				"@modelcontextprotocol/inspector",
 				"--cli",
-				this.runtime,
-				this.serverPath,
+				...this.command,
 				"--method",
 				"tools/call",
 				"--tool-name",
@@ -178,8 +176,7 @@ export class McpClient {
 			const cmdArgs = [
 				"@modelcontextprotocol/inspector",
 				"--cli",
-				this.runtime,
-				this.serverPath,
+				...this.command,
 				"--method",
 				"prompts/get",
 				"--prompt-name",
@@ -248,7 +245,7 @@ export class McpClient {
 				args.push("--arguments", JSON.stringify(params));
 			}
 
-			args.push(this.runtime, this.serverPath);
+			args.push(...this.command);
 
 			const process = spawn("npx", args);
 
