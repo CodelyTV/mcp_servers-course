@@ -1,12 +1,5 @@
 import { ContainerBuilder } from "diod";
 
-import { SearchSimilarCourseByCoursesNamesPrompt } from "../../../../app/mcp/courses/prompts/SearchSimilarCourseByCoursesNamesPrompt";
-import { CourseResourceTemplate } from "../../../../app/mcp/courses/resources/CourseResourceTemplate";
-import { CoursesResource } from "../../../../app/mcp/courses/resources/CoursesResource";
-import { SearchAllCoursesTool } from "../../../../app/mcp/courses/tools/SearchAllCoursesTool";
-import { SearchCourseByIdTool } from "../../../../app/mcp/courses/tools/SearchCourseByIdTool";
-import { SearchCourseBySimilarNameTool } from "../../../../app/mcp/courses/tools/SearchCourseBySimilarNameTool";
-import { SearchSimilarCoursesByIdsTool } from "../../../../app/mcp/courses/tools/SearchSimilarCoursesByIdsTool";
 import { CourseFinder } from "../../../mooc/courses/application/find/CourseFinder";
 import { CourseBySimilarNameFinder } from "../../../mooc/courses/application/find-by-similar-name/CourseBySimilarNameFinder";
 import { CourseSearcher } from "../../../mooc/courses/application/search/CourseSearcher";
@@ -91,21 +84,6 @@ builder.registerAndUse(SimilarCoursesByIdsSearcher);
 builder.registerAndUse(AllCoursesSearcher);
 builder.registerAndUse(AllCoursesPaginatedSearcher);
 builder.registerAndUse(CourseBySimilarNameFinder);
-
-// MCP Resources
-builder.registerAndUse(CoursesResource).addTag("mcp-resource");
-builder.registerAndUse(CourseResourceTemplate).addTag("mcp-resource_template");
-
-// MCP Tools
-builder.registerAndUse(SearchAllCoursesTool).addTag("mcp-tool");
-builder.registerAndUse(SearchCourseByIdTool).addTag("mcp-tool");
-builder.registerAndUse(SearchCourseBySimilarNameTool).addTag("mcp-tool");
-builder.registerAndUse(SearchSimilarCoursesByIdsTool).addTag("mcp-tool");
-
-// MCP Prompts
-builder
-	.registerAndUse(SearchSimilarCourseByCoursesNamesPrompt)
-	.addTag("mcp-prompt");
 
 // Export container
 export const container = builder.build();

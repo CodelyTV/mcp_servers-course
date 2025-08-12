@@ -1,12 +1,18 @@
+import "reflect-metadata";
+
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { execSync } from "child_process";
+
+import { AllCoursesSearcher } from "../../contexts/mooc/courses/application/search-all/AllCoursesSearcher";
+import { container } from "../../contexts/shared/infrastructure/dependency-injection/diod.config";
 
 const server = new McpServer({
 	name: "codely-mcp",
 	version: "1.0.0",
 	capabilities: {
 		tools: true,
+		resources: true,
 	},
 });
 
@@ -26,6 +32,30 @@ server.registerTool(
 				{
 					type: "text",
 					text: `Available disk space: ${stdout.trim()}`,
+				},
+			],
+		};
+	},
+);
+
+const allCoursesSearcher = container.get(AllCoursesSearcher);
+
+server.registerResource(
+	"courses",
+	"courses://all",
+	{
+		title: "All Courses",
+		description: "Complete list of all available courses",
+	},
+	async () => {
+		const courses = await allCoursesSearcher.search();
+
+		return {
+			contents: [
+				{
+					uri: "courses://all",
+					mimeType: "application/json",
+					text: JSON.stringify(courses),
 				},
 			],
 		};
