@@ -109,21 +109,28 @@ export class McpInspectorCliClient {
 				args.push("--prompt-name", options.promptName);
 			}
 
-			const allArgs = {
-				...options.params,
-				...options.toolArgs,
-				...options.promptArgs,
-			};
+			if (
+				options.promptArgs &&
+				Object.keys(options.promptArgs).length > 0
+			) {
+				for (const [key, value] of Object.entries(options.promptArgs)) {
+					if (value !== undefined) {
+						const argValue = Array.isArray(value)
+							? JSON.stringify(value)
+							: String(value);
+						args.push("--prompt-arg", `${key}=${argValue}`);
+					}
+				}
+			}
 
-			for (const [key, value] of Object.entries(allArgs)) {
-				if (value !== undefined) {
-					const argValue = Array.isArray(value)
-						? JSON.stringify(value)
-						: String(value);
-					const argFlag = options.promptName
-						? "--prompt-arg"
-						: "--tool-arg";
-					args.push(argFlag, `${key}=${argValue}`);
+			if (options.toolArgs) {
+				for (const [key, value] of Object.entries(options.toolArgs)) {
+					if (value !== undefined) {
+						const argValue = Array.isArray(value)
+							? JSON.stringify(value)
+							: String(value);
+						args.push("--tool-arg", `${key}=${argValue}`);
+					}
 				}
 			}
 
