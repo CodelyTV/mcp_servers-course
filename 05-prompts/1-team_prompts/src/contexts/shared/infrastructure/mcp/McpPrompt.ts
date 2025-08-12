@@ -6,5 +6,5 @@ export interface McpPrompt {
 	description: string;
 	inputSchema?: Record<string, unknown>;
 
-	handler(args?: Record<string, unknown>): Promise<McpPromptResponse>;
+	handler(params?: Record<string, unknown>): Promise<McpPromptResponse>;
 }

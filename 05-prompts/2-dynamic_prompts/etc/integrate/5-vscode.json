@@ -2,7 +2,7 @@
 	"servers": {
 		"codely": {
 			"command": "npx",
-			"args": ["ts-node", "/Users/rafa.gomez/Code/codely/mcp-course/05-prompts/1-team_prompts/src/app/mcp/server.ts"]
+			"args": ["ts-node", "/Users/rafa.gomez/Code/codely/mcp-course/05-prompts/2-dynamic_prompts/src/app/mcp/server.ts"]
 		}
 	}
 }

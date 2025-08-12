@@ -2,6 +2,7 @@ import "reflect-metadata";
 
 import { ContainerBuilder } from "diod";
 
+import { SearchSimilarCourseByCoursesNamesPrompt } from "../../../../app/mcp/courses/prompts/SearchSimilarCourseByCoursesNamesPrompt";
 import { CourseResourceTemplate } from "../../../../app/mcp/courses/resources/CourseResourceTemplate";
 import { CoursesResource } from "../../../../app/mcp/courses/resources/CoursesResource";
 import { SearchAllCoursesTool } from "../../../../app/mcp/courses/tools/SearchAllCoursesTool";
@@ -108,6 +109,10 @@ builder.registerAndUse(SearchCourseBySimilarNameTool).addTag("mcp-tool");
 builder.registerAndUse(ViewDiskSpaceTool).addTag("mcp-tool");
 
 // MCP Prompts
+builder
+	.registerAndUse(SearchSimilarCourseByCoursesNamesPrompt)
+	.addTag("mcp-prompt");
+
 builder.registerAndUse(ListAllTestsPrompt).addTag("mcp-prompt");
 
 // Export container
