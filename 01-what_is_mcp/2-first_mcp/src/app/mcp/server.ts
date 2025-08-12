@@ -1,150 +1,26 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type,@typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import "reflect-metadata";
 
-import {
-	McpServer,
-	ResourceTemplate,
-} from "@modelcontextprotocol/sdk/server/mcp.js";
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-
-import { container } from "../../contexts/shared/infrastructure/dependency-injection/diod.config";
-import { McpPrompt } from "../../contexts/shared/infrastructure/mcp/McpPrompt";
-import { McpResource } from "../../contexts/shared/infrastructure/mcp/McpResource";
-import { McpResourceContentsResponse } from "../../contexts/shared/infrastructure/mcp/McpResourceContentsResponse";
-import { McpResourceTemplate } from "../../contexts/shared/infrastructure/mcp/McpResourceTemplate";
-import { McpTool } from "../../contexts/shared/infrastructure/mcp/McpTool";
-
-function convertParamsToStrings(
-	params: Record<string, string | string[]>,
-): Record<string, string> {
-	const result: Record<string, string> = {};
-
-	for (const [key, value] of Object.entries(params)) {
-		result[key] = Array.isArray(value) ? value[0] : value;
-	}
-
-	return result;
-}
 
 const server = new McpServer({
 	name: "codely-mcp",
 	version: "1.0.0",
 	capabilities: {
-		resources: true,
 		tools: true,
-		prompts: true,
 	},
 });
 
-const tools = container
-	.findTaggedServiceIdentifiers<McpTool>("mcp-tool")
-	.map((identifier) => container.get(identifier));
-
-tools.forEach((tool) => {
-	server.registerTool(
-		tool.name,
-		{
-			title: tool.title,
-			description: tool.description,
-			inputSchema: tool.inputSchema as any,
-		},
-		async (args?: Record<string, unknown>) => {
-			const response = await tool.handler(args);
-
-			return {
-				content: response.content
-					.filter((item) => item.type === "text")
-					.map((item) => ({
-						type: "text" as const,
-						text: (item as { text: string }).text,
-					})),
-				structuredContent: response.structuredContent,
-				isError: response.isError,
-			};
-		},
-	);
-});
-
-const prompts = container
-	.findTaggedServiceIdentifiers<McpPrompt>("mcp-prompt")
-	.map((identifier) => container.get(identifier));
-
-prompts.forEach((prompt) => {
-	server.registerPrompt(
-		prompt.name,
-		{
-			title: prompt.title,
-			description: prompt.description,
-			argsSchema: prompt.argsSchema as any,
-		},
-		async (args?: Record<string, unknown>) => {
-			return await prompt.handler(args);
-		},
-	);
-});
-
-const resources = container
-	.findTaggedServiceIdentifiers<McpResource>("mcp-resource")
-	.map((identifier) => container.get(identifier));
-
-const resourceTemplates = container
-	.findTaggedServiceIdentifiers<McpResourceTemplate>("mcp-resource_template")
-	.map((identifier) => container.get(identifier));
-
-resources.forEach((resource) => {
-	server.registerResource(
-		resource.name,
-		resource.uriTemplate,
-		{
-			title: resource.title,
-			description: resource.description,
-		},
-		async (_uri) => {
-			const response = await resource.handler();
-
-			return { contents: response.contents };
-		},
-	);
-});
-
-resourceTemplates.forEach((resourceTemplate) => {
-	server.registerResource(
-		resourceTemplate.name,
-		new ResourceTemplate(resourceTemplate.uriTemplate, {
-			list: async () => ({ resources: [] }),
-		}),
-		{
-			title: resourceTemplate.title,
-			description: resourceTemplate.description,
-		},
-		async (uri, params) => {
-			try {
-				const response = await resourceTemplate.handler(
-					uri,
-					convertParamsToStrings(params),
-				);
-
-				return { contents: response.contents };
-			} catch (error) {
-				if (resourceTemplate.onError) {
-					const response = resourceTemplate.onError(
-						error as any,
-						uri,
-						convertParamsToStrings(params),
-					);
-
-					return { contents: response.contents };
-				}
-
-				return {
-					contents: McpResourceContentsResponse.internalError(
-						uri.href,
-					).contents,
-				};
-			}
-		},
-	);
-});
+server.registerTool(
+	"view_disk_space",
+	{
+		title: "View disk space",
+		description: "View the disk space in G",
+	},
+	async () => {
+		// view disk space executing `df -h / | awk 'NR==2 {print $4}'`
+);
 
 async function main() {
 	const transport = new StdioServerTransport();
