@@ -1,5 +1,6 @@
 import { CodelyError } from "../../domain/CodelyError";
 
+import { McpResourceErrorResponse } from "./McpResourceErrorResponse";
 import { McpResourceResponse } from "./McpResourceResponse";
 
 export interface McpResourceTemplate {
@@ -17,5 +18,5 @@ export interface McpResourceTemplate {
 		error: CodelyError,
 		uri: string,
 		params: Record<string, string>,
-	): McpResourceResponse;
+	): McpResourceErrorResponse;
 }

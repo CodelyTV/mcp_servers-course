@@ -7,6 +7,7 @@ import {
 import { CourseNotFoundError } from "../../../../contexts/mooc/courses/domain/CourseNotFoundError";
 import { assertNever } from "../../../../contexts/shared/domain/assertNever";
 import { InvalidNanoIdError } from "../../../../contexts/shared/domain/InvalidNanoIdError";
+import { McpResourceErrorResponse } from "../../../../contexts/shared/infrastructure/mcp/McpResourceErrorResponse";
 import { McpResourceResponse } from "../../../../contexts/shared/infrastructure/mcp/McpResourceResponse";
 import { McpResourceTemplate } from "../../../../contexts/shared/infrastructure/mcp/McpResourceTemplate";
 
@@ -32,17 +33,17 @@ export class CourseResourceTemplate implements McpResourceTemplate {
 		error: CourseByIdFinderErrors,
 		uri: string,
 		_params: { id: string },
-	): McpResourceResponse {
+	): McpResourceErrorResponse {
 		switch (true) {
 			case error instanceof CourseNotFoundError:
-				return McpResourceResponse.notFound(
-					uri,
+				return McpResourceErrorResponse.notFound(
 					`The course <${error.id}> has not been found`,
+					uri,
 				);
 			case error instanceof InvalidNanoIdError:
-				return McpResourceResponse.badRequest(
-					uri,
+				return McpResourceErrorResponse.badRequest(
 					`The id <${error.id}> is not a valid nano id`,
+					uri,
 				);
 			default:
 				assertNever(error);
