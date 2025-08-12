@@ -1,9 +1,13 @@
 import "reflect-metadata";
 
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import {
+	McpServer,
+	ResourceTemplate,
+} from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { execSync } from "child_process";
 
+import { CourseFinder } from "../../contexts/mooc/courses/application/find/CourseFinder";
 import { AllCoursesSearcher } from "../../contexts/mooc/courses/application/search-all/AllCoursesSearcher";
 import { container } from "../../contexts/shared/infrastructure/dependency-injection/diod.config";
 
@@ -39,6 +43,7 @@ server.registerTool(
 );
 
 const allCoursesSearcher = container.get(AllCoursesSearcher);
+const courseFinder = container.get(CourseFinder);
 
 server.registerResource(
 	"courses",
@@ -56,6 +61,30 @@ server.registerResource(
 					uri: "courses://all",
 					mimeType: "application/json",
 					text: JSON.stringify(courses),
+				},
+			],
+		};
+	},
+);
+
+server.registerResource(
+	"course",
+	new ResourceTemplate("course://{id}", {
+		list: undefined,
+	}),
+	{
+		title: "Course by id",
+		description: "Get a specific course by its id",
+	},
+	async (uri, params) => {
+		const course = await courseFinder.find(params.id as string);
+
+		return {
+			contents: [
+				{
+					uri: uri.toString(),
+					mimeType: "application/json",
+					text: JSON.stringify(course),
 				},
 			],
 		};
