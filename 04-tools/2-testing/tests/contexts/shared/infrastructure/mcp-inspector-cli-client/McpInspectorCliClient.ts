@@ -7,21 +7,6 @@ import { McpResourcesReadResponse } from "./resources/McpResourcesReadResponse";
 import { McpToolCallResponse } from "./tools/McpToolCallResponse";
 import { McpToolsListResponse } from "./tools/McpToolsListResponse";
 
-interface McpPrompt {
-	name: string;
-	title: string;
-	description: string;
-	argsSchema?: object;
-}
-
-interface McpPromptMessage {
-	role: "user" | "assistant";
-	content: {
-		type: "text";
-		text: string;
-	};
-}
-
 export class McpInspectorCliClient {
 	constructor(private readonly command: string[]) {}
 
@@ -52,7 +37,7 @@ export class McpInspectorCliClient {
 	async readResource(uri: string): Promise<McpResourcesReadResponse> {
 		const response = await this.execute<
 			Primitives<McpResourcesReadResponse>
-		>("resources/read", uri);
+		>("resources/read", { uri });
 
 		return McpResourcesReadResponse.fromPrimitives(response);
 	}
@@ -63,10 +48,7 @@ export class McpInspectorCliClient {
 	): Promise<McpToolCallResponse> {
 		const response = await this.execute<Primitives<McpToolCallResponse>>(
 			"tools/call",
-			undefined,
-			undefined,
-			name,
-			args,
+			{ toolName: name, toolArgs: args },
 		);
 
 		return McpToolCallResponse.fromPrimitives(response);
@@ -74,10 +56,12 @@ export class McpInspectorCliClient {
 
 	private async execute<T>(
 		method: string,
-		uri?: string,
-		params?: Record<string, unknown>,
-		toolName?: string,
-		toolArgs?: Record<string, unknown>,
+		options: {
+			uri?: string;
+			params?: Record<string, unknown>;
+			toolName?: string;
+			toolArgs?: Record<string, unknown>;
+		} = {},
 	): Promise<T> {
 		return new Promise((resolve, reject) => {
 			const args = [
@@ -87,20 +71,20 @@ export class McpInspectorCliClient {
 				method,
 			];
 
-			if (uri) {
-				args.push("--uri", uri);
+			if (options.uri) {
+				args.push("--uri", options.uri);
 			}
 
-			if (params) {
-				args.push("--arguments", JSON.stringify(params));
+			if (options.params) {
+				args.push("--arguments", JSON.stringify(options.params));
 			}
 
-			if (toolName) {
-				args.push("--tool-name", toolName);
+			if (options.toolName) {
+				args.push("--tool-name", options.toolName);
 			}
 
-			if (toolArgs) {
-				for (const [key, value] of Object.entries(toolArgs)) {
+			if (options.toolArgs) {
+				for (const [key, value] of Object.entries(options.toolArgs)) {
 					args.push("--tool-arg", `${key}=${value}`);
 				}
 			}
