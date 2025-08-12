@@ -1,16 +1,16 @@
 import { Primitives } from "@codelytv/primitives-type";
 
-import { McpResourceContent } from "./McpResourceContent";
+import { McpResourcesReadResponseContent } from "./McpResourcesReadResponseContent";
 
 export class McpResourcesReadResponse {
-	constructor(public readonly contents: McpResourceContent[]) {}
+	constructor(public readonly contents: McpResourcesReadResponseContent[]) {}
 
 	static fromPrimitives(
 		primitives: Primitives<McpResourcesReadResponse>,
 	): McpResourcesReadResponse {
 		return new McpResourcesReadResponse(
 			primitives.contents.map((content) =>
-				McpResourceContent.fromPrimitives(content),
+				McpResourcesReadResponseContent.fromPrimitives(content),
 			),
 		);
 	}

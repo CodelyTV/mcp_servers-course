@@ -1,6 +1,6 @@
 import { Primitives } from "@codelytv/primitives-type";
 
-export class McpResourceContent {
+export class McpResourcesReadResponseContent {
 	constructor(
 		public readonly uri: string,
 		public readonly mimeType?: string,
@@ -9,9 +9,9 @@ export class McpResourceContent {
 	) {}
 
 	static fromPrimitives(
-		content: Primitives<McpResourceContent>,
-	): McpResourceContent {
-		return new McpResourceContent(
+		content: Primitives<McpResourcesReadResponseContent>,
+	): McpResourcesReadResponseContent {
+		return new McpResourcesReadResponseContent(
 			content.uri,
 			content.mimeType,
 			content.text,
@@ -19,7 +19,7 @@ export class McpResourceContent {
 		);
 	}
 
-	toPrimitives(): Primitives<McpResourceContent> {
+	toPrimitives(): Primitives<McpResourcesReadResponseContent> {
 		return {
 			uri: this.uri,
 			mimeType: this.mimeType,
