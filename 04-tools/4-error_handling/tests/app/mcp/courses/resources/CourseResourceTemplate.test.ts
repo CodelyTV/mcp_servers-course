@@ -3,6 +3,7 @@ import "reflect-metadata";
 import { CourseRepository } from "../../../../../src/contexts/mooc/courses/domain/CourseRepository";
 import { container } from "../../../../../src/contexts/shared/infrastructure/dependency-injection/diod.config";
 import { PostgresConnection } from "../../../../../src/contexts/shared/infrastructure/postgres/PostgresConnection";
+import { CourseIdMother } from "../../../../contexts/mooc/courses/domain/CourseIdMother";
 import { CourseMother } from "../../../../contexts/mooc/courses/domain/CourseMother";
 import { McpInspectorCliClient } from "../../../../contexts/shared/infrastructure/mcp-inspector-cli-client/McpInspectorCliClient";
 
@@ -30,14 +31,22 @@ describe("CourseResourceTemplate should", () => {
 	});
 
 	it("return bad request error when course id is invalid", async () => {
-		const invalidId = "invalid-nanoid";
+		const invalidId = CourseIdMother.invalid();
 
 		await expect(
 			mcpClient.readResource(`courses://${invalidId}`),
 		).rejects.toThrow(
-			new Error(
-				`Process exited with code -32000: The id <invalid-nanoid> is not a valid nano id`,
-			),
+			`Process exited with code 1: Failed to read resource courses://${invalidId}: MCP error -32000: The id <${invalidId}> is not a valid nano id`,
+		);
+	});
+
+	it("return not found error when course is not found", async () => {
+		const nonExistingCourseId = CourseIdMother.create().value;
+
+		await expect(
+			mcpClient.readResource(`courses://${nonExistingCourseId}`),
+		).rejects.toThrow(
+			`Process exited with code 1: Failed to read resource courses://${nonExistingCourseId}: MCP error -32002: The course <${nonExistingCourseId}> has not been found`,
 		);
 	});
 

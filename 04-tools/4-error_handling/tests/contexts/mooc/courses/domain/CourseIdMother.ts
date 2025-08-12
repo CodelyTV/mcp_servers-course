@@ -6,4 +6,8 @@ export class CourseIdMother {
 	static create(value?: string): CourseId {
 		return new CourseId(value ?? faker.string.alphanumeric(4));
 	}
+
+	static invalid(): string {
+		return "invalid-nanoid";
+	}
 }
