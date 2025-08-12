@@ -25,7 +25,7 @@ describe("CoursesResource should", () => {
 	it("list courses resource", async () => {
 		const resources = await mcpClient.listResources();
 
-		expect(resources).toContain("courses://all");
+		expect(resources.uris()).toContain("courses://all");
 	});
 
 	it("return empty when there are no courses", async () => {
