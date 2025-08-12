@@ -83,22 +83,17 @@ describe("SearchSimilarCoursesByIdsTool should", () => {
 		);
 
 		const expectedData = {
-			courses: expect.arrayContaining([
-				expect.objectContaining({
-					id: extremeTsCourse.id.value,
-					name: "Extreme TypeScript",
-				}),
-			]),
-			total: expect.any(Number),
+			courses: [extremeTsCourse.toPrimitives()],
+			total: 1,
 			searchedIds: [jsCourse.id.value, tsCourse.id.value],
 		};
 
 		expect(response.toPrimitives()).toEqual({
 			content: [
-				expect.objectContaining({
+				{
 					type: "text",
-					text: expect.any(String),
-				}),
+					text: JSON.stringify(expectedData),
+				},
 			],
 			structuredContent: expectedData,
 			isError: false,
