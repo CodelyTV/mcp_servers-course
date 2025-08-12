@@ -1,6 +1,6 @@
+import { Primitives } from "@codelytv/primitives-type";
 import { spawn } from "child_process";
 
-import { McpToolListResponse } from "./McpToolListResponse";
 import { McpToolsListResponse } from "./McpToolsListResponse";
 
 interface McpResourceContent {
@@ -79,21 +79,11 @@ export class McpInspectorCliClient {
 
 	async listTools(): Promise<McpToolsListResponse> {
 		const response =
-			await this.executeInspectorCommand<McpToolsListResponse>(
-				"tools/list",
-			);
+			await this.executeInspectorCommand<
+				Primitives<McpToolsListResponse>
+			>("tools/list");
 
-		const toolInstances = response.tools.map(
-			(tool) =>
-				new McpToolListResponse(
-					tool.name,
-					tool.title,
-					tool.description,
-					tool.inputSchema,
-				),
-		);
-
-		return new McpToolsListResponse(toolInstances);
+		return McpToolsListResponse.fromPrimitives(response);
 	}
 
 	async listResources(): Promise<string[]> {

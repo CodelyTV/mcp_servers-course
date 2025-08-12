@@ -24,9 +24,8 @@ describe("SearchAllCoursesTool should", () => {
 
 	it("list search all courses tool", async () => {
 		const tools = await mcpClient.listTools();
-		const toolNames = tools.map((tool) => tool.name);
 
-		expect(toolNames).toContain("courses-search_all");
+		expect(tools.names()).toContain("courses-search_all");
 	});
 
 	it("return empty when there are no courses", async () => {
