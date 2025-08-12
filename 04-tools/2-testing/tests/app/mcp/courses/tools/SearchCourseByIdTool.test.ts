@@ -1,6 +1,5 @@
 import "reflect-metadata";
 
-import { SearchCourseByIdTool } from "../../../../../src/app/mcp/courses/tools/SearchCourseByIdTool";
 import { CourseRepository } from "../../../../../src/contexts/mooc/courses/domain/CourseRepository";
 import { container } from "../../../../../src/contexts/shared/infrastructure/dependency-injection/diod.config";
 import { PostgresConnection } from "../../../../../src/contexts/shared/infrastructure/postgres/PostgresConnection";
@@ -31,16 +30,25 @@ describe("SearchCourseByIdTool should", () => {
 		expect(toolNames).toContain("courses-search_by_id");
 	});
 
-	it("tool works correctly when called directly", async () => {
-		const searchCourseByIdTool = container.get(SearchCourseByIdTool);
+	it("return existing course", async () => {
 		const course = CourseMother.createdToday();
 		await courseRepository.save(course);
 
-		const response = await searchCourseByIdTool.handler({
+		const response = await mcpClient.callTool("courses-search_by_id", {
 			id: course.id.value,
 		});
 
-		expect(response.isError).toBe(false);
-		expect(response.structuredContent).toEqual(course.toPrimitives());
+		const expectedData = course.toPrimitives();
+
+		expect(response.toPrimitives()).toEqual({
+			content: [
+				expect.objectContaining({
+					type: "text",
+					text: JSON.stringify(expectedData),
+				}),
+			],
+			structuredContent: expectedData,
+			isError: false,
+		});
 	});
 });

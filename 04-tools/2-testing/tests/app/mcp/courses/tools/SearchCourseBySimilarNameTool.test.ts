@@ -1,6 +1,5 @@
 import "reflect-metadata";
 
-import { SearchCourseBySimilarNameTool } from "../../../../../src/app/mcp/courses/tools/SearchCourseBySimilarNameTool";
 import { CourseRepository } from "../../../../../src/contexts/mooc/courses/domain/CourseRepository";
 import { container } from "../../../../../src/contexts/shared/infrastructure/dependency-injection/diod.config";
 import { PostgresConnection } from "../../../../../src/contexts/shared/infrastructure/postgres/PostgresConnection";
@@ -31,18 +30,28 @@ describe("SearchCourseBySimilarNameTool should", () => {
 		expect(toolNames).toContain("courses-search_by_similar_name");
 	});
 
-	it("tool works correctly when called directly", async () => {
-		const searchCourseBySimilarNameTool = container.get(
-			SearchCourseBySimilarNameTool,
-		);
+	it("return existing course", async () => {
 		const course = CourseMother.createdToday();
 		await courseRepository.save(course);
 
-		const response = await searchCourseBySimilarNameTool.handler({
-			name: course.name,
-		});
+		const response = await mcpClient.callTool(
+			"courses-search_by_similar_name",
+			{
+				name: course.name,
+			},
+		);
 
-		expect(response.isError).toBe(false);
-		expect(response.structuredContent).toEqual(course.toPrimitives());
+		const expectedData = course.toPrimitives();
+
+		expect(response.toPrimitives()).toEqual({
+			content: [
+				{
+					type: "text",
+					text: JSON.stringify(expectedData),
+				},
+			],
+			structuredContent: expectedData,
+			isError: false,
+		});
 	});
 });

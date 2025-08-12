@@ -67,6 +67,7 @@ export class McpInspectorCliClient {
 			const args = [
 				"@modelcontextprotocol/inspector",
 				"--cli",
+				...this.command.slice(1),
 				"--method",
 				method,
 			];
@@ -89,8 +90,8 @@ export class McpInspectorCliClient {
 				}
 			}
 
-			const [executable, ...commandArgs] = this.command;
-			const process = spawn(executable, [...args, ...commandArgs]);
+			const [executable] = this.command;
+			const process = spawn(executable, args);
 
 			let stdout = "";
 			let stderr = "";
