@@ -1,11 +1,10 @@
 import "reflect-metadata";
 
-import { Ollama } from "@langchain/ollama";
-
 import { CourseRepository } from "../../../../../src/contexts/mooc/courses/domain/CourseRepository";
 import { container } from "../../../../../src/contexts/shared/infrastructure/dependency-injection/diod.config";
 import { PostgresConnection } from "../../../../../src/contexts/shared/infrastructure/postgres/PostgresConnection";
 import { CourseMother } from "../../../../contexts/mooc/courses/domain/CourseMother";
+import { evaluatePrompt } from "../../../../contexts/shared/infrastructure/evaluatePrompt";
 import { McpInspectorCliClient } from "../../../../contexts/shared/infrastructure/mcp-inspector-cli-client/McpInspectorCliClient";
 
 const courseRepository = container.get(CourseRepository);
@@ -54,28 +53,14 @@ describe("SearchSimilarCourseByCoursesNamesPrompt should", () => {
 
 		const prompt = response.firstPromptText();
 
-		const ollama = new Ollama({
-			model: "gemma3:latest",
-			temperature: 0,
-		});
-
-		const evaluationPrompt = `
-You are evaluating if a prompt correctly instructs to use a specific tool.
-
-Expected: The prompt should instruct to use the "courses-search_similar_by_ids" tool with course IDs.
-Actual prompt: "${prompt}"
-
-Does the actual prompt correctly instruct to use the courses-search_similar_by_ids tool? 
-Answer with a score from 0 to 1, where 1 means perfect match and 0 means no match.
-Just respond with a number between 0 and 1, nothing else.
-`;
-
-		const evaluationResult = await ollama.invoke(evaluationPrompt);
-		const score = parseFloat(evaluationResult.trim());
+		const score = await evaluatePrompt(
+			'The prompt should instruct to use the "courses-search_similar_by_ids" tool with course IDs',
+			prompt,
+		);
 
 		expect(score).toBeGreaterThan(0.7);
 		expect(prompt).toContain("courses-search_similar_by_ids");
 		expect(prompt).toContain(viewsCourse.id.value);
 		expect(prompt).toContain(cacheCourse.id.value);
-	}, 20000);
+	});
 });
