@@ -38,8 +38,6 @@ server.registerTool(
 	},
 );
 
-const allCoursesSearcher = container.get(AllCoursesSearcher);
-
 server.registerResource(
 	"courses",
 	"courses://all",
@@ -48,6 +46,8 @@ server.registerResource(
 		description: "Complete list of all available courses",
 	},
 	async () => {
+		const allCoursesSearcher = container.get(AllCoursesSearcher);
+
 		const courses = await allCoursesSearcher.search();
 
 		return {
