@@ -1,5 +1,6 @@
 import "reflect-metadata";
 
+import { evaluatePrompt } from "../../../../contexts/shared/infrastructure/evaluatePrompt";
 import { McpInspectorCliClient } from "../../../../contexts/shared/infrastructure/mcp-inspector-cli-client/McpInspectorCliClient";
 
 describe("ListAllTestsPrompt should", () => {
@@ -18,21 +19,11 @@ describe("ListAllTestsPrompt should", () => {
 	it("return a user message with instructions to list all tests", async () => {
 		const response = await mcpClient.getPrompt("utils-list_all_tests");
 
-		expect(response.toPrimitives()).toEqual({
-			messages: [
-				{
-					role: "user",
-					content: {
-						type: "text",
-						text: `
-			List all tests and test case inside the /tests folder. The format should be:
-			🧪 Test "describe" content
-			  - ✅ Test case name
-			  - …
-			`.trim(),
-					},
-				},
-			],
-		});
+		const score = await evaluatePrompt(
+			`The prompt should guide how to list all tests and test cases inside the test folder using emojis`,
+			response.firstPromptText(),
+		);
+
+		expect(score).toBeGreaterThan(0.7);
 	});
 });
