@@ -34,13 +34,16 @@ describe("SearchSimilarCourseByCoursesNamesPrompt should", () => {
 	});
 
 	it("return a valid prompt to search courses by similar names", async () => {
-		const course = CourseMother.create({
+		const cacheCourse = CourseMother.create({
 			name: `Infrastructure design: Cache`,
 		});
-		const anotherCourse = CourseMother.create({
+		const viewsCourse = CourseMother.create({
 			name: `Infrastructure design: Views`,
 		});
-		const courses = [course, anotherCourse];
+		const kafkaCourse = CourseMother.create({
+			name: `Infrastructure design: Kafka`,
+		});
+		const courses = [cacheCourse, viewsCourse, kafkaCourse];
 		await Promise.all(
 			courses.map((course) => courseRepository.save(course)),
 		);
@@ -61,12 +64,12 @@ describe("SearchSimilarCourseByCoursesNamesPrompt should", () => {
 		});
 
 		const evaluation = await evaluator.evaluateStrings({
-			input: "Views,Cache",
+			input: `Prompt that incites to use the courses-search_similar_by_ids tool passing course ids`,
 			prediction: prompt,
 		});
 
 		expect(evaluation.score).toBeGreaterThan(0.7);
-		expect(prompt).toContain("Views");
-		expect(prompt).toContain("Cache");
+		expect(prompt).toContain(viewsCourse.id.value);
+		expect(prompt).toContain(cacheCourse.id.value);
 	});
 });
