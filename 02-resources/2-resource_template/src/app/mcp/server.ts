@@ -82,7 +82,7 @@ server.registerResource(
 		return {
 			contents: [
 				{
-					uri: uri.toString(),
+					uri: uri.href,
 					mimeType: "application/json",
 					text: JSON.stringify(course),
 				},
