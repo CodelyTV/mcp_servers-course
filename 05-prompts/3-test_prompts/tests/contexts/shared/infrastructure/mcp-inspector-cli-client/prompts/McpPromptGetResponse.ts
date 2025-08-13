@@ -20,4 +20,8 @@ export class McpPromptGetResponse {
 			messages: this.messages.map((message) => message.toPrimitives()),
 		};
 	}
+
+	firstPromptText(): string {
+		return this.messages[0].content.text;
+	}
 }

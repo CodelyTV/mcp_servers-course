@@ -21,6 +21,7 @@ export class SearchSimilarCourseByCoursesNamesPrompt implements McpPrompt {
 	async handler({ names }: { names: string }): Promise<McpPromptResponse> {
 		const coursesPromises = names
 			.split(",")
+			.map((name) => name.trim())
 			.map((name) => this.finder.find(name));
 
 		const courses = await Promise.all(coursesPromises);
