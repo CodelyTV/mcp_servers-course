@@ -1,10 +1,11 @@
-import {McpResourceResponse} from "./McpResourceResponse";
+import { UriScheme } from "./McpResource";
+import { McpResourceResponse } from "./McpResourceResponse";
 
 export interface McpResourceTemplate {
 	name: string;
 	title: string;
 	description: string;
-	uriTemplate: `${string}://${string}{${string}}${string}`;
+	uriTemplate: `${UriScheme}://${string}{${string}}${string}`;
 
 	handler(
 		uri: string,
