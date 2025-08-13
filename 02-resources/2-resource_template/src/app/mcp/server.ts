@@ -5,7 +5,6 @@ import {
 	ResourceTemplate,
 } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { ListResourcesResult } from "@modelcontextprotocol/sdk/types.js";
 import { execSync } from "child_process";
 
 import { CourseFinder } from "../../contexts/mooc/courses/application/find/CourseFinder";
@@ -71,32 +70,7 @@ server.registerResource(
 server.registerResource(
 	"course",
 	new ResourceTemplate("course://{id}", {
-		list: async (): Promise<ListResourcesResult> => {
-			const courses = await allCoursesSearcher.search();
-
-			return {
-				resources: courses.map((course) => ({
-					name: course.id,
-					uri: `course://${course.id}`,
-					title: course.name,
-					description: course.summary,
-				})),
-			};
-		},
-		complete: {
-			id: async (value: string): Promise<string[]> => {
-				const courses = await allCoursesSearcher.search();
-				const courseIds = courses.map((course) => course.id);
-
-				if (!value) {
-					return courseIds;
-				}
-
-				return courseIds.filter((id) =>
-					id.toLowerCase().includes(value.toLowerCase()),
-				);
-			},
-		},
+		list: undefined,
 	}),
 	{
 		title: "Course by id",
