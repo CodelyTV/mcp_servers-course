@@ -1,7 +1,6 @@
 import "reflect-metadata";
 
 import { Ollama } from "@langchain/ollama";
-import { loadEvaluator } from "langchain/evaluation";
 
 import { CourseRepository } from "../../../../../src/contexts/mooc/courses/domain/CourseRepository";
 import { container } from "../../../../../src/contexts/shared/infrastructure/dependency-injection/diod.config";
@@ -55,21 +54,28 @@ describe("SearchSimilarCourseByCoursesNamesPrompt should", () => {
 
 		const prompt = response.firstPromptText();
 
-		const evaluator = await loadEvaluator("criteria", {
-			criteria: "relevance",
-			llm: new Ollama({
-				model: "gemma3",
-				temperature: 0,
-			}),
+		const ollama = new Ollama({
+			model: "gemma3:latest",
+			temperature: 0,
 		});
 
-		const evaluation = await evaluator.evaluateStrings({
-			input: `Prompt that incites to use the courses-search_similar_by_ids tool passing course ids`,
-			prediction: prompt,
-		});
+		const evaluationPrompt = `
+You are evaluating if a prompt correctly instructs to use a specific tool.
 
-		expect(evaluation.score).toBeGreaterThan(0.7);
+Expected: The prompt should instruct to use the "courses-search_similar_by_ids" tool with course IDs.
+Actual prompt: "${prompt}"
+
+Does the actual prompt correctly instruct to use the courses-search_similar_by_ids tool? 
+Answer with a score from 0 to 1, where 1 means perfect match and 0 means no match.
+Just respond with a number between 0 and 1, nothing else.
+`;
+
+		const evaluationResult = await ollama.invoke(evaluationPrompt);
+		const score = parseFloat(evaluationResult.trim());
+
+		expect(score).toBeGreaterThan(0.7);
+		expect(prompt).toContain("courses-search_similar_by_ids");
 		expect(prompt).toContain(viewsCourse.id.value);
 		expect(prompt).toContain(cacheCourse.id.value);
-	});
+	}, 20000);
 });
