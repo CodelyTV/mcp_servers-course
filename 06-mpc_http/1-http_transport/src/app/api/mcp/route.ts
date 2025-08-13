@@ -1,141 +1,132 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-import "reflect-metadata";
-
-import { NextRequest, NextResponse } from "next/server";
+import { ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { createMcpHandler } from "mcp-handler";
 
 import { container } from "../../../contexts/shared/infrastructure/dependency-injection/diod.config";
+import { McpPrompt } from "../../../contexts/shared/infrastructure/mcp/McpPrompt";
+import { McpResource } from "../../../contexts/shared/infrastructure/mcp/McpResource";
+import { McpResourceTemplate } from "../../../contexts/shared/infrastructure/mcp/McpResourceTemplate";
 import { McpTool } from "../../../contexts/shared/infrastructure/mcp/McpTool";
 
-export const runtime = "nodejs";
+const tools = container
+	.findTaggedServiceIdentifiers<McpTool>("mcp-tool")
+	.map((identifier) => container.get(identifier));
 
-function getTools(): McpTool[] {
-	try {
-		return container
-			.findTaggedServiceIdentifiers<McpTool>("mcp-tool")
-			.map((identifier) => container.get(identifier));
-	} catch (error) {
-		console.error("Error loading tools from DI container:", error);
+const resources = container
+	.findTaggedServiceIdentifiers<McpResource>("mcp-resource")
+	.map((identifier) => container.get(identifier));
 
-		return [];
-	}
-}
+const resourceTemplates = container
+	.findTaggedServiceIdentifiers<McpResourceTemplate>("mcp-resource_template")
+	.map((identifier) => container.get(identifier));
 
-export async function POST(request: NextRequest) {
-	try {
-		const body = await request.json();
+const prompts = container
+	.findTaggedServiceIdentifiers<McpPrompt>("mcp-prompt")
+	.map((identifier) => container.get(identifier));
 
-		if (!body.jsonrpc || body.jsonrpc !== "2.0") {
-			return NextResponse.json(
+const handler = createMcpHandler(
+	(server) => {
+		tools.forEach((tool) => {
+			server.registerTool(
+				tool.name,
 				{
-					jsonrpc: "2.0",
-					error: {
-						code: -32600,
-						message: "Invalid Request",
-					},
-					id: body.id || null,
+					title: tool.title,
+					description: tool.description,
+					inputSchema: tool.inputSchema as any,
 				},
-				{ status: 400 },
+				async (params?: Record<string, unknown>) => {
+					const response = await tool.handler(params);
+
+					return {
+						content: response.content,
+						structuredContent: response.structuredContent,
+						isError: response.isError,
+					};
+				},
 			);
-		}
+		});
 
-		const { method, params, id } = body;
-
-		// Manejar diferentes métodos MCP
-		switch (method) {
-			case "initialize":
-				return NextResponse.json({
-					jsonrpc: "2.0",
-					result: {
-						protocolVersion: "2024-11-05",
-						serverInfo: {
-							name: "codely-mcp-api",
-							version: "1.0.0",
-						},
-						capabilities: {
-							tools: {},
-						},
-					},
-					id,
-				});
-
-			case "tools/list": {
-				const tools = getTools();
-
-				return NextResponse.json({
-					jsonrpc: "2.0",
-					result: {
-						tools: tools.map((tool) => ({
-							name: tool.name,
-							description: tool.description,
-							inputSchema: tool.inputSchema || {
-								type: "object",
-								properties: {},
-							},
-						})),
-					},
-					id,
-				});
-			}
-
-			case "tools/call": {
-				const tools = getTools();
-				const tool = tools.find((t) => t.name === params?.name);
-
-				if (!tool) {
-					return NextResponse.json({
-						jsonrpc: "2.0",
-						error: {
-							code: -32601,
-							message: `Tool not found: ${params?.name}`,
-						},
-						id,
-					});
-				}
-
-				try {
-					const result = await tool.handler(params?.arguments || {});
-
-					return NextResponse.json({
-						jsonrpc: "2.0",
-						result: {
-							content: result.content,
-							isError: result.isError,
-						},
-						id,
-					});
-				} catch (error) {
-					return NextResponse.json({
-						jsonrpc: "2.0",
-						error: {
-							code: -32603,
-							message: `Error executing tool ${params?.name}: ${error}`,
-						},
-						id,
-					});
-				}
-			}
-
-			default:
-				return NextResponse.json({
-					jsonrpc: "2.0",
-					error: {
-						code: -32601,
-						message: `Method not found: ${method}`,
-					},
-					id,
-				});
-		}
-	} catch (error) {
-		return NextResponse.json(
-			{
-				jsonrpc: "2.0",
-				error: {
-					code: -32603,
-					message: `Internal error: ${error}`,
+		resources.forEach((resource) => {
+			server.registerResource(
+				resource.name,
+				resource.uriTemplate,
+				{
+					title: resource.title,
+					description: resource.description,
 				},
-				id: null,
-			},
-			{ status: 500 },
-		);
-	}
+				async (_uri) => {
+					const response = await resource.handler();
+
+					return { contents: response.contents };
+				},
+			);
+		});
+
+		resourceTemplates.forEach((resourceTemplate) => {
+			server.registerResource(
+				resourceTemplate.name,
+				new ResourceTemplate(resourceTemplate.uriTemplate, {
+					list: undefined,
+				}),
+				{
+					title: resourceTemplate.title,
+					description: resourceTemplate.description,
+				},
+				async (uri, params) => {
+					try {
+						const response = await resourceTemplate.handler(
+							uri.href,
+							params as unknown as Record<string, string>,
+						);
+
+						return { contents: response.contents };
+					} catch (error) {
+						if (resourceTemplate.onError) {
+							const errorResponse = resourceTemplate.onError(
+								error as any,
+								uri.href,
+							);
+
+							throw generateMcpError(
+								errorResponse.error.message,
+								errorResponse.error.code,
+								errorResponse.error.uri,
+							);
+						}
+
+						throw new Error("Internal server error");
+					}
+				},
+			);
+		});
+		prompts.forEach((prompt) => {
+			server.registerPrompt(
+				prompt.name,
+				{
+					title: prompt.title,
+					description: prompt.description,
+					argsSchema: prompt.inputSchema as any,
+				},
+				async (params?: Record<string, unknown>) => {
+					const response = await prompt.handler(params);
+
+					return {
+						messages: response.messages,
+						description: response.description,
+					};
+				},
+			);
+		});
+	},
+	{},
+	{ basePath: "/api" },
+);
+
+export { handler as DELETE, handler as GET, handler as POST };
+
+function generateMcpError(message: string, code: number, uri: string): Error {
+	const error = new Error(message);
+	(error as any).code = code;
+	(error as any).data = { uri };
+
+	return error;
 }

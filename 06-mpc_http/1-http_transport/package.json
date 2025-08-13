@@ -14,7 +14,7 @@
 		"search-courses": "ts-node ./src/app/scripts/search-courses.ts",
 		"mcp:serve": "ts-node ./src/app/mcp/server.ts",
 		"mcp:debug:direct": "node debug-mcp-direct.js",
-		"mcp:inspect": "npx @modelcontextprotocol/inspector ts-node ./src/app/mcp/server.ts",
+		"mcp:inspect": "npx @modelcontextprotocol/inspector",
 		"mcp:inspect:debug": "npx @modelcontextprotocol/inspector ./start-mcp-debug.sh"
 	},
 	"dependencies": {
