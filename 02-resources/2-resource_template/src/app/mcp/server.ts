@@ -83,6 +83,20 @@ server.registerResource(
 				})),
 			};
 		},
+		complete: {
+			id: async (value: string): Promise<string[]> => {
+				const courses = await allCoursesSearcher.search();
+				const courseIds = courses.map((course) => course.id);
+
+				if (!value) {
+					return courseIds;
+				}
+
+				return courseIds.filter((id) =>
+					id.toLowerCase().includes(value.toLowerCase()),
+				);
+			},
+		},
 	}),
 	{
 		title: "Course by id",
