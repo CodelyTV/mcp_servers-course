@@ -113,14 +113,17 @@ export class McpInspectorCliClient {
 				options.promptArgs &&
 				Object.keys(options.promptArgs).length > 0
 			) {
-				for (const [key, value] of Object.entries(options.promptArgs)) {
-					if (value !== undefined) {
+				const promptArgsString = Object.entries(options.promptArgs)
+					.filter(([, value]) => value !== undefined)
+					.map(([key, value]) => {
 						const argValue = Array.isArray(value)
 							? JSON.stringify(value)
 							: String(value);
-						args.push("--prompt-arg", `${key}=${argValue}`);
-					}
-				}
+
+						return `${key}=${argValue}`;
+					})
+					.join(",");
+				args.push("--prompt-args", promptArgsString);
 			}
 
 			if (options.toolArgs) {
