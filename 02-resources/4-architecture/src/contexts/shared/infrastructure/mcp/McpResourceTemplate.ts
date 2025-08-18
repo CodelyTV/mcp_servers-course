@@ -1,5 +1,11 @@
 import { UriScheme } from "./McpResource";
+import { McpResourceListResponse } from "./McpResourceListResponse";
 import { McpResourceResponse } from "./McpResourceResponse";
+
+export type McpResourceTemplateCompleteResponse = Record<
+	string,
+	(value: string) => Promise<string[]>
+>;
 
 export interface McpResourceTemplate {
 	name: string;
@@ -11,4 +17,8 @@ export interface McpResourceTemplate {
 		uri: string,
 		params: Record<string, string>,
 	): Promise<McpResourceResponse>;
+
+	list?(): Promise<McpResourceListResponse>;
+
+	complete?(): McpResourceTemplateCompleteResponse;
 }
