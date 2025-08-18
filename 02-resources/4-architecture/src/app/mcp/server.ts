@@ -10,7 +10,6 @@ import { execSync } from "node:child_process";
 
 import { container } from "../../contexts/shared/infrastructure/dependency-injection/diod.config";
 import { McpResource } from "../../contexts/shared/infrastructure/mcp/McpResource";
-import { McpResourceListResponse } from "../../contexts/shared/infrastructure/mcp/McpResourceListResponse";
 import { McpResourceTemplate } from "../../contexts/shared/infrastructure/mcp/McpResourceTemplate";
 
 const server = new McpServer({
@@ -74,15 +73,18 @@ resourceTemplates.forEach((resourceTemplate) => {
 		new ResourceTemplate(resourceTemplate.uriTemplate, {
 			list: resourceTemplate.list
 				? async () => {
-						const result =
-							await (resourceTemplate.list() as Promise<McpResourceListResponse>);
+						if (!resourceTemplate.list) {
+							return { resources: [] };
+						}
+
+						const result = await resourceTemplate.list();
 
 						return {
-							resources: result.resources.map((r) => ({
-								name: r.name,
-								uri: r.uri,
-								title: r.title,
-								description: r.description,
+							resources: result.resources.map((response) => ({
+								name: response.name,
+								uri: response.uri,
+								title: response.title,
+								description: response.description,
 							})),
 						};
 					}
