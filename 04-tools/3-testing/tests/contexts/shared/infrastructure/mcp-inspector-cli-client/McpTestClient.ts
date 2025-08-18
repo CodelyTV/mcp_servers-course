@@ -82,6 +82,13 @@ export class McpTestClient {
 		});
 	}
 
+	async callResourceTemplateParamCompletion(
+		resourceTemplateName: string,
+		textToComplete: string,
+	): Promise<string[]> {
+		const response = await this.client.complete();
+	}
+
 	async readResource(uri: string): Promise<McpTestResourcesReadResponse> {
 		const response = await this.client.readResource({ uri });
 
