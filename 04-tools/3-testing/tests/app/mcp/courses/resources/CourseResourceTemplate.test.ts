@@ -72,16 +72,17 @@ describe("CourseResourceTemplate should", () => {
 	});
 
 	it("complete the id param", async () => {
-		const testCourse = CourseMother.create({ id: "t3st" });
-		const teatCourse = CourseMother.create({ id: "t3at" });
+		const testCourse = CourseMother.createdToday({ id: "t3st" });
+		const teatCourse = CourseMother.createdYesterday({ id: "t3at" });
 		const codeCourse = CourseMother.create({ id: "c0d3" });
 
 		await courseRepository.save(testCourse);
 		await courseRepository.save(teatCourse);
 		await courseRepository.save(codeCourse);
 
-		const response = await mcpClient.callResourceTemplateParamCompletion(
-			"",
+		const response = await mcpClient.completeResourceTemplateParam(
+			"courses://{id}",
+			"id",
 			"t3",
 		);
 
