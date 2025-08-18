@@ -1,16 +1,16 @@
 import { Primitives } from "@codelytv/primitives-type";
 
-import { McpToolListResponse } from "./McpToolListResponse";
+import { McpTestToolListResponse } from "./McpTestToolListResponse";
 
 export class McpToolsListResponse {
-	constructor(public readonly tools: McpToolListResponse[]) {}
+	constructor(public readonly tools: McpTestToolListResponse[]) {}
 
 	static fromPrimitives(
 		primitives: Primitives<McpToolsListResponse>,
 	): McpToolsListResponse {
 		return new McpToolsListResponse(
 			primitives.tools.map((tool) =>
-				McpToolListResponse.fromPrimitives(tool),
+				McpTestToolListResponse.fromPrimitives(tool),
 			),
 		);
 	}

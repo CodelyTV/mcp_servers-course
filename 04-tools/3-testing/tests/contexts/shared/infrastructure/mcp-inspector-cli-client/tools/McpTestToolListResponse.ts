@@ -1,6 +1,6 @@
 import { Primitives } from "@codelytv/primitives-type";
 
-export class McpToolListResponse {
+export class McpTestToolListResponse {
 	constructor(
 		public readonly name: string,
 		public readonly title: string,
@@ -9,9 +9,9 @@ export class McpToolListResponse {
 	) {}
 
 	static fromPrimitives(
-		tool: Primitives<McpToolListResponse>,
-	): McpToolListResponse {
-		return new McpToolListResponse(
+		tool: Primitives<McpTestToolListResponse>,
+	): McpTestToolListResponse {
+		return new McpTestToolListResponse(
 			tool.name,
 			tool.title,
 			tool.description,

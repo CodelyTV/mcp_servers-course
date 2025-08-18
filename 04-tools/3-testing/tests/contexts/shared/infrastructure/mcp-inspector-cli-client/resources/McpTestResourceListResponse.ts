@@ -1,6 +1,6 @@
 import { Primitives } from "@codelytv/primitives-type";
 
-export class McpResourceListResponse {
+export class McpTestResourceListResponse {
 	constructor(
 		public readonly uri: string,
 		public readonly name: string,
@@ -9,9 +9,9 @@ export class McpResourceListResponse {
 	) {}
 
 	static fromPrimitives(
-		resource: Primitives<McpResourceListResponse>,
-	): McpResourceListResponse {
-		return new McpResourceListResponse(
+		resource: Primitives<McpTestResourceListResponse>,
+	): McpTestResourceListResponse {
+		return new McpTestResourceListResponse(
 			resource.uri,
 			resource.name,
 			resource.title,
