@@ -1,6 +1,6 @@
 import { Primitives } from "@codelytv/primitives-type";
 
-export class McpPromptListResponse {
+export class McpTestPromptListResponse {
 	constructor(
 		public readonly name: string,
 		public readonly title: string,
@@ -9,9 +9,9 @@ export class McpPromptListResponse {
 	) {}
 
 	static fromPrimitives(
-		prompt: Primitives<McpPromptListResponse>,
-	): McpPromptListResponse {
-		return new McpPromptListResponse(
+		prompt: Primitives<McpTestPromptListResponse>,
+	): McpTestPromptListResponse {
+		return new McpTestPromptListResponse(
 			prompt.name,
 			prompt.title,
 			prompt.description,

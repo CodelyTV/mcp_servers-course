@@ -1,10 +1,10 @@
 import "reflect-metadata";
 
 import { evaluatePrompt } from "../../../../contexts/shared/infrastructure/evaluatePrompt";
-import { McpInspectorCliClient } from "../../../../contexts/shared/infrastructure/mcp-inspector-cli-client/McpInspectorCliClient";
+import { McpTestClient } from "../../../../contexts/shared/infrastructure/mcp-inspector-cli-client/McpTestClient";
 
 describe("ListAllTestsPrompt should", () => {
-	const mcpClient = new McpInspectorCliClient([
+	const mcpClient = new McpTestClient([
 		"npx",
 		"ts-node",
 		"./src/app/mcp/server.ts",

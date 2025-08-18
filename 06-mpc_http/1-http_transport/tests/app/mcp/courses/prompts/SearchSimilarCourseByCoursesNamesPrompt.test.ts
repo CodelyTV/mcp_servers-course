@@ -5,7 +5,7 @@ import { container } from "../../../../../src/contexts/shared/infrastructure/dep
 import { PostgresConnection } from "../../../../../src/contexts/shared/infrastructure/postgres/PostgresConnection";
 import { CourseMother } from "../../../../contexts/mooc/courses/domain/CourseMother";
 import { evaluatePrompt } from "../../../../contexts/shared/infrastructure/evaluatePrompt";
-import { McpInspectorCliClient } from "../../../../contexts/shared/infrastructure/mcp-inspector-cli-client/McpInspectorCliClient";
+import { McpTestClient } from "../../../../contexts/shared/infrastructure/mcp-inspector-cli-client/McpTestClient";
 
 const courseRepository = container.get(CourseRepository);
 const connection = container.get(PostgresConnection);
@@ -19,7 +19,7 @@ afterAll(async () => {
 });
 
 describe("SearchSimilarCourseByCoursesNamesPrompt should", () => {
-	const mcpClient = new McpInspectorCliClient([
+	const mcpClient = new McpTestClient([
 		"npx",
 		"ts-node",
 		"./src/app/mcp/server.ts",

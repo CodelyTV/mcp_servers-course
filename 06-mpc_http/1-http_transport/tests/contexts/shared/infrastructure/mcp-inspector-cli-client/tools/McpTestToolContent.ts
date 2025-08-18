@@ -1,6 +1,6 @@
 import { Primitives } from "@codelytv/primitives-type";
 
-export class McpToolContent {
+export class McpTestToolContent {
 	constructor(
 		public readonly type: "text" | "image" | "resource",
 		public readonly text?: string,
@@ -13,8 +13,10 @@ export class McpToolContent {
 		},
 	) {}
 
-	static fromPrimitives(content: Primitives<McpToolContent>): McpToolContent {
-		return new McpToolContent(
+	static fromPrimitives(
+		content: Primitives<McpTestToolContent>,
+	): McpTestToolContent {
+		return new McpTestToolContent(
 			content.type,
 			content.text,
 			content.data,
@@ -23,7 +25,7 @@ export class McpToolContent {
 		);
 	}
 
-	toPrimitives(): Primitives<McpToolContent> {
+	toPrimitives(): Primitives<McpTestToolContent> {
 		return {
 			type: this.type,
 			text: this.text,

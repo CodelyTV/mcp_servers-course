@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/dist/cjs/client/streamableHttp";
 
 import { McpTestResourceTemplatesListResponse } from "./resource-templates/McpTestResourceTemplatesListResponse";
 import { McpTestResourcesListResponse } from "./resources/McpTestResourcesListResponse";
@@ -12,10 +13,13 @@ export class McpTestClient {
 	private readonly client: Client;
 	private readonly transport: StdioClientTransport;
 
-	constructor(private readonly command: string[]) {
+	constructor(
+		transport: "stdio" | "http",
+		private readonly args: string[],
+	) {
 		this.client = new Client(
 			{
-				name: "test-client",
+				name: "mcp-test-client",
 				version: "1.0.0",
 			},
 			{
@@ -27,10 +31,14 @@ export class McpTestClient {
 			},
 		);
 
-		this.transport = new StdioClientTransport({
-			command: this.command[0],
-			args: this.command.slice(1),
-		});
+		if (transport === "stdio") {
+			this.transport = new StdioClientTransport({
+				command: this.args[0],
+				args: this.args.slice(1),
+			});
+		} else {
+			this.transport = new StreamableHTTPClientTransport(this.args[0]);
+		}
 	}
 
 	async connect(): Promise<void> {

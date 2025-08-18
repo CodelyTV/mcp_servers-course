@@ -1,27 +1,27 @@
 import { Primitives } from "@codelytv/primitives-type";
 
-import { McpToolContent } from "./McpToolContent";
+import { McpTestToolContent } from "./McpTestToolContent";
 
-export class McpToolCallResponse {
+export class McpTestToolCallResponse {
 	constructor(
-		public readonly content: McpToolContent[],
+		public readonly content: McpTestToolContent[],
 		public readonly structuredContent?: Record<string, unknown>,
 		public readonly isError?: boolean,
 	) {}
 
 	static fromPrimitives(
-		primitives: Primitives<McpToolCallResponse>,
-	): McpToolCallResponse {
-		return new McpToolCallResponse(
+		primitives: Primitives<McpTestToolCallResponse>,
+	): McpTestToolCallResponse {
+		return new McpTestToolCallResponse(
 			primitives.content.map((content) =>
-				McpToolContent.fromPrimitives(content),
+				McpTestToolContent.fromPrimitives(content),
 			),
 			primitives.structuredContent,
 			primitives.isError,
 		);
 	}
 
-	toPrimitives(): Primitives<McpToolCallResponse> {
+	toPrimitives(): Primitives<McpTestToolCallResponse> {
 		return {
 			content: this.content.map((content) => content.toPrimitives()),
 			structuredContent: this.structuredContent,
