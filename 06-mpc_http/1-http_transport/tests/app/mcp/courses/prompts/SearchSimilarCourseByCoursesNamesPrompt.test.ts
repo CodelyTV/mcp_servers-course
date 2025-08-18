@@ -19,11 +19,19 @@ afterAll(async () => {
 });
 
 describe("SearchSimilarCourseByCoursesNamesPrompt should", () => {
-	const mcpClient = new McpTestClient([
+	const mcpClient = new McpTestClient("stdio", [
 		"npx",
 		"ts-node",
 		"./src/app/mcp/server.ts",
 	]);
+
+	beforeAll(async () => {
+		await mcpClient.connect();
+	});
+
+	afterAll(async () => {
+		await mcpClient.disconnect();
+	});
 
 	it("list the courses-search_similar_by_names prompt", async () => {
 		const prompts = await mcpClient.listPrompts();
@@ -62,5 +70,5 @@ describe("SearchSimilarCourseByCoursesNamesPrompt should", () => {
 		expect(prompt).toContain("courses-search_similar_by_ids");
 		expect(prompt).toContain(viewsCourse.id.value);
 		expect(prompt).toContain(cacheCourse.id.value);
-	});
+	}, 20000);
 });

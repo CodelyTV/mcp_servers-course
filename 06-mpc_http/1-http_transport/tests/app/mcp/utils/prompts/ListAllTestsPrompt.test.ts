@@ -4,11 +4,19 @@ import { evaluatePrompt } from "../../../../contexts/shared/infrastructure/evalu
 import { McpTestClient } from "../../../../contexts/shared/infrastructure/mcp-inspector-cli-client/McpTestClient";
 
 describe("ListAllTestsPrompt should", () => {
-	const mcpClient = new McpTestClient([
+	const mcpClient = new McpTestClient("stdio", [
 		"npx",
 		"ts-node",
 		"./src/app/mcp/server.ts",
 	]);
+
+	beforeAll(async () => {
+		await mcpClient.connect();
+	});
+
+	afterAll(async () => {
+		await mcpClient.disconnect();
+	});
 
 	it("list the utils-list_all_tests prompt", async () => {
 		const prompts = await mcpClient.listPrompts();
@@ -25,5 +33,5 @@ describe("ListAllTestsPrompt should", () => {
 		);
 
 		expect(score).toBeGreaterThan(0.7);
-	});
+	}, 20000);
 });

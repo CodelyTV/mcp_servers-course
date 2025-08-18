@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Primitives } from "@codelytv/primitives-type";
 import { Client } from "@modelcontextprotocol/sdk/client/index";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp";
 import { Transport } from "@modelcontextprotocol/sdk/shared/transport";
-import { spawn } from "child_process";
 
 import { McpTestPromptGetResponse } from "./prompts/McpTestPromptGetResponse";
 import { McpTestPromptsListResponse } from "./prompts/McpTestPromptsListResponse";
@@ -147,118 +145,43 @@ export class McpTestClient {
 	}
 
 	async listPrompts(): Promise<McpTestPromptsListResponse> {
-		const response =
-			await this.execute<Primitives<McpTestPromptsListResponse>>(
-				"prompts/list",
-			);
+		const response = await this.client.listPrompts();
 
-		return McpTestPromptsListResponse.fromPrimitives(response);
+		return McpTestPromptsListResponse.fromPrimitives({
+			prompts: response.prompts.map((prompt: any) => ({
+				name: prompt.name,
+				title: prompt.title ?? "",
+				description: prompt.description ?? "",
+				argsSchema: prompt.arguments ?? {},
+			})),
+		});
 	}
 
 	async getPrompt(
 		name: string,
 		args: Record<string, unknown> = {},
 	): Promise<McpTestPromptGetResponse> {
-		const response = await this.execute<
-			Primitives<McpTestPromptGetResponse>
-		>("prompts/get", { promptName: name, promptArgs: args });
+		const response = await this.client.getPrompt({
+			name,
+			arguments: Object.fromEntries(
+				Object.entries(args).map(([key, value]) => [
+					key,
+					String(value),
+				]),
+			),
+		});
 
-		return McpTestPromptGetResponse.fromPrimitives(response);
-	}
-
-	private async execute<T>(
-		method: string,
-		options: {
-			uri?: string;
-			params?: Record<string, unknown>;
-			toolName?: string;
-			toolArgs?: Record<string, unknown>;
-			promptName?: string;
-			promptArgs?: Record<string, unknown>;
-		} = {},
-	): Promise<T> {
-		return new Promise((resolve, reject) => {
-			const args = [
-				"@modelcontextprotocol/inspector",
-				"--cli",
-				...this.args.slice(1),
-				"--method",
-				method,
-			];
-
-			if (options.uri) {
-				args.push("--uri", options.uri);
-			}
-
-			if (options.toolName) {
-				args.push("--tool-name", options.toolName);
-			}
-
-			if (options.promptName) {
-				args.push("--prompt-name", options.promptName);
-			}
-
-			if (
-				options.promptArgs &&
-				Object.keys(options.promptArgs).length > 0
-			) {
-				const promptArgsString = Object.entries(options.promptArgs)
-					.filter(([, value]) => value !== undefined)
-					.map(([key, value]) => {
-						const argValue = Array.isArray(value)
-							? JSON.stringify(value)
-							: String(value);
-
-						return `${key}=${argValue}`;
-					})
-					.join(",");
-				args.push("--prompt-args", promptArgsString);
-			}
-
-			if (options.toolArgs) {
-				for (const [key, value] of Object.entries(options.toolArgs)) {
-					if (value !== undefined) {
-						const argValue = Array.isArray(value)
-							? JSON.stringify(value)
-							: String(value);
-						args.push("--tool-arg", `${key}=${argValue}`);
-					}
-				}
-			}
-
-			const process = spawn("npx", args);
-
-			let stdout = "";
-			let stderr = "";
-
-			process.stdout.on("data", (data) => {
-				stdout += data.toString();
-			});
-
-			process.stderr.on("data", (data) => {
-				stderr += data.toString();
-			});
-
-			process.on("close", (code) => {
-				if (code !== 0) {
-					reject(
-						new Error(
-							`Process exited with code ${code}: ${stderr}`,
-						),
-					);
-
-					return;
-				}
-
-				try {
-					const output = stdout.trim();
-					const response = JSON.parse(output);
-
-					resolve(response as T);
-				} catch (error) {
-					reject(error);
-				}
-			});
+		return McpTestPromptGetResponse.fromPrimitives({
+			messages: response.messages.map((message: any) => ({
+				role: message.role,
+				content:
+					message.content.type === "text"
+						? {
+								type: message.content.type,
+								text: message.content.text,
+							}
+						: message.content,
+			})),
 		});
 	}
 }

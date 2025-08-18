@@ -7,7 +7,7 @@ import { CourseMother } from "../../../../contexts/mooc/courses/domain/CourseMot
 import { McpTestClient } from "../../../../contexts/shared/infrastructure/mcp-inspector-cli-client/McpTestClient";
 
 describe("SearchAllCoursesTool should", () => {
-	const mcpClient = new McpTestClient([
+	const mcpClient = new McpTestClient("stdio", [
 		"npx",
 		"ts-node",
 		"./src/app/mcp/server.ts",
@@ -15,11 +15,16 @@ describe("SearchAllCoursesTool should", () => {
 	const courseRepository = container.get(CourseRepository);
 	const connection = container.get(PostgresConnection);
 
+	beforeAll(async () => {
+		await mcpClient.connect();
+	});
+
 	beforeEach(async () => {
 		await connection.truncateAll();
 	});
 
 	afterAll(async () => {
+		await mcpClient.disconnect();
 		await connection.end();
 	});
 
