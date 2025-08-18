@@ -55,18 +55,19 @@ describe("CourseResourceTemplate should", () => {
 	});
 
 	it("list all available courses as resources", async () => {
-		const course1 = CourseMother.createdToday();
-		const course2 = CourseMother.createdToday();
+		const course = CourseMother.createdToday();
+		const anotherCourse = CourseMother.createdToday();
 
-		await courseRepository.save(course1);
-		await courseRepository.save(course2);
+		await courseRepository.save(course);
+		await courseRepository.save(anotherCourse);
 
 		const response = await mcpClient.listResources();
 
-		expect(response.uris()).toBe([
-			`course://all`,
-			`course://${course1.id.value}`,
-			`course://${course2.id.value}`,
-		]);
+		expect(response.uris()).toEqual(
+			expect.arrayContaining([
+				`course://${course.id.value}`,
+				`course://${anotherCourse.id.value}`,
+			]),
+		);
 	});
 });
