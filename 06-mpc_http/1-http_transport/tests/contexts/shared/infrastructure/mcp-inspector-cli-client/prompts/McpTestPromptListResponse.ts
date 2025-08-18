@@ -5,7 +5,7 @@ export class McpTestPromptListResponse {
 		public readonly name: string,
 		public readonly title: string,
 		public readonly description: string,
-		public readonly argsSchema: object,
+		public readonly args: object,
 	) {}
 
 	static fromPrimitives(
@@ -15,7 +15,7 @@ export class McpTestPromptListResponse {
 			prompt.name,
 			prompt.title,
 			prompt.description,
-			prompt.argsSchema,
+			prompt.args,
 		);
 	}
 }

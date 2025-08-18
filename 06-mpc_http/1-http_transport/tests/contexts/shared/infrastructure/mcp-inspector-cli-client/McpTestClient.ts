@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Primitives } from "@codelytv/primitives-type";
 import { Client } from "@modelcontextprotocol/sdk/client/index";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp";
@@ -57,42 +58,25 @@ export class McpTestClient {
 	async listTools(): Promise<McpTestToolsListResponse> {
 		const response = await this.client.listTools();
 
-		return McpTestToolsListResponse.fromPrimitives({
-			tools: response.tools.map((tool: any) => ({
-				name: tool.name,
-				title: tool.title ?? "",
-				description: tool.description ?? "",
-				inputSchema: tool.inputSchema ?? {},
-			})),
-		});
+		return McpTestToolsListResponse.fromPrimitives(
+			response as Primitives<McpTestToolsListResponse>,
+		);
 	}
 
 	async listResources(): Promise<McpTestResourcesListResponse> {
 		const response = await this.client.listResources();
 
-		return McpTestResourcesListResponse.fromPrimitives({
-			resources: response.resources.map((resource: any) => ({
-				name: resource.name,
-				uri: resource.uri,
-				title: resource.title ?? "",
-				description: resource.description ?? "",
-			})),
-		});
+		return McpTestResourcesListResponse.fromPrimitives(
+			response as Primitives<McpTestResourcesListResponse>,
+		);
 	}
 
 	async listResourceTemplates(): Promise<McpTestResourceTemplatesListResponse> {
 		const response = await this.client.listResourceTemplates();
 
-		return McpTestResourceTemplatesListResponse.fromPrimitives({
-			resourceTemplates: response.resourceTemplates.map(
-				(template: any) => ({
-					name: template.name,
-					uriTemplate: template.uriTemplate,
-					title: template.title ?? "",
-					description: template.description ?? "",
-				}),
-			),
-		});
+		return McpTestResourceTemplatesListResponse.fromPrimitives(
+			response as Primitives<McpTestResourceTemplatesListResponse>,
+		);
 	}
 
 	async completeResourceTemplateParam(
@@ -117,9 +101,9 @@ export class McpTestClient {
 	async readResource(uri: string): Promise<McpTestResourcesReadResponse> {
 		const response = await this.client.readResource({ uri });
 
-		return McpTestResourcesReadResponse.fromPrimitives({
-			contents: response.contents,
-		});
+		return McpTestResourcesReadResponse.fromPrimitives(
+			response as Primitives<McpTestResourcesReadResponse>,
+		);
 	}
 
 	async callTool(
@@ -131,17 +115,9 @@ export class McpTestClient {
 			arguments: args,
 		});
 
-		return McpTestToolCallResponse.fromPrimitives({
-			content: (response.content as any[]).map((content: any) => ({
-				type: content.type,
-				text: content.text,
-				data: content.data,
-				mimeType: content.mimeType,
-				resource: content.resource,
-			})),
-			structuredContent: (response as any).structuredContent,
-			isError: response.isError as boolean,
-		});
+		return McpTestToolCallResponse.fromPrimitives(
+			response as Primitives<McpTestToolCallResponse>,
+		);
 	}
 
 	async listPrompts(): Promise<McpTestPromptsListResponse> {
@@ -152,7 +128,7 @@ export class McpTestClient {
 				name: prompt.name,
 				title: prompt.title ?? "",
 				description: prompt.description ?? "",
-				argsSchema: prompt.arguments ?? {},
+				args: prompt.arguments ?? {},
 			})),
 		});
 	}
