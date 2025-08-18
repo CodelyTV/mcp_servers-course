@@ -62,23 +62,11 @@ describe("CourseResourceTemplate should", () => {
 		await courseRepository.save(course2);
 
 		const response = await mcpClient.listResources();
-		const resources = response.resources;
 
-		// Should include the static "courses://all" resource plus the 2 individual courses
-		expect(resources).toHaveLength(3);
-
-		// Check for individual course resources
-		expect(resources.map((r) => r.uri)).toContain(
+		expect(response.uris()).toBe([
+			`course://all`,
 			`course://${course1.id.value}`,
-		);
-		expect(resources.map((r) => r.uri)).toContain(
 			`course://${course2.id.value}`,
-		);
-
-		// Check for the static courses resource
-		expect(resources.map((r) => r.uri)).toContain("courses://all");
-
-		expect(resources.map((r) => r.name)).toContain(course1.id.value);
-		expect(resources.map((r) => r.name)).toContain(course2.id.value);
+		]);
 	});
 });
