@@ -18,7 +18,6 @@ const server = new McpServer({
 	capabilities: {
 		resources: true,
 		tools: true,
-		prompts: true,
 	},
 });
 
@@ -29,7 +28,7 @@ server.registerTool(
 		description: "View the disk space in G",
 	},
 	() => {
-		const stdout = execSync("df -h / | /usr/bin/awk 'NR==2 {print $4}'", {
+		const stdout = execSync("df -h / | awk 'NR==2 {print $4}'", {
 			encoding: "utf8",
 		});
 
@@ -72,7 +71,25 @@ resourceTemplates.forEach((resourceTemplate) => {
 	server.registerResource(
 		resourceTemplate.name,
 		new ResourceTemplate(resourceTemplate.uriTemplate, {
-			list: undefined,
+			list: resourceTemplate.list
+				? async () => {
+						if (!resourceTemplate.list) {
+							return { resources: [] };
+						}
+
+						const result = await resourceTemplate.list();
+
+						return {
+							resources: result.resources.map((response) => ({
+								name: response.name,
+								uri: response.uri,
+								title: response.title,
+								description: response.description,
+							})),
+						};
+					}
+				: undefined,
+			complete: resourceTemplate.complete?.(),
 		}),
 		{
 			title: resourceTemplate.title,
@@ -80,7 +97,7 @@ resourceTemplates.forEach((resourceTemplate) => {
 		},
 		async (uri, params) => {
 			const response = await resourceTemplate.handler(
-				uri,
+				uri.href,
 				params as Record<string, string>,
 			);
 

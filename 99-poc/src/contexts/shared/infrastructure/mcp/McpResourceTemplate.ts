@@ -1,21 +1,24 @@
-import { CodelyError } from "../../domain/CodelyError";
+import { UriScheme } from "./McpResource";
+import { McpResourceListResponse } from "./McpResourceListResponse";
+import { McpResourceResponse } from "./McpResourceResponse";
 
-import { McpResourceContentsResponse } from "./McpResourceContentsResponse";
+export type McpResourceTemplateCompleteResponse = Record<
+	string,
+	(value: string) => Promise<string[]>
+>;
 
 export interface McpResourceTemplate {
 	name: string;
 	title: string;
 	description: string;
-	uriTemplate: string;
+	uriTemplate: `${UriScheme}://${string}{${string}}${string}`;
 
 	handler(
-		uri: URL,
+		uri: string,
 		params: Record<string, string>,
-	): Promise<McpResourceContentsResponse>;
+	): Promise<McpResourceResponse>;
 
-	onError?(
-		error: CodelyError,
-		uri: URL,
-		params: Record<string, string>,
-	): McpResourceContentsResponse;
+	list?(): Promise<McpResourceListResponse>;
+
+	complete?(): McpResourceTemplateCompleteResponse;
 }

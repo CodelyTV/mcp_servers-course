@@ -2,20 +2,20 @@ import { Service } from "diod";
 
 import { AllCoursesSearcher } from "../../../../contexts/mooc/courses/application/search-all/AllCoursesSearcher";
 import { McpResource } from "../../../../contexts/shared/infrastructure/mcp/McpResource";
-import { McpResourceContentsResponse } from "../../../../contexts/shared/infrastructure/mcp/McpResourceContentsResponse";
+import { McpResourceResponse } from "../../../../contexts/shared/infrastructure/mcp/McpResourceResponse";
 
 @Service()
 export class CoursesResource implements McpResource {
 	name = "courses";
 	title = "All Courses";
 	description = "Complete list of all available courses";
-	uriTemplate = "courses://all";
+	uriTemplate = "courses://all" as const;
 
 	constructor(private readonly searcher: AllCoursesSearcher) {}
 
-	async handler(): Promise<McpResourceContentsResponse> {
+	async handler(): Promise<McpResourceResponse> {
 		const courses = await this.searcher.search();
 
-		return McpResourceContentsResponse.success(this.uriTemplate, courses);
+		return McpResourceResponse.success(this.uriTemplate, courses);
 	}
 }

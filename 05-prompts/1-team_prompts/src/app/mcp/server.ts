@@ -35,8 +35,8 @@ tools.forEach((tool) => {
 			description: tool.description,
 			inputSchema: tool.inputSchema as any,
 		},
-		async (params?: Record<string, unknown>) => {
-			const response = await tool.handler(params);
+		async (args?: Record<string, unknown>) => {
+			const response = await tool.handler(args);
 
 			return {
 				content: response.content,
@@ -75,7 +75,25 @@ resourceTemplates.forEach((resourceTemplate) => {
 	server.registerResource(
 		resourceTemplate.name,
 		new ResourceTemplate(resourceTemplate.uriTemplate, {
-			list: undefined,
+			list: resourceTemplate.list
+				? async () => {
+						if (!resourceTemplate.list) {
+							return { resources: [] };
+						}
+
+						const result = await resourceTemplate.list();
+
+						return {
+							resources: result.resources.map((response) => ({
+								name: response.name,
+								uri: response.uri,
+								title: response.title,
+								description: response.description,
+							})),
+						};
+					}
+				: undefined,
+			complete: resourceTemplate.complete?.(),
 		}),
 		{
 			title: resourceTemplate.title,

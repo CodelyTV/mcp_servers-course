@@ -62,5 +62,5 @@ describe("SearchSimilarCourseByCoursesNamesPrompt should", () => {
 		expect(prompt).toContain("courses-search_similar_by_ids");
 		expect(prompt).toContain(viewsCourse.id.value);
 		expect(prompt).toContain(cacheCourse.id.value);
-	});
+	}, 20000);
 });

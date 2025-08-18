@@ -1,60 +1,62 @@
 import { Service } from "diod";
 
+import { CourseFinder } from "../../../../contexts/mooc/courses/application/find/CourseFinder";
+import { AllCoursesSearcher } from "../../../../contexts/mooc/courses/application/search-all/AllCoursesSearcher";
+import { McpResourceListResponse } from "../../../../contexts/shared/infrastructure/mcp/McpResourceListResponse";
+import { McpResourceResponse } from "../../../../contexts/shared/infrastructure/mcp/McpResourceResponse";
 import {
-	CourseByIdFinderErrors,
-	CourseFinder,
-} from "../../../../contexts/mooc/courses/application/find/CourseFinder";
-import { CourseNotFoundError } from "../../../../contexts/mooc/courses/domain/CourseNotFoundError";
-import { assertNever } from "../../../../contexts/shared/domain/assertNever";
-import { InvalidNanoIdError } from "../../../../contexts/shared/domain/InvalidNanoIdError";
-import { McpResourceContentsResponse } from "../../../../contexts/shared/infrastructure/mcp/McpResourceContentsResponse";
-import { McpResourceTemplate } from "../../../../contexts/shared/infrastructure/mcp/McpResourceTemplate";
+	McpResourceTemplate,
+	McpResourceTemplateCompleteResponse,
+} from "../../../../contexts/shared/infrastructure/mcp/McpResourceTemplate";
 
 @Service()
 export class CourseResourceTemplate implements McpResourceTemplate {
 	name = "course-detail";
 	title = "Course Detail";
 	description = "Get detailed information about a specific course by id";
-	uriTemplate = "courses://{id}";
+	uriTemplate = "courses://{id}" as const;
 
-	constructor(private readonly finder: CourseFinder) {}
+	constructor(
+		private readonly finder: CourseFinder,
+		private readonly allCoursesSearcher: AllCoursesSearcher,
+	) {}
 
 	async handler(
-		uri: URL,
-		params: Record<string, string>,
-	): Promise<McpResourceContentsResponse> {
-		const courseId = params.id;
+		uri: string,
+		params: { id: string },
+	): Promise<McpResourceResponse> {
+		const course = await this.finder.find(params.id);
 
-		if (!courseId || courseId.trim() === "") {
-			return McpResourceContentsResponse.badRequest(
-				uri.href,
-				"Course ID is required",
-			);
-		}
-
-		const course = await this.finder.find(courseId);
-
-		return McpResourceContentsResponse.success(uri.href, course);
+		return McpResourceResponse.success(uri, course);
 	}
 
-	onError(
-		error: CourseByIdFinderErrors,
-		uri: URL,
-		_params: Record<string, string>,
-	): McpResourceContentsResponse {
-		switch (true) {
-			case error instanceof CourseNotFoundError:
-				return McpResourceContentsResponse.notFound(
-					uri.href,
-					error.message,
+	async list(): Promise<McpResourceListResponse> {
+		const courses = await this.allCoursesSearcher.search();
+
+		return McpResourceListResponse.create(
+			courses.map((course) => ({
+				name: course.id,
+				uri: `course://${course.id}`,
+				title: course.name,
+				description: course.summary,
+			})),
+		);
+	}
+
+	complete(): McpResourceTemplateCompleteResponse {
+		return {
+			id: async (value: string): Promise<string[]> => {
+				const courses = await this.allCoursesSearcher.search();
+				const courseIds = courses.map((course) => course.id);
+
+				if (!value) {
+					return courseIds;
+				}
+
+				return courseIds.filter((id) =>
+					id.toLowerCase().includes(value.toLowerCase()),
 				);
-			case error instanceof InvalidNanoIdError:
-				return McpResourceContentsResponse.badRequest(
-					uri.href,
-					"Invalid course ID format",
-				);
-			default:
-				assertNever(error);
-		}
+			},
+		};
 	}
 }

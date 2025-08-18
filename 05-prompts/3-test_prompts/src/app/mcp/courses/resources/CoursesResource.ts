@@ -9,7 +9,7 @@ export class CoursesResource implements McpResource {
 	name = "courses";
 	title = "All Courses";
 	description = "Complete list of all available courses";
-	uriTemplate = "courses://all";
+	uriTemplate = "courses://all" as const;
 
 	constructor(private readonly searcher: AllCoursesSearcher) {}
 

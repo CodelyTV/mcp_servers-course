@@ -25,5 +25,5 @@ describe("ListAllTestsPrompt should", () => {
 		);
 
 		expect(score).toBeGreaterThan(0.7);
-	});
+	}, 20000);
 });

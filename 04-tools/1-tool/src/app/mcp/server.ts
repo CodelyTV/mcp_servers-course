@@ -73,7 +73,25 @@ resourceTemplates.forEach((resourceTemplate) => {
 	server.registerResource(
 		resourceTemplate.name,
 		new ResourceTemplate(resourceTemplate.uriTemplate, {
-			list: undefined,
+			list: resourceTemplate.list
+				? async () => {
+						if (!resourceTemplate.list) {
+							return { resources: [] };
+						}
+
+						const result = await resourceTemplate.list();
+
+						return {
+							resources: result.resources.map((response) => ({
+								name: response.name,
+								uri: response.uri,
+								title: response.title,
+								description: response.description,
+							})),
+						};
+					}
+				: undefined,
+			complete: resourceTemplate.complete?.(),
 		}),
 		{
 			title: resourceTemplate.title,

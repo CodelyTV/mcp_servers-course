@@ -1,13 +1,24 @@
-import { McpResourceContentsResponse } from "./McpResourceContentsResponse";
+import { UriScheme } from "./McpResource";
+import { McpResourceListResponse } from "./McpResourceListResponse";
+import { McpResourceResponse } from "./McpResourceResponse";
+
+export type McpResourceTemplateCompleteResponse = Record<
+	string,
+	(value: string) => Promise<string[]>
+>;
 
 export interface McpResourceTemplate {
 	name: string;
 	title: string;
 	description: string;
-	uriTemplate: string;
+	uriTemplate: `${UriScheme}://${string}{${string}}${string}`;
 
 	handler(
-		uri: URL,
+		uri: string,
 		params: Record<string, string>,
-	): Promise<McpResourceContentsResponse>;
+	): Promise<McpResourceResponse>;
+
+	list?(): Promise<McpResourceListResponse>;
+
+	complete?(): McpResourceTemplateCompleteResponse;
 }

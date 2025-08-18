@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type,@typescript-eslint/no-explicit-any */
 import { ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { createMcpHandler } from "mcp-handler";
 
@@ -65,7 +66,27 @@ const handler = createMcpHandler(
 			server.registerResource(
 				resourceTemplate.name,
 				new ResourceTemplate(resourceTemplate.uriTemplate, {
-					list: undefined,
+					list: resourceTemplate.list
+						? async () => {
+								if (!resourceTemplate.list) {
+									return { resources: [] };
+								}
+
+								const result = await resourceTemplate.list();
+
+								return {
+									resources: result.resources.map(
+										(response) => ({
+											name: response.name,
+											uri: response.uri,
+											title: response.title,
+											description: response.description,
+										}),
+									),
+								};
+							}
+						: undefined,
+					complete: resourceTemplate.complete?.(),
 				}),
 				{
 					title: resourceTemplate.title,
@@ -75,7 +96,7 @@ const handler = createMcpHandler(
 					try {
 						const response = await resourceTemplate.handler(
 							uri.href,
-							params as unknown as Record<string, string>,
+							params as Record<string, string>,
 						);
 
 						return { contents: response.contents };
