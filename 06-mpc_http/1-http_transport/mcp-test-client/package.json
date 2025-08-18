@@ -1,0 +1,36 @@
+{
+	"name": "@codelytv/mcp-test-client",
+	"version": "1.0.0",
+	"description": "A TypeScript test client for Model Context Protocol (MCP) servers",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"require": "./dist/index.js",
+			"import": "./dist/index.js"
+		}
+	},
+	"scripts": {
+		"build": "tsc",
+		"prepublish": "npm run build",
+		"clean": "rm -rf dist"
+	},
+	"keywords": ["mcp", "model-context-protocol", "testing", "typescript"],
+	"author": "CodelyTV",
+	"license": "MIT",
+	"peerDependencies": {
+		"@codelytv/primitives-type": "^3.1.0",
+		"@modelcontextprotocol/sdk": "^1.17.2"
+	},
+	"devDependencies": {
+		"typescript": "^5.8.3"
+	},
+	"files": [
+		"dist/**/*",
+		"README.md"
+	],
+	"eslintIgnore": [
+		"dist/**/*"
+	]
+}

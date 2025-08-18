@@ -5,6 +5,9 @@ import globals from "globals";
 export default [
 	...eslintConfigCodely.course,
 	{
+		ignores: ["mcp-test-client/dist/**/*"],
+	},
+	{
 		files: ["**/**.ts"],
 		rules: {
 			"@typescript-eslint/explicit-function-return-type": "error",

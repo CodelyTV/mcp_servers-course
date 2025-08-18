@@ -1,10 +1,11 @@
 import "reflect-metadata";
 
+import { McpTestClient } from "@codelytv/mcp-test-client";
+
 import { CourseRepository } from "../../../../../src/contexts/mooc/courses/domain/CourseRepository";
 import { container } from "../../../../../src/contexts/shared/infrastructure/dependency-injection/diod.config";
 import { PostgresConnection } from "../../../../../src/contexts/shared/infrastructure/postgres/PostgresConnection";
 import { CourseMother } from "../../../../contexts/mooc/courses/domain/CourseMother";
-import { McpTestClient } from "../../../../contexts/shared/infrastructure/mcp-test-client/McpTestClient";
 
 describe("CoursesResource should", () => {
 	const mcpClient = new McpTestClient("stdio", [
