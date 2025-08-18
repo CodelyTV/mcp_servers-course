@@ -5,7 +5,7 @@ import { container } from "../../../../../src/contexts/shared/infrastructure/dep
 import { PostgresConnection } from "../../../../../src/contexts/shared/infrastructure/postgres/PostgresConnection";
 import { CourseMother } from "../../../../contexts/mooc/courses/domain/CourseMother";
 import { evaluatePrompt } from "../../../../contexts/shared/infrastructure/evaluatePrompt";
-import { McpTestClient } from "../../../../contexts/shared/infrastructure/mcp-inspector-cli-client/McpTestClient";
+import { McpTestClient } from "../../../../contexts/shared/infrastructure/mcp-test-client/McpTestClient";
 
 const courseRepository = container.get(CourseRepository);
 const connection = container.get(PostgresConnection);

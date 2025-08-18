@@ -1,7 +1,7 @@
 import "reflect-metadata";
 
 import { evaluatePrompt } from "../../../../contexts/shared/infrastructure/evaluatePrompt";
-import { McpTestClient } from "../../../../contexts/shared/infrastructure/mcp-inspector-cli-client/McpTestClient";
+import { McpTestClient } from "../../../../contexts/shared/infrastructure/mcp-test-client/McpTestClient";
 
 describe("ListAllTestsPrompt should", () => {
 	const mcpClient = new McpTestClient("stdio", [

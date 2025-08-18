@@ -5,7 +5,7 @@ import { container } from "../../../../../src/contexts/shared/infrastructure/dep
 import { PostgresConnection } from "../../../../../src/contexts/shared/infrastructure/postgres/PostgresConnection";
 import { CourseIdMother } from "../../../../contexts/mooc/courses/domain/CourseIdMother";
 import { CourseMother } from "../../../../contexts/mooc/courses/domain/CourseMother";
-import { McpTestClient } from "../../../../contexts/shared/infrastructure/mcp-inspector-cli-client/McpTestClient";
+import { McpTestClient } from "../../../../contexts/shared/infrastructure/mcp-test-client/McpTestClient";
 
 describe("SearchCourseByIdTool should", () => {
 	const mcpClient = new McpTestClient("stdio", [
