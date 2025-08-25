@@ -7,17 +7,16 @@ import { container } from "../../../../../src/contexts/shared/infrastructure/dep
 import { PostgresConnection } from "../../../../../src/contexts/shared/infrastructure/postgres/PostgresConnection";
 import { CourseIdMother } from "../../../../contexts/mooc/courses/domain/CourseIdMother";
 import { CourseMother } from "../../../../contexts/mooc/courses/domain/CourseMother";
+import { TestServerManager } from "../../../../utils/TestServerManager";
 
 describe("SearchCourseByIdTool should", () => {
-	const mcpClient = new McpTestClient("stdio", [
-		"npx",
-		"ts-node",
-		"./src/app/mcp/server.ts",
-	]);
+	const serverManager = new TestServerManager();
+	const mcpClient = new McpTestClient("http", [serverManager.mcpUrl()]);
 	const courseRepository = container.get(CourseRepository);
 	const connection = container.get(PostgresConnection);
 
 	beforeAll(async () => {
+		await serverManager.start();
 		await mcpClient.connect();
 	});
 
@@ -27,6 +26,7 @@ describe("SearchCourseByIdTool should", () => {
 
 	afterAll(async () => {
 		await mcpClient.disconnect();
+		await serverManager.stop();
 		await connection.end();
 	});
 

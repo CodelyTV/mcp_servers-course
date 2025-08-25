@@ -3,20 +3,20 @@ import "reflect-metadata";
 import { McpTestClient } from "@codelytv/mcp-test-client";
 
 import { evaluatePrompt } from "../../../../contexts/shared/infrastructure/evaluatePrompt";
+import { TestServerManager } from "../../../../utils/TestServerManager";
 
 describe("ListAllTestsPrompt should", () => {
-	const mcpClient = new McpTestClient("stdio", [
-		"npx",
-		"ts-node",
-		"./src/app/mcp/server.ts",
-	]);
+	const serverManager = new TestServerManager();
+	const mcpClient = new McpTestClient("http", [serverManager.mcpUrl()]);
 
 	beforeAll(async () => {
+		await serverManager.start();
 		await mcpClient.connect();
 	});
 
 	afterAll(async () => {
 		await mcpClient.disconnect();
+		await serverManager.stop();
 	});
 
 	it("list the utils-list_all_tests prompt", async () => {
