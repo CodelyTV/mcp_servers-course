@@ -43,14 +43,16 @@ export class CourseMother {
 		return Array.from({ length: count }, () => this.create());
 	}
 
-	static createdToday(): Course {
+	static createdToday(params?: { id?: string }): Course {
 		return this.create({
+			...params,
 			publishedAt: DateMother.today(),
 		});
 	}
 
-	static createdYesterday(): Course {
+	static createdYesterday(params?: { id?: string }): Course {
 		return this.create({
+			...params,
 			publishedAt: DateMother.yesterday(),
 		});
 	}

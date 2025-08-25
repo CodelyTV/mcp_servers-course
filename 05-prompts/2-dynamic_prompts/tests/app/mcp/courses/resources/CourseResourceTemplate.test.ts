@@ -42,7 +42,7 @@ describe("CourseResourceTemplate should", () => {
 		await expect(
 			mcpClient.readResource(`courses://${invalidId}`),
 		).rejects.toThrow(
-			`Process exited with code 1: Failed to read resource courses://${invalidId}: MCP error -32000: The id <${invalidId}> is not a valid nano id`,
+			`MCP error -32000: The id <${invalidId}> is not a valid nano id`,
 		);
 	});
 
@@ -52,12 +52,12 @@ describe("CourseResourceTemplate should", () => {
 		await expect(
 			mcpClient.readResource(`courses://${nonExistingCourseId}`),
 		).rejects.toThrow(
-			`Process exited with code 1: Failed to read resource courses://${nonExistingCourseId}: MCP error -32002: The course <${nonExistingCourseId}> has not been found`,
+			`MCP error -32002: The course <${nonExistingCourseId}> has not been found`,
 		);
 	});
 
 	it("return course details when course exists", async () => {
-		const course = CourseMother.createdToday();
+		const course = CourseMother.create();
 
 		await courseRepository.save(course);
 
@@ -74,5 +74,40 @@ describe("CourseResourceTemplate should", () => {
 				},
 			],
 		});
+	});
+
+	it("list all available courses as resources", async () => {
+		const course = CourseMother.create();
+		const anotherCourse = CourseMother.create();
+
+		await courseRepository.save(course);
+		await courseRepository.save(anotherCourse);
+
+		const response = await mcpClient.listResources();
+
+		expect(response.uris()).toEqual(
+			expect.arrayContaining([
+				`course://${course.id.value}`,
+				`course://${anotherCourse.id.value}`,
+			]),
+		);
+	});
+
+	it("complete the id param", async () => {
+		const testCourse = CourseMother.createdToday({ id: "t3st" });
+		const teatCourse = CourseMother.createdYesterday({ id: "t3at" });
+		const codeCourse = CourseMother.create({ id: "c0d3" });
+
+		await courseRepository.save(testCourse);
+		await courseRepository.save(teatCourse);
+		await courseRepository.save(codeCourse);
+
+		const response = await mcpClient.completeResourceTemplateParam(
+			"courses://{id}",
+			"id",
+			"t3",
+		);
+
+		expect(response).toEqual(["t3st", "t3at"]);
 	});
 });

@@ -57,7 +57,7 @@ describe("CourseResourceTemplate should", () => {
 	});
 
 	it("return course details when course exists", async () => {
-		const course = CourseMother.createdToday();
+		const course = CourseMother.create();
 
 		await courseRepository.save(course);
 
@@ -74,5 +74,40 @@ describe("CourseResourceTemplate should", () => {
 				},
 			],
 		});
+	});
+
+	it("list all available courses as resources", async () => {
+		const course = CourseMother.create();
+		const anotherCourse = CourseMother.create();
+
+		await courseRepository.save(course);
+		await courseRepository.save(anotherCourse);
+
+		const response = await mcpClient.listResources();
+
+		expect(response.uris()).toEqual(
+			expect.arrayContaining([
+				`course://${course.id.value}`,
+				`course://${anotherCourse.id.value}`,
+			]),
+		);
+	});
+
+	it("complete the id param", async () => {
+		const testCourse = CourseMother.createdToday({ id: "t3st" });
+		const teatCourse = CourseMother.createdYesterday({ id: "t3at" });
+		const codeCourse = CourseMother.create({ id: "c0d3" });
+
+		await courseRepository.save(testCourse);
+		await courseRepository.save(teatCourse);
+		await courseRepository.save(codeCourse);
+
+		const response = await mcpClient.completeResourceTemplateParam(
+			"courses://{id}",
+			"id",
+			"t3",
+		);
+
+		expect(response).toEqual(["t3st", "t3at"]);
 	});
 });

@@ -8,9 +8,9 @@ import { McpPromptResponse } from "../../../../contexts/shared/infrastructure/mc
 @Service()
 export class SearchSimilarCourseByCoursesNamesPrompt implements McpPrompt {
 	name = "courses-search_similar_by_names";
-	title = "Buscar Cursos con Nombres Similares";
+	title = "Find Courses with Similar Names";
 	description =
-		"Genera un prompt para buscar un curso similar a los cursos enviados";
+		"Generate a prompt to search for a course similar to the courses submitted";
 
 	inputSchema = {
 		names: z.string(),
@@ -21,16 +21,15 @@ export class SearchSimilarCourseByCoursesNamesPrompt implements McpPrompt {
 	async handler({ names }: { names: string }): Promise<McpPromptResponse> {
 		const coursesPromises = names
 			.split(",")
-			.map((name) => name.trim())
 			.map((name) => this.finder.find(name));
 
 		const courses = await Promise.all(coursesPromises);
 
 		return McpPromptResponse.user(
-			`Buscar cursos similares usando la herramienta courses-search_similar_by_ids a estos ids: ${courses
+			`Search for similar courses using the courses-search_similar_by_ids tool for these IDs: ${courses
 				.map((course) => course.id)
 				.join(", ")}`.trim(),
-			`Buscar cursos similares a ${courses.length} curso(s) encontrado(s)`,
+			`Find courses similar to ${courses.length} course(s) found`,
 		);
 	}
 }

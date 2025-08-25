@@ -9,6 +9,14 @@ describe("ListAllTestsPrompt should", () => {
 		"./src/app/mcp/server.ts",
 	]);
 
+	beforeAll(async () => {
+		await mcpClient.connect();
+	});
+
+	afterAll(async () => {
+		await mcpClient.disconnect();
+	});
+
 	it("list the utils-list_all_tests prompt", async () => {
 		const prompts = await mcpClient.listPrompts();
 

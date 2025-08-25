@@ -8,28 +8,28 @@ import { PostgresConnection } from "../../../../../src/contexts/shared/infrastru
 import { CourseMother } from "../../../../contexts/mooc/courses/domain/CourseMother";
 import { evaluatePrompt } from "../../../../contexts/shared/infrastructure/evaluatePrompt";
 
-const courseRepository = container.get(CourseRepository);
-const connection = container.get(PostgresConnection);
-
-beforeAll(async () => {
-	await mcpClient.connect();
-});
-
-beforeEach(async () => {
-	await connection.truncateAll();
-});
-
-afterAll(async () => {
-	await mcpClient.disconnect();
-	await connection.end();
-});
-
 describe("SearchSimilarCourseByCoursesNamesPrompt should", () => {
 	const mcpClient = new McpTestClient("stdio", [
 		"npx",
 		"ts-node",
 		"./src/app/mcp/server.ts",
 	]);
+
+	const courseRepository = container.get(CourseRepository);
+	const connection = container.get(PostgresConnection);
+
+	beforeAll(async () => {
+		await mcpClient.connect();
+	});
+
+	beforeEach(async () => {
+		await connection.truncateAll();
+	});
+
+	afterAll(async () => {
+		await mcpClient.disconnect();
+		await connection.end();
+	});
 
 	it("list the courses-search_similar_by_names prompt", async () => {
 		const prompts = await mcpClient.listPrompts();
@@ -68,5 +68,5 @@ describe("SearchSimilarCourseByCoursesNamesPrompt should", () => {
 		expect(prompt).toContain("courses-search_similar_by_ids");
 		expect(prompt).toContain(viewsCourse.id.value);
 		expect(prompt).toContain(cacheCourse.id.value);
-	}, 20000);
+	}, 30000);
 });

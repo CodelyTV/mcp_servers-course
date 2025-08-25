@@ -5,6 +5,7 @@ import { McpTestClient } from "@codelytv/mcp-test-client";
 import { CourseRepository } from "../../../../../src/contexts/mooc/courses/domain/CourseRepository";
 import { container } from "../../../../../src/contexts/shared/infrastructure/dependency-injection/diod.config";
 import { PostgresConnection } from "../../../../../src/contexts/shared/infrastructure/postgres/PostgresConnection";
+import { CourseIdMother } from "../../../../contexts/mooc/courses/domain/CourseIdMother";
 import { CourseMother } from "../../../../contexts/mooc/courses/domain/CourseMother";
 
 describe("CourseResourceTemplate should", () => {
@@ -33,6 +34,26 @@ describe("CourseResourceTemplate should", () => {
 		const resourceTemplates = await mcpClient.listResourceTemplates();
 
 		expect(resourceTemplates.uris()).toContain("courses://{id}");
+	});
+
+	it("return bad request error when course id is invalid", async () => {
+		const invalidId = CourseIdMother.invalid();
+
+		await expect(
+			mcpClient.readResource(`courses://${invalidId}`),
+		).rejects.toThrow(
+			`MCP error -32000: The id <${invalidId}> is not a valid nano id`,
+		);
+	});
+
+	it("return not found error when course is not found", async () => {
+		const nonExistingCourseId = CourseIdMother.create().value;
+
+		await expect(
+			mcpClient.readResource(`courses://${nonExistingCourseId}`),
+		).rejects.toThrow(
+			`MCP error -32002: The course <${nonExistingCourseId}> has not been found`,
+		);
 	});
 
 	it("return course details when course exists", async () => {

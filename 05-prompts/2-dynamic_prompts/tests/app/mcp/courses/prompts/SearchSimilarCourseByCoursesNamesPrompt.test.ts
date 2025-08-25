@@ -9,6 +9,14 @@ describe("SearchSimilarCourseByCoursesNamesPrompt should", () => {
 		"./src/app/mcp/server.ts",
 	]);
 
+	beforeAll(async () => {
+		await mcpClient.connect();
+	});
+
+	afterAll(async () => {
+		await mcpClient.disconnect();
+	});
+
 	it("list the courses-search_similar_by_names prompt", async () => {
 		const prompts = await mcpClient.listPrompts();
 
