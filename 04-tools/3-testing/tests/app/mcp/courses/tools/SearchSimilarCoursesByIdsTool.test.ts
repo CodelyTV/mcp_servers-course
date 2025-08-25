@@ -4,10 +4,10 @@ import { CourseRepository } from "../../../../../src/contexts/mooc/courses/domai
 import { container } from "../../../../../src/contexts/shared/infrastructure/dependency-injection/diod.config";
 import { PostgresConnection } from "../../../../../src/contexts/shared/infrastructure/postgres/PostgresConnection";
 import { CourseMother } from "../../../../contexts/mooc/courses/domain/CourseMother";
-import { McpTestClient } from "../../../../contexts/shared/infrastructure/mcp-inspector-cli-client/McpTestClient";
+import { McpTestClient } from "@codelytv/mcp-test-client";
 
 describe("SearchSimilarCoursesByIdsTool should", () => {
-	const mcpClient = new McpTestClient([
+	const mcpClient = new McpTestClient("stdio", [
 		"npx",
 		"ts-node",
 		"./src/app/mcp/server.ts",

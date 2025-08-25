@@ -5,10 +5,10 @@ import { container } from "../../../../../src/contexts/shared/infrastructure/dep
 import { PostgresConnection } from "../../../../../src/contexts/shared/infrastructure/postgres/PostgresConnection";
 import { CourseIdMother } from "../../../../contexts/mooc/courses/domain/CourseIdMother";
 import { CourseMother } from "../../../../contexts/mooc/courses/domain/CourseMother";
-import { McpInspectorCliClient } from "../../../../contexts/shared/infrastructure/mcp-inspector-cli-client/McpInspectorCliClient";
+import { McpTestClient } from "@codelytv/mcp-test-client";
 
 describe("SearchCourseByIdTool should", () => {
-	const mcpClient = new McpInspectorCliClient([
+	const mcpClient = new McpTestClient("stdio", [
 		"npx",
 		"ts-node",
 		"./src/app/mcp/server.ts",
@@ -16,11 +16,16 @@ describe("SearchCourseByIdTool should", () => {
 	const courseRepository = container.get(CourseRepository);
 	const connection = container.get(PostgresConnection);
 
+	beforeAll(async () => {
+		await mcpClient.connect();
+	});
+
 	beforeEach(async () => {
 		await connection.truncateAll();
 	});
 
 	afterAll(async () => {
+		await mcpClient.disconnect();
 		await connection.end();
 	});
 

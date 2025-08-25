@@ -1,9 +1,9 @@
 import "reflect-metadata";
 
-import { McpInspectorCliClient } from "../../../../contexts/shared/infrastructure/mcp-inspector-cli-client/McpInspectorCliClient";
+import { McpTestClient } from "@codelytv/mcp-test-client";
 
 describe("SearchSimilarCourseByCoursesNamesPrompt should", () => {
-	const mcpClient = new McpInspectorCliClient([
+	const mcpClient = new McpTestClient("stdio", [
 		"npx",
 		"ts-node",
 		"./src/app/mcp/server.ts",
