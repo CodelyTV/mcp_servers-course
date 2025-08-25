@@ -42,7 +42,7 @@ describe("CourseResourceTemplate should", () => {
 		await expect(
 			mcpClient.readResource(`courses://${invalidId}`),
 		).rejects.toThrow(
-			`Process exited with code 1: Failed to read resource courses://${invalidId}: MCP error -32000: The id <${invalidId}> is not a valid nano id`,
+			`MCP error -32000: The id <${invalidId}> is not a valid nano id`,
 		);
 	});
 
@@ -52,7 +52,7 @@ describe("CourseResourceTemplate should", () => {
 		await expect(
 			mcpClient.readResource(`courses://${nonExistingCourseId}`),
 		).rejects.toThrow(
-			`Process exited with code 1: Failed to read resource courses://${nonExistingCourseId}: MCP error -32002: The course <${nonExistingCourseId}> has not been found`,
+			`MCP error -32002: The course <${nonExistingCourseId}> has not been found`,
 		);
 	});
 
