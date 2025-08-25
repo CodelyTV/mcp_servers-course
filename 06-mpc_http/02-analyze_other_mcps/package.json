@@ -1,0 +1,9 @@
+{
+	"name": "codely",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"mcp:inspect:codely": "npx @modelcontextprotocol/inspector --transport http --server-url https://codely.com/api/mcp",
+		"mcp:inspect:notion": "npx @modelcontextprotocol/inspector --transport http --server-url https://mcp.notion.com/mcp"
+	}
+}
