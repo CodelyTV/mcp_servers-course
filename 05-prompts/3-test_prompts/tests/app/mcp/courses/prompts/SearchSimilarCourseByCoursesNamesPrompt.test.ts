@@ -1,25 +1,26 @@
 import "reflect-metadata";
 
+import { McpTestClient } from "@codelytv/mcp-test-client";
+
 import { CourseRepository } from "../../../../../src/contexts/mooc/courses/domain/CourseRepository";
 import { container } from "../../../../../src/contexts/shared/infrastructure/dependency-injection/diod.config";
 import { PostgresConnection } from "../../../../../src/contexts/shared/infrastructure/postgres/PostgresConnection";
 import { CourseMother } from "../../../../contexts/mooc/courses/domain/CourseMother";
 import { evaluatePrompt } from "../../../../contexts/shared/infrastructure/evaluatePrompt";
-import { McpTestClient } from "@codelytv/mcp-test-client";
 
 const courseRepository = container.get(CourseRepository);
 const connection = container.get(PostgresConnection);
 
-	beforeAll(async () => {
-		await mcpClient.connect();
-	});
+beforeAll(async () => {
+	await mcpClient.connect();
+});
 
 beforeEach(async () => {
 	await connection.truncateAll();
 });
 
 afterAll(async () => {
-		await mcpClient.disconnect();
+	await mcpClient.disconnect();
 	await connection.end();
 });
 

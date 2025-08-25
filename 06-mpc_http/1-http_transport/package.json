@@ -14,13 +14,13 @@
 		"search-courses": "ts-node ./src/app/scripts/search-courses.ts",
 		"mcp:serve": "ts-node ./src/app/mcp/server.ts",
 		"mcp:debug:direct": "node debug-mcp-direct.js",
-		"mcp:inspect": "npx @modelcontextprotocol/inspector",
+		"mcp:inspect": "npx @modelcontextprotocol/inspector ts-node ./src/app/mcp/server.ts",
 		"mcp:inspect:debug": "npx @modelcontextprotocol/inspector ./start-mcp-debug.sh"
 	},
 	"dependencies": {
 		"@langchain/core": "^0.3.66",
 		"@langchain/ollama": "^0.2.3",
-		"@modelcontextprotocol/sdk": "^1.17.2",
+		"@modelcontextprotocol/sdk": "^1.17.1",
 		"diod": "^3.0.0",
 		"langchain": "^0.3.30",
 		"mariadb": "^3.4.5",
@@ -38,6 +38,8 @@
 	},
 	"devDependencies": {
 		"@codelytv/mcp-test-client": "^0.5.0",
+		"@swc/core": "^1.13.3",
+		"@swc/jest": "^0.2.39",
 		"@codelytv/primitives-type": "^3.1.0",
 		"@faker-js/faker": "^9.9.0",
 		"@next/eslint-plugin-next": "^15.4.3",
