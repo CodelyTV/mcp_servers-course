@@ -1,6 +1,6 @@
 import "reflect-metadata";
 
-import { McpTestClient } from "@codelytv/mcp-test-client";
+import { McpClient } from "@codelytv/mcp-client";
 
 import { CourseRepository } from "../../../../../src/contexts/mooc/courses/domain/CourseRepository";
 import { container } from "../../../../../src/contexts/shared/infrastructure/dependency-injection/diod.config";
@@ -9,7 +9,7 @@ import { CourseIdMother } from "../../../../contexts/mooc/courses/domain/CourseI
 import { CourseMother } from "../../../../contexts/mooc/courses/domain/CourseMother";
 
 describe("SearchCourseByIdTool should", () => {
-	const mcpClient = new McpTestClient("stdio", [
+	const mcpClient = new McpClient("stdio", [
 		"npx",
 		"ts-node",
 		"./src/app/mcp/server.ts",

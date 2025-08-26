@@ -1,11 +1,11 @@
 import "reflect-metadata";
 
-import { McpTestClient } from "@codelytv/mcp-test-client";
+import { McpClient } from "@codelytv/mcp-client";
 
 import { evaluatePrompt } from "../../../../contexts/shared/infrastructure/evaluatePrompt";
 
 describe("ListAllTestsPrompt should", () => {
-	const mcpClient = new McpTestClient("stdio", [
+	const mcpClient = new McpClient("stdio", [
 		"npx",
 		"ts-node",
 		"./src/app/mcp/server.ts",

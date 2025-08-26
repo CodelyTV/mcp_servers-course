@@ -1,6 +1,6 @@
 import "reflect-metadata";
 
-import { McpTestClient } from "@codelytv/mcp-test-client";
+import { McpClient } from "@codelytv/mcp-client";
 
 import { CourseRepository } from "../../../../../src/contexts/mooc/courses/domain/CourseRepository";
 import { container } from "../../../../../src/contexts/shared/infrastructure/dependency-injection/diod.config";
@@ -10,7 +10,7 @@ import { TestServerManager } from "../../../../utils/TestServerManager";
 
 describe("CoursesResource should", () => {
 	const serverManager = new TestServerManager();
-	const mcpClient = new McpTestClient("http", [serverManager.mcpUrl()]);
+	const mcpClient = new McpClient("http", [serverManager.mcpUrl()]);
 	const courseRepository = container.get(CourseRepository);
 	const connection = container.get(PostgresConnection);
 

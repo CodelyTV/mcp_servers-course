@@ -1,13 +1,13 @@
 import "reflect-metadata";
 
-import { McpTestClient } from "@codelytv/mcp-test-client";
+import { McpClient } from "@codelytv/mcp-client";
 
 import { evaluatePrompt } from "../../../../contexts/shared/infrastructure/evaluatePrompt";
 import { TestServerManager } from "../../../../utils/TestServerManager";
 
 describe("ListAllTestsPrompt should", () => {
 	const serverManager = new TestServerManager();
-	const mcpClient = new McpTestClient("http", [serverManager.mcpUrl()]);
+	const mcpClient = new McpClient("http", [serverManager.mcpUrl()]);
 
 	beforeAll(async () => {
 		await serverManager.start();
