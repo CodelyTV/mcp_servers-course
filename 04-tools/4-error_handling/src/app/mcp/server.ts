@@ -7,6 +7,7 @@ import {
 } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 
+import { CodelyError } from "../../contexts/shared/domain/CodelyError";
 import { container } from "../../contexts/shared/infrastructure/dependency-injection/diod.config";
 import { McpResource } from "../../contexts/shared/infrastructure/mcp/McpResource";
 import { McpResourceTemplate } from "../../contexts/shared/infrastructure/mcp/McpResourceTemplate";
@@ -34,13 +35,27 @@ tools.forEach((tool) => {
 			inputSchema: tool.inputSchema as any,
 		},
 		async (args?: Record<string, unknown>) => {
-			const response = await tool.handler(args);
+			try {
+				const response = await tool.handler(args);
 
-			return {
-				content: response.content,
-				structuredContent: response.structuredContent,
-				isError: response.isError,
-			};
+				return {
+					content: response.content,
+					structuredContent: response.structuredContent,
+					isError: response.isError,
+				};
+			} catch (error) {
+				if (tool.onError && error instanceof CodelyError) {
+					const errorResponse = tool.onError(error);
+
+					return {
+						content: errorResponse.content,
+						structuredContent: errorResponse.structuredContent,
+						isError: errorResponse.isError,
+					};
+				}
+
+				throw new Error("Internal server error");
+			}
 		},
 	);
 });
