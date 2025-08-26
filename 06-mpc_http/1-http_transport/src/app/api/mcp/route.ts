@@ -2,6 +2,7 @@
 import { ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { createMcpHandler } from "mcp-handler";
 
+import { CodelyError } from "../../../contexts/shared/domain/CodelyError";
 import { container } from "../../../contexts/shared/infrastructure/dependency-injection/diod.config";
 import { McpPrompt } from "../../../contexts/shared/infrastructure/mcp/McpPrompt";
 import { McpResource } from "../../../contexts/shared/infrastructure/mcp/McpResource";
@@ -34,14 +35,29 @@ const handler = createMcpHandler(
 					description: tool.description,
 					inputSchema: tool.inputSchema as any,
 				},
-				async (params?: Record<string, unknown>) => {
-					const response = await tool.handler(params);
+				async (args?: Record<string, unknown>) => {
+					try {
+						const response = await tool.handler(args);
 
-					return {
-						content: response.content,
-						structuredContent: response.structuredContent,
-						isError: response.isError,
-					};
+						return {
+							content: response.content,
+							structuredContent: response.structuredContent,
+							isError: response.isError,
+						};
+					} catch (error) {
+						if (tool.onError && error instanceof CodelyError) {
+							const errorResponse = tool.onError(error);
+
+							return {
+								content: errorResponse.content,
+								structuredContent:
+									errorResponse.structuredContent,
+								isError: errorResponse.isError,
+							};
+						}
+
+						throw new Error("Internal server error");
+					}
 				},
 			);
 		});
@@ -101,9 +117,12 @@ const handler = createMcpHandler(
 
 						return { contents: response.contents };
 					} catch (error) {
-						if (resourceTemplate.onError) {
+						if (
+							resourceTemplate.onError &&
+							error instanceof CodelyError
+						) {
 							const errorResponse = resourceTemplate.onError(
-								error as any,
+								error,
 								uri.href,
 							);
 

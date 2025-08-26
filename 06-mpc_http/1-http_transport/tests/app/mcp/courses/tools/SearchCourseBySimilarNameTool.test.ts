@@ -15,7 +15,6 @@ describe("SearchCourseBySimilarNameTool should", () => {
 	const connection = container.get(PostgresConnection);
 
 	beforeAll(async () => {
-		await serverManager.start();
 		await mcpClient.connect();
 	});
 
@@ -25,7 +24,6 @@ describe("SearchCourseBySimilarNameTool should", () => {
 
 	afterAll(async () => {
 		await mcpClient.disconnect();
-		await serverManager.stop();
 		await connection.end();
 	});
 
@@ -35,6 +33,28 @@ describe("SearchCourseBySimilarNameTool should", () => {
 		expect(toolsResponse.names()).toContain(
 			"courses-search_by_similar_name",
 		);
+	});
+
+	it("return error when course is not found", async () => {
+		const nonExistingCourseName = CourseMother.create().name;
+
+		const response = await mcpClient.callTool(
+			"courses-search_by_similar_name",
+			{
+				name: nonExistingCourseName,
+			},
+		);
+
+		expect(response.toPrimitives()).toEqual({
+			content: [
+				{
+					type: "text",
+					text: `There are no courses similar to ${nonExistingCourseName}`,
+				},
+			],
+			structuredContent: undefined,
+			isError: true,
+		});
 	});
 
 	it("return existing course", async () => {

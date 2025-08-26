@@ -121,9 +121,9 @@ resourceTemplates.forEach((resourceTemplate) => {
 
 				return { contents: response.contents };
 			} catch (error) {
-				if (resourceTemplate.onError) {
+				if (resourceTemplate.onError && error instanceof CodelyError) {
 					const errorResponse = resourceTemplate.onError(
-						error as any,
+						error,
 						uri.href,
 					);
 
