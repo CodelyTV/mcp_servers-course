@@ -9,6 +9,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 
 import { CodelyError } from "../../contexts/shared/domain/CodelyError";
 import { container } from "../../contexts/shared/infrastructure/dependency-injection/diod.config";
+import { McpPrompt } from "../../contexts/shared/infrastructure/mcp/McpPrompt";
 import { McpResource } from "../../contexts/shared/infrastructure/mcp/McpResource";
 import { McpResourceTemplate } from "../../contexts/shared/infrastructure/mcp/McpResourceTemplate";
 import { McpTool } from "../../contexts/shared/infrastructure/mcp/McpTool";
@@ -137,6 +138,29 @@ resourceTemplates.forEach((resourceTemplate) => {
 
 				throw new Error("Internal server error");
 			}
+		},
+	);
+});
+
+const prompts = container
+	.findTaggedServiceIdentifiers<McpPrompt>("mcp-prompt")
+	.map((identifier) => container.get(identifier));
+
+prompts.forEach((prompt) => {
+	server.registerPrompt(
+		prompt.name,
+		{
+			title: prompt.title,
+			description: prompt.description,
+			argsSchema: prompt.inputSchema as any,
+		},
+		async (params?: Record<string, unknown>) => {
+			const response = await prompt.handler(params);
+
+			return {
+				messages: response.messages,
+				description: response.description,
+			};
 		},
 	);
 });
