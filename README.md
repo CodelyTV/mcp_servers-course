@@ -9,7 +9,7 @@
 </p>
 
 <h1 align="center">
-    {COURSE_EMOJI} {COURSE_NAME_IN_ENGLISH}
+    🥏 MCP in Depth: Build Your Server Following Best Practices
 </h1>
 
 <p align="center">
@@ -18,10 +18,10 @@
 </p>
 
 <p align="center">
-    {COURSE_SUMMARY_IN_ENGLISH}
+    Create your MCP server by exploring all its primitives and applying best practices.
 </p>
 
 <p align="center">
-  <a href="https://github.com/CodelyTV/{REPOSITORY_NAME}/stargazers">Stars are welcome 😊</a><br><br>
-  Course (Spanish): <a href="{COURSE_URL}">{COURSE_NAME_IN_SPANISH}</a>
+  <a href="https://github.com/CodelyTV/mcp_servers-course/stargazers">Stars are welcome 😊</a><br><br>
+  Course (Spanish): <a href="https://pro.codely.com/library/mcp-a-fondo-crea-tu-servidor-siguiendo-buenas-practicas-239481">MCP a fondo: Crea tu servidor siguiendo buenas prácticas</a>
 </p>
